@@ -114,13 +114,6 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
         // Do any additional setup after loading the view, typically from a nib.
     }
     
-    func generateFirstRunWindow(){
-        let firstView = UILabel()
-        firstView.translatesAutoresizingMaskIntoConstraints = false
-        
-    }
-    
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if currentSong != nil{
