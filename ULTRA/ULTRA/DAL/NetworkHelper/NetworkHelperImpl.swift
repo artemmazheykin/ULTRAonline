@@ -28,7 +28,7 @@ class NetworkHelperImpl: NetworkHelper{
             
             URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
                 guard error == nil, let data = data else {
-                    print("!!!!error = \(error)")
+                    print("!!!!error")
                     pup.fulfill(nil)
                     return
                 }

@@ -92,7 +92,6 @@ class MagicPlayer {
             }
         }
         isPlaying = true
-        print("delegate = \(delegate)")
         delegate?.playPauseStopDidTapped()
     }
     
