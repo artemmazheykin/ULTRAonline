@@ -68,6 +68,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+//        let vc = window?.rootViewController as! UINavigationController
+//        if vc.viewControllers.count > 1, let fvc = vc.viewControllers[1] as? FavouriteViewController{
+//            if fvc.favoriteSongs.count != DataSingleton.shared.songs.count{
+//                fvc.updateFavoriteSongs()
+//                fvc.favoritesTable.reloadData()
+//            }
+//        }
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SongModel{
+@objc class SongModel: NSObject{
     
     let artistName: String
     let songName: String

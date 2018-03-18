@@ -32,7 +32,6 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
     @IBOutlet weak var songName: UILabel!
     @IBOutlet weak var starButton: UIButton!
     
-    
     var myURLArtistAndSongString = "https://radiopleer.com/info/ultra.txt"
     var last10SongsUrl = "https://radiopleer.com/info/ultra_last_tracks.txt"
     var last10SongsStrings: [String] = []
@@ -69,6 +68,7 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
     override func viewDidLoad() {
         super.viewDidLoad()
         radioPlayer.delegate = self
+        DataSingleton.shared.delegateMainScreenVC = self
         isDownloadingMediaContentPermited = (UserDefaults.standard.value(forKey: "IsDownloadingMediaContentPermited") as? Bool) ?? true
         
         favoriteSongs = songService.getFavoriteArtistsFromUserDefaults()
@@ -112,6 +112,12 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
         setupRemoteCommandCenter()
         //        songService.resetFavourites()
         // Do any additional setup after loading the view, typically from a nib.
+    }
+    
+    func generateFirstRunWindow(){
+        let firstView = UILabel()
+        firstView.translatesAutoresizingMaskIntoConstraints = false
+        
     }
     
     
@@ -360,5 +366,14 @@ extension MainScreenController: MagicPlayerDelegate{
         updateStartStopButton()
     }
 
+}
+
+extension MainScreenController: DataSingletonDelegate{
+    
+    func favoriteSongsHaveChanged() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.dislikeCommand.isActive = !currentSong.isFavorite
+        commandCenter.likeCommand.isActive = currentSong.isFavorite
+    }
 }
 

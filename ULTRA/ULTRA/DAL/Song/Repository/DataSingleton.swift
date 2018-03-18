@@ -10,20 +10,27 @@ import Foundation
 import UIKit
 import Kingfisher
 
-protocol DataSingletonDelegate: class {
-    func last10SongsHaveChanged(last10Songs:[SongModel], last10SongsStrings: [String])
+@objc protocol DataSingletonDelegate: class {
+    
+    @objc optional func last10SongsHaveChanged(last10Songs:[SongModel], last10SongsStrings: [String])
+    @objc optional func favoriteSongsHaveChanged()
 }
+
 
 class DataSingleton{
     
     var songService: SongService!
     var isDownloadingMediaContentPermited: Bool!
     
-    weak var delegate: DataSingletonDelegate?
+    weak var delegateLast10VC: DataSingletonDelegate?
+    weak var delegateFavoritesVC: DataSingletonDelegate?
+    weak var delegateMainScreenVC: DataSingletonDelegate?
     
     var songs:[String:SongModel]{
         didSet{
             updateLast10Songs()
+            delegateFavoritesVC?.favoriteSongsHaveChanged?()
+            delegateMainScreenVC?.favoriteSongsHaveChanged?()
         }
     }
     
@@ -31,7 +38,7 @@ class DataSingleton{
     
     var last10Songs:[SongModel] = []{
         didSet{
-            delegate?.last10SongsHaveChanged(last10Songs: last10Songs, last10SongsStrings: last10SongsStrings)
+            delegateLast10VC?.last10SongsHaveChanged?(last10Songs: last10Songs, last10SongsStrings: last10SongsStrings)
         }
     }
     

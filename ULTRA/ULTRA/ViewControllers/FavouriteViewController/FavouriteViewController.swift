@@ -10,7 +10,7 @@ import UIKit
 import Kingfisher
 
 
-class FavouriteViewController: UIViewController {
+class FavouriteViewController: UIViewController{
 
     @IBOutlet weak var favoritesTable: UITableView!
     
@@ -26,12 +26,18 @@ class FavouriteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
+        DataSingleton.shared.delegateFavoritesVC = self
         favoritesTable.delegate = self
         favoritesTable.dataSource = self
         reloadSection()
+        updateFavoriteSongs()
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        // Do any additional setup after loading the view.
+    }
+    
+    func updateFavoriteSongs(){
         var unsortedFavoriteSongs:[SongModel] = []
-
+        
         for songDic in DataSingleton.shared.songs{
             unsortedFavoriteSongs.append(songDic.value)
         }
@@ -41,17 +47,19 @@ class FavouriteViewController: UIViewController {
         favoriteSongs = unsortedFavoriteSongs.sorted { (song1, song2) -> Bool in
             return song1.dateOfCreation > song2.dateOfCreation
         }
-        
-        self.navigationController?.navigationBar.tintColor = UIColor.white
-        // Do any additional setup after loading the view.
+        favoritesTable.reloadData()
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if favoriteSongs.count != DataSingleton.shared.images.count{
-            favoritesTable.reloadData()
-        }
-    }
+    
+    
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//
+//        print("!!!!!!!!!!!!!!!!!!!!!!!!!")
+//        if favoriteSongs.count != DataSingleton.shared.images.count{
+//            favoritesTable.reloadData()
+//            
+//        }
+//    }
     
     @objc func didTappedAppleMusicButton(){
         
@@ -141,6 +149,12 @@ extension FavouriteViewController: UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.delete) {
+            
+            let mainVc = self.navigationController?.viewControllers[0] as! MainScreenController
+            let deletingSong = favoriteSongs[indexPath.row]
+            if deletingSong.artistAndSongName == mainVc.currentSong.artistAndSongName{
+                mainVc.currentSong.isFavorite = !mainVc.currentSong.isFavorite
+            }
             
             DataSingleton.shared.deleteSongAndImageFromFavorites(songModel: favoriteSongs[indexPath.row])
             favoriteSongs.remove(at: indexPath.row)
@@ -333,5 +347,11 @@ extension UIView{
         self.addConstraints(constraints)
         NSLayoutConstraint.activate(constraints)
 
+    }
+}
+
+extension FavouriteViewController: DataSingletonDelegate{
+    func favoriteSongsHaveChanged() {
+        updateFavoriteSongs()
     }
 }

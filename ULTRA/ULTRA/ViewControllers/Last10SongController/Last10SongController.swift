@@ -23,7 +23,7 @@ class Last10SongController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        DataSingleton.shared.delegate = self
+        DataSingleton.shared.delegateLast10VC = self
 
         songsTableView.delegate = self
         songsTableView.dataSource = self
