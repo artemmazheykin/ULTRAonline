@@ -159,7 +159,7 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
                             if self.isDownloadingMediaContentPermited{
                                 _ = self.networkHelper.getUrlImage(metadata: self.currentSong.artistAndSongName, size: 500).done{urlOpt in
                                     if let url = urlOpt{
-                                        self.artistImageFromVC.kf.setImage(with: url, placeholder: #imageLiteral(resourceName: "ultra_logo_black"), completionHandler: { (image, _, _, _) in
+                                        self.artistImageFromVC.kf.setImage(with: url, completionHandler: { (image, _, _, _) in
                                             
                                             if image == nil{
                                                 self.artistImageFromVC.image = #imageLiteral(resourceName: "ultra_logo_black")
@@ -203,7 +203,9 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
         //            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: image)
         //        }
         
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: image)
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork.init(boundsSize: image.size, requestHandler: { (size) -> UIImage in
+            return image
+        })
         nowPlayingInfo[MPMediaItemPropertyArtist] = artist
         
         

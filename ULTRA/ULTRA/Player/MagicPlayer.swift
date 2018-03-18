@@ -117,6 +117,7 @@ class MagicPlayer {
         
         playerItem = AVPlayerItem(asset: asset)
         player?.replaceCurrentItem(with: playerItem)
+        
     }    
     
     private func setupNotifications() {

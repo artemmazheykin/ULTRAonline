@@ -60,7 +60,7 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="u43-ba-9Dj">
-                                <rect key="frame" x="19" y="64.5" width="337.5" height="45.5"/>
+                                <rect key="frame" x="19.5" y="64.5" width="337.5" height="45.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mza-hj-KDF">
                                         <rect key="frame" x="0.0" y="0.0" width="337.5" height="21.5"/>
@@ -82,7 +82,7 @@
                                     </label>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="mza-hj-KDF" firstAttribute="width" secondItem="ntI-Ro-opg" secondAttribute="width" id="ofR-Ho-7rh"/>
+                                    <constraint firstItem="mza-hj-KDF" firstAttribute="width" secondItem="ntI-Ro-opg" secondAttribute="width" id="dfx-gP-QPr"/>
                                 </constraints>
                             </stackView>
                         </subviews>
@@ -97,9 +97,9 @@
                             <constraint firstItem="Orm-ec-zht" firstAttribute="top" secondItem="QlK-RQ-UUj" secondAttribute="bottom" constant="20" id="N6F-Ud-Bf3"/>
                             <constraint firstItem="QlK-RQ-UUj" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Tm7-DD-NfN"/>
                             <constraint firstItem="u43-ba-9Dj" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="W2R-D1-rBY"/>
+                            <constraint firstItem="ntI-Ro-opg" firstAttribute="width" secondItem="6Tk-OE-BBY" secondAttribute="width" multiplier="0.9" id="ZtJ-MP-9sJ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="QlK-RQ-UUj" secondAttribute="trailing" constant="20" id="deb-kc-nXq"/>
                             <constraint firstItem="QlK-RQ-UUj" firstAttribute="top" secondItem="u43-ba-9Dj" secondAttribute="bottom" constant="10" id="gSl-hQ-a1I"/>
-                            <constraint firstItem="u43-ba-9Dj" firstAttribute="width" secondItem="6Tk-OE-BBY" secondAttribute="width" multiplier="0.9" id="nZp-d1-XXh"/>
                             <constraint firstItem="tFw-gD-A4S" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="qna-48-oMn"/>
                             <constraint firstItem="Orm-ec-zht" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" multiplier="1.7" id="ywX-Cj-ETO"/>
                         </constraints>
@@ -130,7 +130,7 @@
                                 <rect key="frame" x="0.0" y="214" width="375" height="453"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FavoriteSongCell" rowHeight="55" id="cXw-mt-CN6" customClass="FavoriteSongCell" customModule="ULTRA" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FavoriteSongCell" rowHeight="55" id="cXw-mt-CN6" customClass="FavoriteSongCell" customModule="ULTRA" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cXw-mt-CN6" id="R8d-gb-bgo">
@@ -365,7 +365,7 @@
                                 <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="sectionIndexTrackingBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SongCell" id="LSK-Pz-4ky" customClass="SongCell" customModule="ULTRA" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SongCell" id="LSK-Pz-4ky" customClass="SongCell" customModule="ULTRA" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LSK-Pz-4ky" id="5W9-d9-4OM">
