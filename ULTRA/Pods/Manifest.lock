@@ -1,0 +1,23 @@
+PODS:
+  - Kingfisher (4.6.3)
+  - PromiseKit (6.2.1):
+    - PromiseKit/CorePromise (= 6.2.1)
+    - PromiseKit/Foundation (= 6.2.1)
+    - PromiseKit/UIKit (= 6.2.1)
+  - PromiseKit/CorePromise (6.2.1)
+  - PromiseKit/Foundation (6.2.1):
+    - PromiseKit/CorePromise
+  - PromiseKit/UIKit (6.2.1):
+    - PromiseKit/CorePromise
+
+DEPENDENCIES:
+  - Kingfisher (~> 4.0)
+  - PromiseKit
+
+SPEC CHECKSUMS:
+  Kingfisher: 98e6d5b5e807645743e8ed5ececd25d688d38452
+  PromiseKit: edaca6f0a7ed73b08c287600537d13867a7fabc7
+
+PODFILE CHECKSUM: e042b7d465d612881db9e1c0b5da7a056b65907f
+
+COCOAPODS: 1.4.0
