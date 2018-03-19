@@ -24,6 +24,10 @@ import AVFoundation
 import MediaPlayer
 import PromiseKit
 
+protocol MainScreenControllerDelegate{
+    func likeOrDislikeDidTapped(currentSong: SongModel)
+}
+
 class MainScreenController: UIViewController, UIPopoverPresentationControllerDelegate{
     
     
@@ -31,6 +35,7 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
     @IBOutlet weak var artistName: UILabel!
     @IBOutlet weak var songName: UILabel!
     @IBOutlet weak var starButton: UIButton!
+    var delegate: MainScreenControllerDelegate?
     
     var myURLArtistAndSongString = "https://radiopleer.com/info/ultra.txt"
     var last10SongsUrl = "https://radiopleer.com/info/ultra_last_tracks.txt"
@@ -231,30 +236,53 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
         }
         commandCenter.likeCommand.localizedTitle = "Нравится"
         commandCenter.dislikeCommand.localizedTitle = "Не нравится"
-        commandCenter.likeCommand.addTarget(self, action: #selector(likeOrDislike))
-        commandCenter.dislikeCommand.addTarget(self, action: #selector(likeOrDislike))
+        commandCenter.likeCommand.addTarget(self, action: #selector(likeLockScreen))
+        commandCenter.dislikeCommand.addTarget(self, action: #selector(dislikeLockScreen))
         
     }
     
-    @objc func likeOrDislike(){
+//    @objc func likeOrDislike(){
+//        if currentSong != nil{
+//            
+//            currentSong.isFavorite = !currentSong.isFavorite
+//            
+//            if currentSong.isFavorite{
+//                
+//                DataSingleton.shared.addSongAndImageToFavorites(songModel: currentSong)
+//                
+//            }else{
+//                DataSingleton.shared.deleteSongAndImageFromFavorites(songModel: currentSong)
+//            }
+//            starButton.setImage(currentSong.isFavorite ? #imageLiteral(resourceName: "star-filled") : #imageLiteral(resourceName: "star-unfilled"), for: .normal)
+//            updateCommandCenter()
+//
+//        }
+//    }
+    
+    @objc func dislikeLockScreen(){
         if currentSong != nil{
             
-            currentSong.isFavorite = !currentSong.isFavorite
+            currentSong.isFavorite = false
             
-            if currentSong.isFavorite{
-                
-                DataSingleton.shared.addSongAndImageToFavorites(songModel: currentSong)
-                
-            }else{
-                DataSingleton.shared.deleteSongAndImageFromFavorites(songModel: currentSong)
-            }
+            DataSingleton.shared.deleteSongAndImageFromFavorites(songModel: currentSong)
             starButton.setImage(currentSong.isFavorite ? #imageLiteral(resourceName: "star-filled") : #imageLiteral(resourceName: "star-unfilled"), for: .normal)
             updateCommandCenter()
-
+            delegate?.likeOrDislikeDidTapped(currentSong: currentSong)
         }
     }
-    
-    
+
+    @objc func likeLockScreen(){
+        if currentSong != nil{
+            
+            currentSong.isFavorite = true
+            
+            DataSingleton.shared.addSongAndImageToFavorites(songModel: currentSong)
+            starButton.setImage(currentSong.isFavorite ? #imageLiteral(resourceName: "star-filled") : #imageLiteral(resourceName: "star-unfilled"), for: .normal)
+            updateCommandCenter()
+            delegate?.likeOrDislikeDidTapped(currentSong: currentSong)
+        }
+    }
+
     @IBAction func startStopRadioDidTapped(_ sender: UIButton) {
         
         if radioPlayer.isPlaying{

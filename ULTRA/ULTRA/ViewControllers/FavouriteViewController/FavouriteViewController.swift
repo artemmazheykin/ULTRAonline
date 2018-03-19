@@ -25,29 +25,30 @@ class FavouriteViewController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        DataSingleton.shared.delegateFavoritesVC = self
+        updateFavoriteSongs()
+        let mainVc = self.navigationController?.viewControllers[0] as! MainScreenController
+        mainVc.delegate = self
         favoritesTable.delegate = self
         favoritesTable.dataSource = self
         reloadSection()
-        updateFavoriteSongs()
         self.navigationController?.navigationBar.tintColor = UIColor.white
+        print("favoriteSongs.count = \(favoriteSongs.count)")
+
         // Do any additional setup after loading the view.
     }
     
     func updateFavoriteSongs(){
         var unsortedFavoriteSongs:[SongModel] = []
-        
+
         for songDic in DataSingleton.shared.songs{
             unsortedFavoriteSongs.append(songDic.value)
         }
-        
+
         favoriteSongImages = DataSingleton.shared.images
-        
+
         favoriteSongs = unsortedFavoriteSongs.sorted { (song1, song2) -> Bool in
             return song1.dateOfCreation > song2.dateOfCreation
         }
-        favoritesTable.reloadData()
     }
     
     
@@ -89,11 +90,6 @@ class FavouriteViewController: UIViewController{
         }
     }
 
-//    if #available(iOS 10.0, *) {
-//    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-//    } else {
-//    UIApplication.shared.openURL(url)
-//    }
 
     
     @objc func didTappedCopyNameButton(){
@@ -231,12 +227,17 @@ extension FavouriteViewController: UITableViewDelegate{
             imageView.contentMode = .scaleAspectFit
             let appleMusicButton = UIButton(frame: CGRect(x: self.view.frame.width - 60, y: 90, width: 50, height: 50))
             headerView.addSubview(appleMusicButton)
-            if favoriteSongImages[songModel.artistAndSongName] == nil{
-                appleMusicButton.setImage(#imageLiteral(resourceName: "copyImage"), for: .normal)
-                appleMusicButton.addTarget(self, action: #selector(didTappedCopyNameButton), for: .touchUpInside)
-            }else{
-                appleMusicButton.setImage(#imageLiteral(resourceName: "ITunes"), for: .normal)
-                appleMusicButton.addTarget(self, action: #selector(didTappedAppleMusicButton), for: .touchUpInside)
+            
+            if selectedIndexPath != nil{
+                _ = networkHelper.getUrlSong(metadata: favoriteSongs[selectedIndexPath!.row].artistAndSongName).done{ urlOpt in
+                    if let _ = urlOpt{
+                        appleMusicButton.setImage(#imageLiteral(resourceName: "ITunes"), for: .normal)
+                        appleMusicButton.addTarget(self, action: #selector(self.didTappedAppleMusicButton), for: .touchUpInside)
+                    }else{
+                        appleMusicButton.setImage(#imageLiteral(resourceName: "copyImage"), for: .normal)
+                        appleMusicButton.addTarget(self, action: #selector(self.didTappedCopyNameButton), for: .touchUpInside)
+                    }
+                }
             }
         }
     }
@@ -356,8 +357,28 @@ extension UIView{
     }
 }
 
-extension FavouriteViewController: DataSingletonDelegate{
-    func favoriteSongsHaveChanged() {
-        updateFavoriteSongs()
+extension FavouriteViewController: MainScreenControllerDelegate{
+    
+    func likeOrDislikeDidTapped(currentSong: SongModel) {
+    
+        switch currentSong.isFavorite{
+        case true:
+            favoriteSongs.insert(currentSong, at: 0)
+            favoritesTable.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+        case false:
+            for (i,song) in favoriteSongs.enumerated(){
+                var index:Int!
+                if song.artistAndSongName == currentSong.artistAndSongName{
+                    index = i
+                }
+                if let index = index{
+                    favoriteSongs.remove(at: index)
+                    favoritesTable.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                }
+            }
+        }
     }
 }
+    
+    
+
