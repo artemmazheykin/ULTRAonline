@@ -221,7 +221,6 @@ extension FavouriteViewController: UITableViewDelegate{
             songNameLabel.numberOfLines = 2
             songNameLabel.adjustsFontSizeToFitWidth = true
 
-            let songModel = favoriteSongs[indexPath!.row]
             imageView.image = cell.artistImage.image
             imageView.backgroundColor = .black
             imageView.contentMode = .scaleAspectFit
