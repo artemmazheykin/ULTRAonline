@@ -149,5 +149,12 @@ class SongServiceImpl: SongService {
         repository.resetFavourites()
     }
     
+    func getIDsFromUserDefaults() -> [String]{
+        <#code#>
+    }
+    
+    func setIDsToUserDefaults(ids: [String]) {
+        <#code#>
+    }
 
 }

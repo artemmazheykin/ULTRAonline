@@ -6,6 +6,8 @@
 //  Copyright © 2018 Morodin. All rights reserved.
 //
 
+
+// "trackId": 723342422
 import UIKit
 import PromiseKit
 import StoreKit
@@ -74,7 +76,8 @@ class NetworkHelperImpl: NetworkHelper{
                         pup.fulfill(nil)
                         return
                 }
-//                print("result = \(result)")
+                
+                print("result = \(result)")
                 let collectionViewUrl = URL(string: collectionView)
                 pup.fulfill(collectionViewUrl)
             }).resume()
@@ -109,6 +112,58 @@ class NetworkHelperImpl: NetworkHelper{
             }).resume()
         }
     }
+    
+    func getTrackId(metadata: String) -> Promise<String?> {
+        return Promise<String?>{pup in
+            
+            guard !metadata.isEmpty, metadata !=  " - ", let url = getSearchURLSongWithStorefront(with: metadata) else {
+                pup.fulfill(nil)
+                return
+            }
+            
+            URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+                guard error == nil, let data = data else {
+                    pup.fulfill(nil)
+                    return
+                }
+                
+                let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                guard let parsedResult = json as? [String: Any],
+                    let results = parsedResult[Keys.results] as? Array<[String: Any]>,
+                    let result = results.first,
+                    let trackId = result[Keys.trackId] as? String else {
+                        pup.fulfill(nil)
+                        return
+                }
+                //                print("result = \(result)")
+                pup.fulfill(trackId)
+            }).resume()
+        }
+    }
+    
+    func getTrackIds(songNames: [String]) -> Promise<[String:String]>{
+        return Promise<[String:String]>{pup in
+            
+            
+            var result:[String:String] = [:]
+            for songName in songNames{
+                
+                _ = getTrackId(metadata: songName).done{ trackId in
+                    result[songName] = trackId
+                }
+                
+                
+            }
+            
+            
+            
+            
+            
+            
+            
+        }
+    }
+
 
     private func getSearchURLSongWithStorefront(with term: String) -> URL? {
         
@@ -163,6 +218,7 @@ class NetworkHelperImpl: NetworkHelper{
         static let artwork = "artworkUrl100"
         static let collectionViewUrl = "collectionViewUrl"
         static let artistViewUrl = "artistViewUrl"
+        static let trackId = "trackId"
     }
     
     private struct Values {

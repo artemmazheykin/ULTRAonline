@@ -43,7 +43,8 @@ class DataSingleton{
     }
     
     var images: [String:UIImage] = [:]
-    
+    var trackIds:[String:String] = [:]
+
     var networkHelper = NetworkHelperImpl()
     
     open static let shared = DataSingleton()
@@ -128,6 +129,13 @@ class DataSingleton{
                 }
             }
         }
+        
+        _ = networkHelper.getTrackId(metadata: songModel.artistAndSongName).done{trackId in
+            self.trackIds[songModel.artistAndSongName] = trackId
+            var IDs = songService
+        }
+        
+        
     }
     
     func deleteSongAndImageFromFavorites(songModel: SongModel){

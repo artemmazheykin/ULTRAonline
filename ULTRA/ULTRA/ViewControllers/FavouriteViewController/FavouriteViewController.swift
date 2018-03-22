@@ -8,7 +8,8 @@
 
 import UIKit
 import Kingfisher
-
+import StoreKit
+import MediaPlayer
 
 class FavouriteViewController: UIViewController{
 
@@ -22,10 +23,17 @@ class FavouriteViewController: UIViewController{
     var favoriteSongs:[SongModel] = []
     var favoriteSongImages:[String:UIImage] = [:]
     var selectedIndexPath: IndexPath?
+    let applicationMusicPlayer = MPMusicPlayerController.applicationMusicPlayer
     
     override func viewDidLoad() {
         super.viewDidLoad()
         updateFavoriteSongs()
+        for song in favoriteSongs{
+            _ = networkHelper.getTrackId(metadata: song.artistAndSongName).done{trackId in
+                self.trackIds[song.artistAndSongName] = trackId
+            }
+        }
+        
         let mainVc = self.navigationController?.viewControllers[0] as! MainScreenController
         mainVc.delegate = self
         favoritesTable.delegate = self
@@ -33,7 +41,8 @@ class FavouriteViewController: UIViewController{
         reloadSection()
         self.navigationController?.navigationBar.tintColor = UIColor.white
         print("favoriteSongs.count = \(favoriteSongs.count)")
-
+        applicationMusicPlayer.setQueue(with: <#T##[String]#>)
+        
         // Do any additional setup after loading the view.
     }
     
