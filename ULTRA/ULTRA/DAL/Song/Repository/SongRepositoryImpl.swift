@@ -12,6 +12,7 @@ class SongRepositoryImpl: SongRepository {
     
     let favorKey = "FavoriteSongsKey"
     let favorImageKey = "FavoriteImageKey"
+    let songsIDKey = "SongsIDKey"
 
     func getFavoriteArtistsFromUserDefaults() -> [ArtistModel]{
         
@@ -74,5 +75,17 @@ class SongRepositoryImpl: SongRepository {
         UserDefaults.standard.set([], forKey: favorImageKey)
     }
     
+    func getIDsFromUserDefaults() -> [String:String]{
+        let ids: [String:String] = [:]
+        
+        if let idsFromUserDefaults = UserDefaults.standard.value(forKey: songsIDKey) as? [String:String]{
+            return idsFromUserDefaults
+        }
+        return ids
+    }
     
+    func setIDsToUserDefaults(ids: [String:String]) {
+        UserDefaults.standard.set(ids, forKey: songsIDKey)
+    }
+
 }

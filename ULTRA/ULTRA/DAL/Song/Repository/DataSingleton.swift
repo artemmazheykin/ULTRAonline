@@ -56,6 +56,7 @@ class DataSingleton{
         songServiceImpl.repository = repository
         songService = songServiceImpl
         self.songs = songService.getFavoriteSongsFromUserDefaults()
+        trackIds = songService.getIDsFromUserDefaults()
         updateLast10SongsEvery10Seconds()
     }
     
@@ -132,7 +133,9 @@ class DataSingleton{
         
         _ = networkHelper.getTrackId(metadata: songModel.artistAndSongName).done{trackId in
             self.trackIds[songModel.artistAndSongName] = trackId
-            var IDs = songService
+            if let id = trackId{
+                self.songService.addIDToUserDefaults(id: (songName: songModel.artistAndSongName, number: id))
+            }
         }
         
         
@@ -145,6 +148,8 @@ class DataSingleton{
             images[songModel.artistAndSongName] = nil
             ImageCache.default.removeImage(forKey: songModel.artistAndSongName)
         }
+        trackIds[songModel.artistAndSongName] = nil
+        songService.deleteIDFromUserDefaults(songName: songModel.artistAndSongName)
     }
     
     

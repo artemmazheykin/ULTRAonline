@@ -104,6 +104,7 @@ class MagicPlayer {
 
     open func stop() {
         guard let player = player else { return }
+        player.pause()
         player.replaceCurrentItem(with: nil)
         isPlaying = false
         delegate?.playPauseStopDidTapped()

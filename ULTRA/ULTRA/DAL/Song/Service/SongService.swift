@@ -14,8 +14,6 @@ protocol SongService: class {
     func getFavoriteArtistsFromUserDefaults() -> [ArtistModel]
     func getFavoriteSongsFromUserDefaults() -> [String:SongModel]
     func setFavoriteArtistsToUserDefaults(artists: [ArtistModel])
-    func getFavoriteImagesFromUserDefaults() -> [String:SongImageModel]
-    func setFavoriteImagesToUserDefaults(images: [String:SongImageModel])
 //    func isThatSongFaforiteChecking(artist: String, song: String) -> Promise<SongModel>
     func isThatSongFaforiteChecking(artist: String, song: String) -> SongModel
     func addSongToFavorites(songModel: SongModel)
@@ -23,7 +21,8 @@ protocol SongService: class {
     func addCurrentSongImageToFavorites(songImageModel: SongImageModel)
     func deleteSongImageFromFavorites(songModel: SongModel)
     func resetFavourites()
-    func getIDsFromUserDefaults() -> [String]
-    func setIDsToUserDefaults(ids: [String])
+    func addIDToUserDefaults(id: (songName: String,number: String))
+    func deleteIDFromUserDefaults(songName: String)
+    func getIDsFromUserDefaults() -> [String:String]
 
 }

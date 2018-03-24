@@ -79,4 +79,13 @@ extension String{
             completion(nil)
         }
     }
+    
+    func getSongId() -> String{
+        
+        let components = self.components(separatedBy: ".0")
+        if components.count > 1{
+            return components.first!
+        }
+        return ""
+    }
 }

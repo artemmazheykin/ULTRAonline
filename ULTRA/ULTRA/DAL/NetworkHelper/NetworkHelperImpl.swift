@@ -30,13 +30,12 @@ class NetworkHelperImpl: NetworkHelper{
             
             URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
                 guard error == nil, let data = data else {
-                    print("!!!!error")
+                    print("!!!!error \(error.debugDescription)")
                     pup.fulfill(nil)
                     return
                 }
 
                 let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
-                
                 guard let parsedResult = json as? [String: Any],
                     let results = parsedResult[Keys.results] as? Array<[String: Any]>,
                     let result = results.first,
@@ -106,7 +105,7 @@ class NetworkHelperImpl: NetworkHelper{
                         pup.fulfill(nil)
                         return
                 }
-                //                print("result = \(result)")
+//                                print("result = \(result)")
                 let artistViewUrl = URL(string: artistView)
                 pup.fulfill(artistViewUrl)
             }).resume()
@@ -123,6 +122,7 @@ class NetworkHelperImpl: NetworkHelper{
             
             URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
                 guard error == nil, let data = data else {
+                    print("error.debugDescription = \(error.debugDescription)")
                     pup.fulfill(nil)
                     return
                 }
@@ -131,12 +131,15 @@ class NetworkHelperImpl: NetworkHelper{
                 guard let parsedResult = json as? [String: Any],
                     let results = parsedResult[Keys.results] as? Array<[String: Any]>,
                     let result = results.first,
-                    let trackId = result[Keys.trackId] as? String else {
+                    let trackId = result[Keys.trackId] as? Double else {
                         pup.fulfill(nil)
                         return
                 }
-                //                print("result = \(result)")
-                pup.fulfill(trackId)
+                print("result = \(result)")
+                let idRaw = String(trackId)
+                let id = idRaw.getSongId()
+                
+                pup.fulfill(id)
             }).resume()
         }
     }

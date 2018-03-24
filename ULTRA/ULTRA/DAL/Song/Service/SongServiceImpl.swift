@@ -137,24 +137,27 @@ class SongServiceImpl: SongService {
         
         repository.setFavoriteArtistsToUserDefaults(artists: artists)
     }
-    
-    func getFavoriteImagesFromUserDefaults() -> [String:SongImageModel]{
-        return repository.getFavoriteImagesFromUserDefaults()
-    }
-    func setFavoriteImagesToUserDefaults(images: [String:SongImageModel]){
-        repository.setFavoriteImagesToUserDefaults(images: images)
-    }
-        
+            
     func resetFavourites(){
         repository.resetFavourites()
     }
     
-    func getIDsFromUserDefaults() -> [String]{
-        <#code#>
+    func addIDToUserDefaults(id: (songName: String,number: String)){
+        
+        var ids = repository.getIDsFromUserDefaults()
+        ids[id.songName] = id.number
+        repository.setIDsToUserDefaults(ids: ids)
     }
     
-    func setIDsToUserDefaults(ids: [String]) {
-        <#code#>
+    func deleteIDFromUserDefaults(songName: String){
+        
+        var ids = repository.getIDsFromUserDefaults()
+        ids[songName] = nil
+        repository.setIDsToUserDefaults(ids: ids)
+    }
+    
+    func getIDsFromUserDefaults() -> [String : String] {
+        return repository.getIDsFromUserDefaults()
     }
 
 }

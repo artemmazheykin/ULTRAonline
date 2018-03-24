@@ -136,13 +136,8 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
     func updateStartStopButton(){
         if radioPlayer.timeControlStatus().rawValue == 0{
             startStopRadio.setImage(#imageLiteral(resourceName: "play-button-circled-100"), for: .normal)
-            print("radioPlayer.timeControlStatus().rawValue = \(radioPlayer.timeControlStatus().rawValue)")
-//            radioPlayer.pause()
-//            radioPlayer.isPlaying = false
         }else{
             startStopRadio.setImage(#imageLiteral(resourceName: "pause-button-100"), for: .normal)
-//            radioPlayer.play()
-//            radioPlayer.isPlaying = true
         }
     }
     

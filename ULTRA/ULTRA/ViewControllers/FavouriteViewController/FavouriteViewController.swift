@@ -23,16 +23,14 @@ class FavouriteViewController: UIViewController{
     var favoriteSongs:[SongModel] = []
     var favoriteSongImages:[String:UIImage] = [:]
     var selectedIndexPath: IndexPath?
-    let applicationMusicPlayer = MPMusicPlayerController.applicationMusicPlayer
+//    let applicationMusicPlayer = MPMusicPlayerController.applicationMusicPlayer
+    let applicationMusicPlayer = MPMusicPlayerController.systemMusicPlayer
+
+    var trackIds: [String:String] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         updateFavoriteSongs()
-        for song in favoriteSongs{
-            _ = networkHelper.getTrackId(metadata: song.artistAndSongName).done{trackId in
-                self.trackIds[song.artistAndSongName] = trackId
-            }
-        }
         
         let mainVc = self.navigationController?.viewControllers[0] as! MainScreenController
         mainVc.delegate = self
@@ -41,7 +39,6 @@ class FavouriteViewController: UIViewController{
         reloadSection()
         self.navigationController?.navigationBar.tintColor = UIColor.white
         print("favoriteSongs.count = \(favoriteSongs.count)")
-        applicationMusicPlayer.setQueue(with: <#T##[String]#>)
         
         // Do any additional setup after loading the view.
     }
@@ -54,23 +51,55 @@ class FavouriteViewController: UIViewController{
         }
 
         favoriteSongImages = DataSingleton.shared.images
-
+        trackIds = DataSingleton.shared.trackIds
+        print("trackIDs = \(trackIds)")
         favoriteSongs = unsortedFavoriteSongs.sorted { (song1, song2) -> Bool in
             return song1.dateOfCreation > song2.dateOfCreation
         }
     }
     
+    @objc func didTappedPlayButton(sender: UIButton){
+        
+        let song = favoriteSongs[sender.tag]
+        if let id = trackIds[song.artistAndSongName]{
+            let player = MagicPlayer.shared
+            player.stop()
+            
+            let audiosession = AVAudioSession.sharedInstance()
+            do{
+                try audiosession.setActive(false)
+            }
+            catch{
+                print("errorrrr!!!!!")
+            }
+            print(id)
+//            DispatchQueue.global(qos: .background).async {
+                self.applicationMusicPlayer.setQueue(with: [id])
+                self.applicationMusicPlayer.play()
+//            }
+        }
+//        applicationMusicPlayer.item
+//        MPMediaPlayback
+
+    }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//
-//        print("!!!!!!!!!!!!!!!!!!!!!!!!!")
-//        if favoriteSongs.count != DataSingleton.shared.images.count{
-//            favoritesTable.reloadData()
-//            
-//        }
-//    }
-    
+    @objc private func handleInterruption(notification: Notification) {
+        switch applicationMusicPlayer.playbackState {
+        case .playing:
+            print("play")
+        case .paused, .stopped:
+            print("stop")
+
+        default:
+            break
+        }
+        
+    }
+    private func setupNotifications() {
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(handleInterruption), name: .MPMusicPlayerControllerPlaybackStateDidChange, object: nil)
+    }
+
     @objc func didTappedAppleMusicButton(){
         
         if selectedIndexPath != nil{
@@ -172,7 +201,13 @@ extension FavouriteViewController: UITableViewDelegate{
             tableView.beginUpdates()
             tableView.deleteRows(at: [indexPath], with: .automatic)
             tableView.endUpdates()
-
+        
+            for (i,_) in favoriteSongs.enumerated(){
+                if let cell = favoritesTable.cellForRow(at: IndexPath(row: i, section: 0)) as? FavoriteSongCell{
+                    cell.playButton.tag = i
+                }
+            }
+            
             reloadSection()
         }
     }
@@ -186,13 +221,13 @@ extension FavouriteViewController: UITableViewDelegate{
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 0.25
         imageView.layer.borderColor = UIColor(red: 123/255, green: 123/255, blue: 123/255, alpha: 1.0).cgColor
-
+        
         headerView.addSubview(imageView)
         headerView.backgroundColor = .white
         let view = UIView(frame: CGRect(x: 0, y: headerView.frame.height, width: headerView.frame.width, height: 0.5))
         view.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 222/255, alpha: 1.0)
         headerView.addSubview(view)
-
+        
         if indexPath == nil{
             let infoLabel = UILabel(frame: CGRect(x: 150, y: 10, width: Int(headerView.frame.width) - 160, height: 130))
             infoLabel.text = "Здесь можно посмотреть понравившиеся треки и найти исполнителя в Apple Music"
@@ -265,7 +300,7 @@ extension FavouriteViewController: UITableViewDelegate{
             selectedIndexPath = indexPath
             reloadSection(indexPath: selectedIndexPath)
         }        
-
+        
     }
     
 }
@@ -316,7 +351,17 @@ extension FavouriteViewController: UITableViewDataSource{
                     }
                 }
         }
-        
+        cell.playButton.tag = indexPath.row
+        cell.playButton.addTarget(self, action: #selector(didTappedPlayButton(sender:)), for: .touchUpInside)
+        _ = networkHelper.getTrackId(metadata: favoriteSongs[indexPath.row].artistAndSongName).done{
+            id in
+            if id == nil{
+                cell.playButton.isHidden = true
+            }
+            else{
+                cell.playButton.isHidden = false
+            }
+        }
         return cell
         
     }
@@ -324,6 +369,7 @@ extension FavouriteViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 55
     }
+    
 }
 
 extension UIView{

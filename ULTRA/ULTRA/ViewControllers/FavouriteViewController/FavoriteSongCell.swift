@@ -13,6 +13,7 @@ class FavoriteSongCell: UITableViewCell {
     @IBOutlet weak var artistImage: UIImageView!
     @IBOutlet weak var songNameLabel: UILabel!
     @IBOutlet weak var artistNameLabel: UILabel!
+    @IBOutlet weak var playButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -23,6 +24,10 @@ class FavoriteSongCell: UITableViewCell {
         artistImage.contentMode = .scaleAspectFit
         artistImage.layer.borderWidth = 0.25
         artistImage.layer.borderColor = UIColor(red: 123/255, green: 123/255, blue: 123/255, alpha: 1.0).cgColor
+        let templateImage = #imageLiteral(resourceName: "play-button-circled-100").withRenderingMode(.alwaysTemplate)
+        playButton.setImage(templateImage, for: .normal)
+        playButton.imageView?.tintColor = UIColor.red
+        
         // Initialization code
     }
 

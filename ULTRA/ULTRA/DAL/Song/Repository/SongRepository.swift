@@ -15,5 +15,7 @@ protocol SongRepository: class {
     func setFavoriteArtistsToUserDefaults(artists: [ArtistModel])
     func getFavoriteImagesFromUserDefaults() -> [String:SongImageModel]
     func setFavoriteImagesToUserDefaults(images: [String:SongImageModel])
+    func getIDsFromUserDefaults() -> [String:String]
+    func setIDsToUserDefaults(ids: [String:String])
     func resetFavourites()
 }
