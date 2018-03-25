@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 import Kingfisher
+import StoreKit
+import MediaPlayer
 
 @objc protocol DataSingletonDelegate: class {
     
@@ -34,6 +36,16 @@ class DataSingleton{
         }
     }
     
+    var sortedSongsArray: [SongModel]{
+        var unsortedSongs: [SongModel] = []
+        
+        for song in songs{
+            unsortedSongs.append(song.value)
+        }
+        let sortedSongs = unsortedSongs.sorted { $0.dateOfCreation > $1.dateOfCreation }
+        return sortedSongs
+    }
+    
     var last10SongsStrings: [String] = []
     
     var last10Songs:[SongModel] = []{
@@ -43,7 +55,23 @@ class DataSingleton{
     }
     
     var images: [String:UIImage] = [:]
-    var trackIds:[String:String] = [:]
+    var trackIds:[String:String] = [:]{
+        didSet{
+            let player = MagicPlayer.shared
+            player.favoriteSongIDsDescriptor = MPMusicPlayerStoreQueueDescriptor(storeIDs: arrayIDs)
+        }
+    }
+    var arrayIDs: [String]{
+        var ids: [String] = []
+        for song in sortedSongsArray{
+            if let id = trackIds[song.artistAndSongName]{
+                ids.append(id)
+            }
+        }
+        print("ids = \(ids)")
+        return ids
+    }
+
 
     var networkHelper = NetworkHelperImpl()
     
@@ -57,6 +85,8 @@ class DataSingleton{
         songService = songServiceImpl
         self.songs = songService.getFavoriteSongsFromUserDefaults()
         trackIds = songService.getIDsFromUserDefaults()
+        let player = MagicPlayer.shared
+        player.favoriteSongIDsDescriptor = MPMusicPlayerStoreQueueDescriptor(storeIDs: arrayIDs)
         updateLast10SongsEvery10Seconds()
     }
     

@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class SongCell: UITableViewCell {
 
     @IBOutlet weak var songNameLabel: UILabel!

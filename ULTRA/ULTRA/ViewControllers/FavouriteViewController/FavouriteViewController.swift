@@ -23,21 +23,6 @@ class FavouriteViewController: UIViewController{
     var favoriteSongs:[SongModel] = []
     var favoriteSongImages:[String:UIImage] = [:]
     var selectedIndexPath: IndexPath?
-//    let applicationMusicPlayer = MPMusicPlayerController.applicationMusicPlayer
-    let applicationMusicPlayer = MPMusicPlayerController.systemMusicPlayer
-
-    var trackIds: [String:String] = [:]
-    
-    var arrayIDs: [String]{
-        var ids: [String] = []
-        for song in favoriteSongs{
-            if let id = trackIds[song.artistAndSongName]{
-                ids.append(id)
-            }
-        }
-        print("ids = \(ids)")
-        return ids
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,8 +47,6 @@ class FavouriteViewController: UIViewController{
         }
 
         favoriteSongImages = DataSingleton.shared.images
-        trackIds = DataSingleton.shared.trackIds
-        print("trackIDs = \(trackIds)")
         favoriteSongs = unsortedFavoriteSongs.sorted { (song1, song2) -> Bool in
             return song1.dateOfCreation > song2.dateOfCreation
         }
@@ -72,51 +55,12 @@ class FavouriteViewController: UIViewController{
     @objc func didTappedPlayButton(sender: UIButton){
         
         let song = favoriteSongs[sender.tag]
-        if let id = trackIds[song.artistAndSongName]{
-            print(id)
+        if let id = DataSingleton.shared.trackIds[song.artistAndSongName]{
             let player = MagicPlayer.shared
-            player.stop()
-            
-            let audiosession = AVAudioSession.sharedInstance()
-            do{
-                try audiosession.setActive(false)
-            }
-            catch{
-                print("errorrrr!!!!!")
-            }
-            print(id)
-            DispatchQueue.global(qos: .background).async {
-                
-                let songs = MPMusicPlayerStoreQueueDescriptor(storeIDs: self.arrayIDs)
-                songs.startItemID = id
-                self.applicationMusicPlayer.repeatMode = .all
-                
-                self.applicationMusicPlayer.setQueue(with: songs)
-                self.applicationMusicPlayer.play()
-//                let playerVC = PandoraPlayer.configure(withMPMediaItems: [self.applicationMusicPlayer.nowPlayingItem!])
-//                self.navigationController?.present(playerVC, animated: true, completion: nil)
-
-            }
+            player.systemPlayerPlay(id: id)
         }
     }
     
-    @objc private func handleInterruption(notification: Notification) {
-        switch applicationMusicPlayer.playbackState {
-        case .playing:
-            print("play")
-        case .paused, .stopped:
-            print("stop")
-
-        default:
-            break
-        }
-        
-    }
-    private func setupNotifications() {
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(handleInterruption), name: .MPMusicPlayerControllerPlaybackStateDidChange, object: nil)
-    }
-
     @objc func didTappedAppleMusicButton(){
         
         if selectedIndexPath != nil{
@@ -316,10 +260,10 @@ extension FavouriteViewController: UITableViewDelegate{
         }else{
             selectedIndexPath = indexPath
             reloadSection(indexPath: selectedIndexPath)
-//            _ = networkHelper.getTrackId(metadata: favoriteSongs[indexPath.row].artistAndSongName).done{
-//                id in
-//                print(id)
-//            }
+            _ = networkHelper.getTrackId(metadata: favoriteSongs[indexPath.row].artistAndSongName).done{
+                id in
+                print(id)
+            }
         }
         
     }
@@ -380,6 +324,10 @@ extension FavouriteViewController: UITableViewDataSource{
                 cell.playButton.isHidden = true
             }
             else{
+                if DataSingleton.shared.trackIds[self.favoriteSongs[indexPath.row].artistAndSongName] == nil{
+                    self.songService.addIDToUserDefaults(id: (songName: self.favoriteSongs[indexPath.row].artistAndSongName, number: id!))
+                    DataSingleton.shared.trackIds[self.favoriteSongs[indexPath.row].artistAndSongName] = id
+                }
                 cell.playButton.isHidden = false
             }
         }
@@ -440,8 +388,6 @@ extension FavouriteViewController: MainScreenControllerDelegate{
         case true:
             favoriteSongs.insert(currentSong, at: 0)
             favoritesTable.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-            trackIds[currentSong.artistAndSongName] = DataSingleton.shared.trackIds[currentSong.artistAndSongName]
-            print("trackIds[currentSong.artistAndSongName] = \(trackIds[currentSong.artistAndSongName])")
         case false:
             for (i,song) in favoriteSongs.enumerated(){
                 var index:Int!
@@ -452,7 +398,6 @@ extension FavouriteViewController: MainScreenControllerDelegate{
                     favoriteSongs.remove(at: index)
                     favoritesTable.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
                 }
-                trackIds[currentSong.artistAndSongName] = nil
             }
         }
     }

@@ -8,6 +8,9 @@
 
 import UIKit
 import AVFoundation
+import StoreKit
+import MediaPlayer
+
 
 protocol MagicPlayerDelegate {
     func playPauseStopDidTapped()
@@ -16,7 +19,8 @@ protocol MagicPlayerDelegate {
 class MagicPlayer {
     
     var asset: AVAsset!
-    private var player: AVPlayer!
+    private var avPlayer: AVPlayer!
+    private var systemPlayer = MPMusicPlayerController.systemMusicPlayer
     private var playerItem: AVPlayerItem?
     open var radioURL: URL{
         didSet{
@@ -39,7 +43,8 @@ class MagicPlayer {
     
     open var isPlaying = false
     var delegate: MagicPlayerDelegate?
-
+    var favoriteSongIDsDescriptor: MPMusicPlayerStoreQueueDescriptor!
+    
     open static let shared = MagicPlayer()
     
     init() {
@@ -72,23 +77,46 @@ class MagicPlayer {
         if isAutoPlay{
             play()
         }
+        systemPlayer.repeatMode = .all
+        systemPlayer.beginGeneratingPlaybackNotifications()
 
     }
     
+    deinit {
+        systemPlayer.endGeneratingPlaybackNotifications()
+    }
+    
+    open func systemPlayerPlay(id: String?){
+        if let id = id{
+            stop()
+            let audiosession = AVAudioSession.sharedInstance()
+            do{
+                try audiosession.setActive(false)
+            }
+            catch{
+                print("errorrrr!!!!!")
+            }
+            favoriteSongIDsDescriptor.startItemID = id
+            
+            systemPlayer.setQueue(with: favoriteSongIDsDescriptor)
+            systemPlayer.play()
+        }
+    }
+    
     open func timeControlStatus() -> AVPlayerTimeControlStatus{
-        return player.timeControlStatus
+        return avPlayer.timeControlStatus
     }
     open func play() {
         
         
-        player?.play()
+        avPlayer?.play()
         DispatchQueue.global(qos: .background).async {
             
             
             usleep(500000)
-            if self.player?.timeControlStatus.rawValue == 1 || self.player?.timeControlStatus.rawValue == 0{
+            if self.avPlayer?.timeControlStatus.rawValue == 1 || self.avPlayer?.timeControlStatus.rawValue == 0{
                 self.setupPlayer(with: self.asset)
-                self.player?.play()
+                self.avPlayer?.play()
             }
         }
         isPlaying = true
@@ -96,35 +124,51 @@ class MagicPlayer {
     }
     
     open func pause() {
-        guard let player = player else { return }
-        player.pause()
+        guard let avPlayer = avPlayer else { return }
+        avPlayer.pause()
         isPlaying = false
         delegate?.playPauseStopDidTapped()
     }
 
     open func stop() {
-        guard let player = player else { return }
-        player.pause()
-        player.replaceCurrentItem(with: nil)
+        guard let avPlayer = avPlayer else { return }
+        avPlayer.pause()
+        avPlayer.replaceCurrentItem(with: nil)
         isPlaying = false
         delegate?.playPauseStopDidTapped()
 
     }
 
     private func setupPlayer(with asset: AVAsset) {
-        if player == nil {
-            player = AVPlayer()
+        if avPlayer == nil {
+            avPlayer = AVPlayer()
         }
         
         playerItem = AVPlayerItem(asset: asset)
-        player?.replaceCurrentItem(with: playerItem)
+        avPlayer?.replaceCurrentItem(with: playerItem)
         
     }    
     
     private func setupNotifications() {
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(handleInterruption), name: .AVAudioSessionInterruption, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(handlePlaybackState), name: .MPMusicPlayerControllerPlaybackStateDidChange, object: nil)
+
     }
+    
+    @objc private func handlePlaybackState(notification: Notification) {
+        switch systemPlayer.playbackState {
+        case .playing:
+            print("play")
+        case .paused, .stopped:
+            print("stop")
+            
+        default:
+            break
+        }
+        
+    }
+
 
     @objc private func handleInterruption(notification: Notification) {
         guard let userInfo = notification.userInfo,
