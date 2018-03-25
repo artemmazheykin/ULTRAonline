@@ -133,6 +133,7 @@ class DataSingleton{
         
         _ = networkHelper.getTrackId(metadata: songModel.artistAndSongName).done{trackId in
             self.trackIds[songModel.artistAndSongName] = trackId
+            print("self.trackIds[songModel.artistAndSongName] = \(self.trackIds[songModel.artistAndSongName])")
             if let id = trackId{
                 self.songService.addIDToUserDefaults(id: (songName: songModel.artistAndSongName, number: id))
             }

@@ -76,7 +76,7 @@ class NetworkHelperImpl: NetworkHelper{
                         return
                 }
                 
-                print("result = \(result)")
+//                print("result = \(result)")
                 let collectionViewUrl = URL(string: collectionView)
                 pup.fulfill(collectionViewUrl)
             }).resume()
@@ -131,6 +131,8 @@ class NetworkHelperImpl: NetworkHelper{
                 guard let parsedResult = json as? [String: Any],
                     let results = parsedResult[Keys.results] as? Array<[String: Any]>,
                     let result = results.first,
+                    let isStreamable = result[Keys.isStreamable] as? Int,
+                    isStreamable == 1,
                     let trackId = result[Keys.trackId] as? Double else {
                         pup.fulfill(nil)
                         return
@@ -222,6 +224,7 @@ class NetworkHelperImpl: NetworkHelper{
         static let collectionViewUrl = "collectionViewUrl"
         static let artistViewUrl = "artistViewUrl"
         static let trackId = "trackId"
+        static let isStreamable = "isStreamable"
     }
     
     private struct Values {

@@ -28,6 +28,17 @@ class FavouriteViewController: UIViewController{
 
     var trackIds: [String:String] = [:]
     
+    var arrayIDs: [String]{
+        var ids: [String] = []
+        for song in favoriteSongs{
+            if let id = trackIds[song.artistAndSongName]{
+                ids.append(id)
+            }
+        }
+        print("ids = \(ids)")
+        return ids
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         updateFavoriteSongs()
@@ -62,6 +73,7 @@ class FavouriteViewController: UIViewController{
         
         let song = favoriteSongs[sender.tag]
         if let id = trackIds[song.artistAndSongName]{
+            print(id)
             let player = MagicPlayer.shared
             player.stop()
             
@@ -73,14 +85,19 @@ class FavouriteViewController: UIViewController{
                 print("errorrrr!!!!!")
             }
             print(id)
-//            DispatchQueue.global(qos: .background).async {
-                self.applicationMusicPlayer.setQueue(with: [id])
+            DispatchQueue.global(qos: .background).async {
+                
+                let songs = MPMusicPlayerStoreQueueDescriptor(storeIDs: self.arrayIDs)
+                songs.startItemID = id
+                self.applicationMusicPlayer.repeatMode = .all
+                
+                self.applicationMusicPlayer.setQueue(with: songs)
                 self.applicationMusicPlayer.play()
-//            }
-        }
-//        applicationMusicPlayer.item
-//        MPMediaPlayback
+//                let playerVC = PandoraPlayer.configure(withMPMediaItems: [self.applicationMusicPlayer.nowPlayingItem!])
+//                self.navigationController?.present(playerVC, animated: true, completion: nil)
 
+            }
+        }
     }
     
     @objc private func handleInterruption(notification: Notification) {
@@ -299,7 +316,11 @@ extension FavouriteViewController: UITableViewDelegate{
         }else{
             selectedIndexPath = indexPath
             reloadSection(indexPath: selectedIndexPath)
-        }        
+//            _ = networkHelper.getTrackId(metadata: favoriteSongs[indexPath.row].artistAndSongName).done{
+//                id in
+//                print(id)
+//            }
+        }
         
     }
     
@@ -419,6 +440,8 @@ extension FavouriteViewController: MainScreenControllerDelegate{
         case true:
             favoriteSongs.insert(currentSong, at: 0)
             favoritesTable.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+            trackIds[currentSong.artistAndSongName] = DataSingleton.shared.trackIds[currentSong.artistAndSongName]
+            print("trackIds[currentSong.artistAndSongName] = \(trackIds[currentSong.artistAndSongName])")
         case false:
             for (i,song) in favoriteSongs.enumerated(){
                 var index:Int!
@@ -429,6 +452,7 @@ extension FavouriteViewController: MainScreenControllerDelegate{
                     favoriteSongs.remove(at: index)
                     favoritesTable.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
                 }
+                trackIds[currentSong.artistAndSongName] = nil
             }
         }
     }

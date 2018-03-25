@@ -1,5 +1,5 @@
 PODS:
-  - Kingfisher (4.6.3)
+  - Kingfisher (4.6.4)
   - PromiseKit (6.2.1):
     - PromiseKit/CorePromise (= 6.2.1)
     - PromiseKit/Foundation (= 6.2.1)
@@ -15,9 +15,9 @@ DEPENDENCIES:
   - PromiseKit
 
 SPEC CHECKSUMS:
-  Kingfisher: 98e6d5b5e807645743e8ed5ececd25d688d38452
+  Kingfisher: 68498a706e46c2a050b0c9572f100e5db407f6e0
   PromiseKit: edaca6f0a7ed73b08c287600537d13867a7fabc7
 
-PODFILE CHECKSUM: e042b7d465d612881db9e1c0b5da7a056b65907f
+PODFILE CHECKSUM: d1d93d86f5936e6a73c47f8035e960e011f2e3a4
 
 COCOAPODS: 1.4.0
