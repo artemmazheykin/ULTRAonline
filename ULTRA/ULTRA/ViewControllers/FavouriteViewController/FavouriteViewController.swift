@@ -12,7 +12,7 @@ import StoreKit
 import MediaPlayer
 
 class FavouriteViewController: UIViewController{
-
+    
     @IBOutlet weak var favoritesTable: UITableView!
     
     @IBOutlet weak var headerView: UIView!
@@ -41,11 +41,11 @@ class FavouriteViewController: UIViewController{
     
     func updateFavoriteSongs(){
         var unsortedFavoriteSongs:[SongModel] = []
-
+        
         for songDic in DataSingleton.shared.songs{
             unsortedFavoriteSongs.append(songDic.value)
         }
-
+        
         favoriteSongImages = DataSingleton.shared.images
         favoriteSongs = unsortedFavoriteSongs.sorted { (song1, song2) -> Bool in
             return song1.dateOfCreation > song2.dateOfCreation
@@ -88,15 +88,15 @@ class FavouriteViewController: UIViewController{
             }
         }
     }
-
-
+    
+    
     
     @objc func didTappedCopyNameButton(){
         
         let cell = favoriteSongs[selectedIndexPath!.row]
         UIPasteboard.general.string = cell.artistAndSongName
         let copyView = UILabel()
-
+        
         copyView.text = "Название трека скопировано в буфер обмена"
         copyView.numberOfLines = 2
         copyView.adjustsFontSizeToFitWidth = true
@@ -118,26 +118,26 @@ class FavouriteViewController: UIViewController{
             sleep(1)
             DispatchQueue.main.async {
                 copyView.fadeOut()
-//                copyView.removeFromSuperview()
+                //                copyView.removeFromSuperview()
             }
         }
         
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
      */
     
 }
@@ -162,7 +162,7 @@ extension FavouriteViewController: UITableViewDelegate{
             tableView.beginUpdates()
             tableView.deleteRows(at: [indexPath], with: .automatic)
             tableView.endUpdates()
-        
+            
             for (i,_) in favoriteSongs.enumerated(){
                 if let cell = favoritesTable.cellForRow(at: IndexPath(row: i, section: 0)) as? FavoriteSongCell{
                     cell.playButton.tag = i
@@ -208,13 +208,13 @@ extension FavouriteViewController: UITableViewDelegate{
             headerView.addSubview(songNameLabel)
             songNameLabel.translatesAutoresizingMaskIntoConstraints = false
             artistNameButton.translatesAutoresizingMaskIntoConstraints = false
-
+            
             songNameLabel.font = UIFont.boldSystemFont(ofSize: 20)
             artistNameButton.setTitle(favoriteSongs[indexPath!.row].artistName, for: .normal)
             artistNameButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
             artistNameButton.setTitleColor(cell.artistNameLabel.textColor, for: .normal)
             artistNameButton.setTitleColor(UIColor.red, for: .highlighted)
-
+            
             songNameLabel.leftAnchor.constraint(equalTo: imageView.rightAnchor, constant: 10).isActive = true
             
             songNameLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: +10).isActive = true
@@ -225,7 +225,7 @@ extension FavouriteViewController: UITableViewDelegate{
             songNameLabel.text = favoriteSongs[indexPath!.row].songName
             songNameLabel.numberOfLines = 2
             songNameLabel.adjustsFontSizeToFitWidth = true
-
+            
             imageView.image = cell.artistImage.image
             imageView.backgroundColor = .black
             imageView.contentMode = .scaleAspectFit
@@ -249,7 +249,7 @@ extension FavouriteViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
         return "Cтереть"
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         
@@ -274,7 +274,7 @@ extension FavouriteViewController: UITableViewDataSource{
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
-
+        
     }
     
     
@@ -283,39 +283,36 @@ extension FavouriteViewController: UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        
         let cell = favoritesTable.dequeueReusableCell(withIdentifier: "FavoriteSongCell") as! FavoriteSongCell
         let song = favoriteSongs[indexPath.row]
         
         cell.songNameLabel.text = song.songName
         cell.artistNameLabel.text = song.artistName
-        cell.artistImage.image = #imageLiteral(resourceName: "ultra_logo_black")
+        if let image = self.favoriteSongImages[song.artistAndSongName]{
+            cell.artistImage.image = image
+        }else{
             DispatchQueue.global(qos: .background).async {
-                if let image = self.favoriteSongImages[song.artistAndSongName]{
-                    DispatchQueue.main.async {
-                        cell.artistImage.image = image
-                    }
-                }else{
-                    if DataSingleton.shared.isDownloadingMediaContentPermited{
-                        
-                        _ = self.networkHelper.getUrlImage(metadata: song.artistAndSongName, size: 300).done{urlOpt in
-                            if let url = urlOpt{
-                                cell.artistImage.kf.setImage(with: url, placeholder: #imageLiteral(resourceName: "ultra_logo_black"), completionHandler: { (imageOpt, _, _, _) in
-                                    if let image = imageOpt{
-                                        DataSingleton.shared.images[song.artistAndSongName] = image
-                                        ImageCache.default.store(image, forKey: song.artistAndSongName)
-                                    }else{
-                                        cell.artistImage.image = #imageLiteral(resourceName: "ultra_logo_black")
-                                    }
-                                })
-                            }
-                            else{
-                                cell.artistImage.image = #imageLiteral(resourceName: "ultra_logo_black")
-                            }
+                if DataSingleton.shared.isDownloadingMediaContentPermited{
+                    _ = self.networkHelper.getUrlImage(metadata: song.artistAndSongName, size: 300).done{urlOpt in
+                        if let url = urlOpt{
+                            cell.artistImage.kf.setImage(with: url, placeholder: #imageLiteral(resourceName: "ultra_logo_black"), completionHandler: { (imageOpt, _, _, _) in
+                                if let image = imageOpt{
+                                    DataSingleton.shared.images[song.artistAndSongName] = image
+                                    ImageCache.default.store(image, forKey: song.artistAndSongName)
+                                }else{
+                                    cell.artistImage.image = #imageLiteral(resourceName: "ultra_logo_black")
+                                }
+                            })
+                        }
+                        else{
+                            cell.artistImage.image = #imageLiteral(resourceName: "ultra_logo_black")
                         }
                     }
                 }
+            }
         }
+        
         cell.playButton.tag = indexPath.row
         cell.playButton.addTarget(self, action: #selector(didTappedPlayButton(sender:)), for: .touchUpInside)
         _ = networkHelper.getTrackId(metadata: favoriteSongs[indexPath.row].artistAndSongName).done{
@@ -367,7 +364,7 @@ extension UIView{
         copyLabel.text = "Название трека скопировано в буфер обмена"
         copyLabel.numberOfLines = 2
         copyLabel.adjustsFontSizeToFitWidth = true
-
+        
         var constraints:[NSLayoutConstraint] = []
         
         constraints.append(copyLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0))
@@ -376,14 +373,14 @@ extension UIView{
         constraints.append(copyLabel.heightAnchor.constraint(equalToConstant: 50))
         self.addConstraints(constraints)
         NSLayoutConstraint.activate(constraints)
-
+        
     }
 }
 
 extension FavouriteViewController: MainScreenControllerDelegate{
     
     func likeOrDislikeDidTapped(currentSong: SongModel) {
-    
+        
         switch currentSong.isFavorite{
         case true:
             favoriteSongs.insert(currentSong, at: 0)
@@ -402,6 +399,6 @@ extension FavouriteViewController: MainScreenControllerDelegate{
         }
     }
 }
-    
-    
+
+
 
