@@ -72,6 +72,7 @@ class DataSingleton{
         return ids
     }
 
+    var bottomPlayeView: BottomPlayerView!
 
     var networkHelper = NetworkHelperImpl()
     
@@ -88,6 +89,8 @@ class DataSingleton{
         let player = MagicPlayer.shared
         player.favoriteSongIDsDescriptor = MPMusicPlayerStoreQueueDescriptor(storeIDs: arrayIDs)
         updateLast10SongsEvery10Seconds()
+        bottomPlayeView = BottomPlayerView()
+
     }
     
     func updateLast10SongsEvery10Seconds(){

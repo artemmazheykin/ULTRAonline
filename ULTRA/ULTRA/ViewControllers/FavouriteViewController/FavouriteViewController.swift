@@ -37,6 +37,7 @@ class FavouriteViewController: UIViewController{
         print("favoriteSongs.count = \(favoriteSongs.count)")
         
         // Do any additional setup after loading the view.
+        
     }
     
     func updateFavoriteSongs(){

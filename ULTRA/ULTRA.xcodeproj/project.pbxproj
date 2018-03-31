@@ -43,6 +43,7 @@
 		EDA493522053293600A27141 /* SongService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA493512053293600A27141 /* SongService.swift */; };
 		EDA493542053299100A27141 /* SongServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA493532053299100A27141 /* SongServiceImpl.swift */; };
 		EDA6474A20691BF600C33D05 /* BottomPlayer.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDA6474920691BF600C33D05 /* BottomPlayer.xib */; };
+		EDA6474C206D553200C33D05 /* BottomPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA6474B206D553200C33D05 /* BottomPlayerView.swift */; };
 		EDCA1F59205991B100FB1059 /* DataSingleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA1F58205991B100FB1059 /* DataSingleton.swift */; };
 		EDCDE9482051F1D30085803A /* SongModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCDE9472051F1D30085803A /* SongModel.swift */; };
 		EDD32EF02052985E008B5644 /* SongRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD32EEF2052985E008B5644 /* SongRepository.swift */; };
@@ -105,6 +106,7 @@
 		EDA493512053293600A27141 /* SongService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongService.swift; sourceTree = "<group>"; };
 		EDA493532053299100A27141 /* SongServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongServiceImpl.swift; sourceTree = "<group>"; };
 		EDA6474920691BF600C33D05 /* BottomPlayer.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomPlayer.xib; sourceTree = "<group>"; };
+		EDA6474B206D553200C33D05 /* BottomPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomPlayerView.swift; sourceTree = "<group>"; };
 		EDCA1F58205991B100FB1059 /* DataSingleton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSingleton.swift; sourceTree = "<group>"; };
 		EDCDE9472051F1D30085803A /* SongModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongModel.swift; sourceTree = "<group>"; };
 		EDD32EEF2052985E008B5644 /* SongRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongRepository.swift; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 			children = (
 				ED040B08205DC9CA00754D2E /* MagicPlayer.swift */,
 				EDA6474920691BF600C33D05 /* BottomPlayer.xib */,
+				EDA6474B206D553200C33D05 /* BottomPlayerView.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -591,6 +594,7 @@
 				ED9FEB6020558D6900E953CA /* NetworkHelper.swift in Sources */,
 				ED3AC4602034BF5E006770F1 /* MainScreenController.swift in Sources */,
 				ED9C898B2053419D002FDFC0 /* String.swift in Sources */,
+				EDA6474C206D553200C33D05 /* BottomPlayerView.swift in Sources */,
 				ED9FEB5D20547F8C00E953CA /* UILabel.swift in Sources */,
 				ED9FEB6220558E1E00E953CA /* NetworkHelperImpl.swift in Sources */,
 				ED751FF62051ECA600803BA2 /* NavigatorImpl.swift in Sources */,
