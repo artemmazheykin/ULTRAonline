@@ -316,17 +316,20 @@ extension FavouriteViewController: UITableViewDataSource{
         
         cell.playButton.tag = indexPath.row
         cell.playButton.addTarget(self, action: #selector(didTappedPlayButton(sender:)), for: .touchUpInside)
-        _ = networkHelper.getTrackId(metadata: favoriteSongs[indexPath.row].artistAndSongName).done{
-            id in
-            if id == nil{
-                cell.playButton.isHidden = true
-            }
-            else{
-                if DataSingleton.shared.trackIds[self.favoriteSongs[indexPath.row].artistAndSongName] == nil{
+        
+        if let _ = DataSingleton.shared.trackIds[self.favoriteSongs[indexPath.row].artistAndSongName]{
+            cell.playButton.isHidden = false
+        }else{
+            _ = networkHelper.getTrackId(metadata: favoriteSongs[indexPath.row].artistAndSongName).done{
+                id in
+                if id == nil{
+                    cell.playButton.isHidden = true
+                }
+                else{
                     self.songService.addIDToUserDefaults(id: (songName: self.favoriteSongs[indexPath.row].artistAndSongName, number: id!))
                     DataSingleton.shared.trackIds[self.favoriteSongs[indexPath.row].artistAndSongName] = id
+                    cell.playButton.isHidden = false
                 }
-                cell.playButton.isHidden = false
             }
         }
         return cell

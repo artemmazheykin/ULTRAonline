@@ -7,7 +7,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -139,23 +138,23 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HdL-3z-Rn7">
-                                                    <rect key="frame" x="20" y="-2" width="50" height="50"/>
+                                                    <rect key="frame" x="20" y="2.5" width="50" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="0HZ-vv-Yge"/>
                                                         <constraint firstAttribute="width" constant="50" id="tN6-L1-5W5"/>
                                                     </constraints>
                                                 </imageView>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="NtV-rK-jQD">
-                                                    <rect key="frame" x="85" y="1" width="235" height="45"/>
+                                                    <rect key="frame" x="85" y="10" width="235" height="36.5"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Song name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vf4-eT-z4P">
-                                                            <rect key="frame" x="0.0" y="0.0" width="235" height="29"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Song name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vf4-eT-z4P">
+                                                            <rect key="frame" x="0.0" y="0.0" width="235" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Artist name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wRb-WZ-DvW">
-                                                            <rect key="frame" x="0.0" y="29" width="235" height="16"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wRb-WZ-DvW">
+                                                            <rect key="frame" x="0.0" y="20.5" width="235" height="16"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                             <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                                             <nil key="highlightedColor"/>
@@ -170,7 +169,7 @@
                                                     </constraints>
                                                 </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zsJ-vK-wsc">
-                                                    <rect key="frame" x="325" y="6" width="40" height="40"/>
+                                                    <rect key="frame" x="325" y="7.5" width="40" height="40"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="40" id="Qrj-Ll-PHY"/>
                                                         <constraint firstAttribute="width" constant="40" id="cni-ry-EwV"/>
@@ -178,19 +177,15 @@
                                                 </button>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="gy9-xd-jOG" firstAttribute="leading" secondItem="NtV-rK-jQD" secondAttribute="leading" id="0YI-kY-74Z"/>
                                                 <constraint firstAttribute="trailing" secondItem="gy9-xd-jOG" secondAttribute="trailing" id="2XO-Wt-Qys"/>
                                                 <constraint firstItem="NtV-rK-jQD" firstAttribute="centerY" secondItem="R8d-gb-bgo" secondAttribute="centerY" id="7CM-ec-kCY"/>
-                                                <constraint firstItem="NtV-rK-jQD" firstAttribute="top" secondItem="R8d-gb-bgo" secondAttribute="topMargin" constant="-10" id="9aT-FB-7GN"/>
-                                                <constraint firstItem="gy9-xd-jOG" firstAttribute="leading" secondItem="NtV-rK-jQD" secondAttribute="leading" id="Big-Uw-tVV"/>
                                                 <constraint firstItem="HdL-3z-Rn7" firstAttribute="leading" secondItem="R8d-gb-bgo" secondAttribute="leading" constant="20" id="GOQ-7l-5HP"/>
                                                 <constraint firstItem="zsJ-vK-wsc" firstAttribute="centerY" secondItem="R8d-gb-bgo" secondAttribute="centerY" id="Gxt-vf-7Zq"/>
-                                                <constraint firstItem="gy9-xd-jOG" firstAttribute="top" secondItem="NtV-rK-jQD" secondAttribute="bottom" constant="8" symbolic="YES" id="HvE-oH-QKS"/>
                                                 <constraint firstAttribute="bottom" secondItem="gy9-xd-jOG" secondAttribute="bottom" id="Ljh-Yc-7aE"/>
                                                 <constraint firstItem="NtV-rK-jQD" firstAttribute="leading" secondItem="HdL-3z-Rn7" secondAttribute="trailing" constant="15" id="Ms2-O7-V2v"/>
                                                 <constraint firstItem="HdL-3z-Rn7" firstAttribute="centerY" secondItem="R8d-gb-bgo" secondAttribute="centerY" id="NMN-aM-Mui"/>
-                                                <constraint firstItem="NtV-rK-jQD" firstAttribute="centerY" secondItem="HdL-3z-Rn7" secondAttribute="centerY" id="Qng-fE-cYF"/>
                                                 <constraint firstAttribute="trailing" secondItem="NtV-rK-jQD" secondAttribute="trailing" constant="55" id="as0-Tl-e3j"/>
-                                                <constraint firstItem="gy9-xd-jOG" firstAttribute="top" secondItem="zsJ-vK-wsc" secondAttribute="bottom" constant="8" symbolic="YES" id="cWd-Pg-EOj"/>
                                                 <constraint firstItem="zsJ-vK-wsc" firstAttribute="leading" secondItem="NtV-rK-jQD" secondAttribute="trailing" constant="5" id="rLN-9R-vY1"/>
                                             </constraints>
                                         </tableViewCellContentView>
