@@ -97,13 +97,21 @@ class MagicPlayer {
                 print("errorrrr!!!!!")
             }
             favoriteSongIDsDescriptor.startItemID = id
+            
+            
             let item = systemPlayer.nowPlayingItem!
             let duration = item.playbackDuration
-            item.
+//            systemPlayer.currentPlaybackTime
+            
+            
             systemPlayer.setQueue(with: favoriteSongIDsDescriptor)
             systemPlayer.play()
         }
     }
+    
+    
+    
+    
     
     open func timeControlStatus() -> AVPlayerTimeControlStatus{
         return avPlayer.timeControlStatus

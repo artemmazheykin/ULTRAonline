@@ -56,7 +56,6 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
         }
     }
     
-    var bottomPlayeView: UIView!
     var currentSong: SongModel!{
         didSet{
             let commandCenter = MPRemoteCommandCenter.shared()
@@ -117,10 +116,11 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
         updateArtistAndSong()
         setupRemoteCommandCenter()
         
-        bottomPlayeView = BottomPlayerView()
-        bottomPlayeView.frame = CGRect(x: 0, y: view.frame.height - 80, width: view.frame.width, height: 80)
         
-        UIApplication.shared.keyWindow?.addSubview(bottomPlayeView)
+        if let bottomPlayeView = DataSingleton.shared.bottomPlayeView{
+            bottomPlayeView.frame = CGRect(x: 0, y: view.frame.height - 80, width: view.frame.width, height: 80)
+            UIApplication.shared.keyWindow?.addSubview(bottomPlayeView)
+        }
 
         //        songService.resetFavourites()
         // Do any additional setup after loading the view, typically from a nib.
