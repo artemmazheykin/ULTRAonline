@@ -69,10 +69,14 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
         }
     }
     var favoriteSongs:[ArtistModel] = []
+    let bottomPlayerView = BottomPlayerView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        radioPlayer.delegate = self
+        radioPlayer.mainScreenDelegate = self
+        bottomPlayerView.delegate = radioPlayer
+        radioPlayer.slider = bottomPlayerView.slider
+        radioPlayer.bottomPlayerView = bottomPlayerView
         DataSingleton.shared.delegateMainScreenVC = self
         isDownloadingMediaContentPermited = (UserDefaults.standard.value(forKey: "IsDownloadingMediaContentPermited") as? Bool) ?? true
         
@@ -116,12 +120,12 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
         updateArtistAndSong()
         setupRemoteCommandCenter()
         
-        
-        if let bottomPlayeView = DataSingleton.shared.bottomPlayeView{
-            bottomPlayeView.frame = CGRect(x: 0, y: view.frame.height - 80, width: view.frame.width, height: 80)
-            UIApplication.shared.keyWindow?.addSubview(bottomPlayeView)
-        }
+        if let frame = UIApplication.shared.keyWindow?.frame{
+            bottomPlayerView.frame = CGRect(x: 0, y: frame.height - 80, width: frame.width, height: 80)
+            UIApplication.shared.keyWindow?.addSubview(bottomPlayerView)
 
+        }
+        
         //        songService.resetFavourites()
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -131,14 +135,7 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
         if currentSong != nil{
             currentSong = songService.isThatSongFaforiteChecking(artist: currentSong.artistName, song: currentSong.songName)
         }
-//        updateStartStopButton()
     }
-    
-//    override func viewDidAppear(_ animated: Bool) {
-//        self.viewDidAppear(animated)
-//        updateStartStopButton()
-//    }
-    
     
     func updateStartStopButton(){
         if radioPlayer.timeControlStatus().rawValue == 0{

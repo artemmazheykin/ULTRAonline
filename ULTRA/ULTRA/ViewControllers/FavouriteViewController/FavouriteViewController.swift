@@ -30,6 +30,8 @@ class FavouriteViewController: UIViewController{
         
         let mainVc = self.navigationController?.viewControllers[0] as! MainScreenController
         mainVc.delegate = self
+        MagicPlayer.shared.favorVCDelegate = self
+        
         favoritesTable.delegate = self
         favoritesTable.dataSource = self
         reloadSection()
@@ -62,7 +64,7 @@ class FavouriteViewController: UIViewController{
             
         }
     }
-    
+
     @objc func didTappedAppleMusicButton(){
         
         if selectedIndexPath != nil{
@@ -272,10 +274,10 @@ extension FavouriteViewController: UITableViewDelegate{
             selectedIndexPath = indexPath
             reloadSection(indexPath: selectedIndexPath)
             
-            _ = networkHelper.getForTestUrlImage(metadata: favoriteSongs[indexPath.row].artistAndSongName, size: 200).done{
-                image in
-                print(image)
-            }
+//            _ = networkHelper.getForTestUrlImage(metadata: favoriteSongs[indexPath.row].artistAndSongName, size: 200).done{
+//                image in
+//                print(image)
+//            }
 //            _ = networkHelper.getUrlSong(metadata: favoriteSongs[indexPath.row].artistAndSongName).done{
 //                url in
 //                print("_______________________________\(url)")
@@ -422,5 +424,11 @@ extension FavouriteViewController: MainScreenControllerDelegate{
     }
 }
 
+extension FavouriteViewController: MagicPlayerDelegate{
+    
+    func updateSystemPlayer() {
+        print("tratara")
+    }
+}
 
 

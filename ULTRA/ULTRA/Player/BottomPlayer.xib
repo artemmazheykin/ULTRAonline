@@ -38,6 +38,9 @@
                         </imageView>
                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="CCe-uF-3l6">
                             <rect key="frame" x="78" y="40" width="289" height="31"/>
+                            <connections>
+                                <action selector="valueChanged:" destination="-1" eventType="valueChanged" id="rcu-JA-a1R"/>
+                            </connections>
                         </slider>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="vMd-bk-MiW">
                             <rect key="frame" x="80" y="10" width="285" height="20"/>
@@ -105,7 +108,6 @@
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="wye-Pd-Lqr" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="JAb-OG-Pis"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="top" secondItem="CWc-vv-cCX" secondAttribute="bottom" id="LOW-My-hID"/>

@@ -12,8 +12,9 @@ import StoreKit
 import MediaPlayer
 
 
-protocol MagicPlayerDelegate {
-    func playPauseStopDidTapped()
+@objc protocol MagicPlayerDelegate: class {
+    @objc optional func playPauseStopDidTapped()
+    @objc optional func updateSystemPlayer()
 }
 
 class MagicPlayer {
@@ -22,6 +23,10 @@ class MagicPlayer {
     private var avPlayer: AVPlayer!
     private var systemPlayer = MPMusicPlayerController.systemMusicPlayer
     private var playerItem: AVPlayerItem?
+    weak var slider: UISlider!
+    weak var bottomPlayerView: BottomPlayerView!
+    var timer = Timer()
+    
     open var radioURL: URL{
         didSet{
             asset = AVAsset(url: radioURL)
@@ -42,7 +47,10 @@ class MagicPlayer {
     }
     
     open var isPlaying = false
-    var delegate: MagicPlayerDelegate?
+    
+    var mainScreenDelegate: MagicPlayerDelegate?
+    var favorVCDelegate: MagicPlayerDelegate?
+    
     var favoriteSongIDsDescriptor: MPMusicPlayerStoreQueueDescriptor!
     
     open static let shared = MagicPlayer()
@@ -79,7 +87,6 @@ class MagicPlayer {
         }
         systemPlayer.repeatMode = .all
         systemPlayer.beginGeneratingPlaybackNotifications()
-
     }
     
     deinit {
@@ -88,28 +95,56 @@ class MagicPlayer {
     
     open func systemPlayerPlay(id: String?){
         if let id = id{
-            stop()
-            let audiosession = AVAudioSession.sharedInstance()
-            do{
-                try audiosession.setActive(false)
+            DispatchQueue.global(qos: .userInitiated).async {
+                self.stop()
+                let audiosession = AVAudioSession.sharedInstance()
+                do{
+                    try audiosession.setActive(false)
+                }
+                catch{
+                    print("errorrrr!!!!!")
+                }
+                self.favoriteSongIDsDescriptor.startItemID = id
+                
+                self.systemPlayer.setQueue(with: self.favoriteSongIDsDescriptor)
+                self.systemPlayer.play()
+                self.updateSlider()
             }
-            catch{
-                print("errorrrr!!!!!")
-            }
-            favoriteSongIDsDescriptor.startItemID = id
-            
-            
-            let item = systemPlayer.nowPlayingItem!
-            let duration = item.playbackDuration
-//            systemPlayer.currentPlaybackTime
-            
-            
-            systemPlayer.setQueue(with: favoriteSongIDsDescriptor)
-            systemPlayer.play()
         }
     }
     
+    func updateSlider(){
+        
+        let item = self.systemPlayer.nowPlayingItem!
+        print("item.playbackStoreID = \(item.playbackStoreID)")
+        
+        var artistAndSong = ""
+        
+        for keyValue in DataSingleton.shared.trackIds{
+            if keyValue.value == item.playbackStoreID{
+                artistAndSong = keyValue.key
+            }
+        }
+        let image = DataSingleton.shared.images[artistAndSong]
+        
+        let duration = item.playbackDuration
+        
+        DispatchQueue.main.async {
+            self.bottomPlayerView.songNameLabel.text = item.title
+            self.bottomPlayerView.songImageView.image = image
+            self.slider.maximumValue = Float(duration)
+            self.slider.value = 0.0
+//            DispatchQueue.global(qos: .utility).async {
+            self.timer.invalidate()
+            
+            self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateTime), userInfo: nil, repeats: true)
+//            }
+        }
+    }
     
+    @objc func updateTime(_ timer: Timer) {
+        self.slider.value = Float(self.systemPlayer.currentPlaybackTime)
+    }
     
     
     
@@ -130,14 +165,14 @@ class MagicPlayer {
             }
         }
         isPlaying = true
-        delegate?.playPauseStopDidTapped()
+        mainScreenDelegate?.playPauseStopDidTapped?()
     }
     
     open func pause() {
         guard let avPlayer = avPlayer else { return }
         avPlayer.pause()
         isPlaying = false
-        delegate?.playPauseStopDidTapped()
+        mainScreenDelegate?.playPauseStopDidTapped?()
     }
 
     open func stop() {
@@ -145,7 +180,7 @@ class MagicPlayer {
         avPlayer.pause()
         avPlayer.replaceCurrentItem(with: nil)
         isPlaying = false
-        delegate?.playPauseStopDidTapped()
+        mainScreenDelegate?.playPauseStopDidTapped?()
 
     }
 
@@ -163,20 +198,24 @@ class MagicPlayer {
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(handleInterruption), name: .AVAudioSessionInterruption, object: nil)
         notificationCenter.addObserver(self, selector: #selector(handlePlaybackState), name: .MPMusicPlayerControllerPlaybackStateDidChange, object: nil)
-
+        notificationCenter.addObserver(self, selector: #selector(handlePlayingItem), name: .MPMusicPlayerControllerNowPlayingItemDidChange, object: nil)
     }
     
     @objc private func handlePlaybackState(notification: Notification) {
         switch systemPlayer.playbackState {
         case .playing:
+            updateSlider()
             print("play")
         case .paused, .stopped:
             print("stop")
-            
+
         default:
             break
         }
-        
+    }
+
+    @objc private func handlePlayingItem(notification: Notification) {
+        updateSlider()
     }
 
 
@@ -213,4 +252,13 @@ class MagicPlayer {
         }
     }
 
+}
+
+extension MagicPlayer: SliderDelegate{
+    
+    func sliderValueChanged(value: Float){
+        systemPlayer.currentPlaybackTime = TimeInterval(value)
+    }
+    
+    
 }

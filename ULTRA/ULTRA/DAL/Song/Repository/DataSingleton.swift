@@ -81,8 +81,6 @@ class DataSingleton{
         return ids
     }
 
-    var bottomPlayeView: UIView!
-
     var networkHelper = NetworkHelperImpl()
     
     open static let shared = DataSingleton()
