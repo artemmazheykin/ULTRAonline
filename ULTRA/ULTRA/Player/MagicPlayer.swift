@@ -97,7 +97,9 @@ class MagicPlayer {
                 print("errorrrr!!!!!")
             }
             favoriteSongIDsDescriptor.startItemID = id
-            
+            let item = systemPlayer.nowPlayingItem!
+            let duration = item.playbackDuration
+            item.
             systemPlayer.setQueue(with: favoriteSongIDsDescriptor)
             systemPlayer.play()
         }

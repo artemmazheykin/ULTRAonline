@@ -59,14 +59,19 @@ class FavouriteViewController: UIViewController{
         if let id = DataSingleton.shared.trackIds[song.artistAndSongName]{
             let player = MagicPlayer.shared
             player.systemPlayerPlay(id: id)
+            
         }
     }
     
     @objc func didTappedAppleMusicButton(){
         
         if selectedIndexPath != nil{
+            
+            print("favoriteSongs[selectedIndexPath!.row].artistAndSongName) = \(favoriteSongs[selectedIndexPath!.row].artistAndSongName))")
+            
             _ = networkHelper.getUrlSong(metadata: favoriteSongs[selectedIndexPath!.row].artistAndSongName).done{ urlOpt in
-                if let url = urlOpt{
+                
+                if let urlWithMetadata = urlOpt, let url = urlWithMetadata.url{
                     if UIApplication.shared.canOpenURL(url)
                     {
                         UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -233,11 +238,16 @@ extension FavouriteViewController: UITableViewDelegate{
             let appleMusicButton = UIButton(frame: CGRect(x: self.view.frame.width - 60, y: 90, width: 50, height: 50))
             headerView.addSubview(appleMusicButton)
             
-            if selectedIndexPath != nil{
+            if let _ = DataSingleton.shared.favoriteSongUrls[favoriteSongs[selectedIndexPath!.row].artistAndSongName]{
+                appleMusicButton.setImage(#imageLiteral(resourceName: "ITunes"), for: .normal)
+                appleMusicButton.addTarget(self, action: #selector(self.didTappedAppleMusicButton), for: .touchUpInside)
+            }else{
                 _ = networkHelper.getUrlSong(metadata: favoriteSongs[selectedIndexPath!.row].artistAndSongName).done{ urlOpt in
-                    if let _ = urlOpt{
+                    if let urlWithMetadata = urlOpt, let url = urlWithMetadata.url{
                         appleMusicButton.setImage(#imageLiteral(resourceName: "ITunes"), for: .normal)
                         appleMusicButton.addTarget(self, action: #selector(self.didTappedAppleMusicButton), for: .touchUpInside)
+                        self.songService.addURLToUserDefaults(songUrl: (songName: urlWithMetadata.metadata, url: url))
+                        DataSingleton.shared.favoriteSongUrls[urlWithMetadata.metadata] = url
                     }else{
                         appleMusicButton.setImage(#imageLiteral(resourceName: "copyImage"), for: .normal)
                         appleMusicButton.addTarget(self, action: #selector(self.didTappedCopyNameButton), for: .touchUpInside)
@@ -261,10 +271,15 @@ extension FavouriteViewController: UITableViewDelegate{
         }else{
             selectedIndexPath = indexPath
             reloadSection(indexPath: selectedIndexPath)
-            _ = networkHelper.getTrackId(metadata: favoriteSongs[indexPath.row].artistAndSongName).done{
-                id in
-                print(id)
+            
+            _ = networkHelper.getForTestUrlImage(metadata: favoriteSongs[indexPath.row].artistAndSongName, size: 200).done{
+                image in
+                print(image)
             }
+//            _ = networkHelper.getUrlSong(metadata: favoriteSongs[indexPath.row].artistAndSongName).done{
+//                url in
+//                print("_______________________________\(url)")
+//            }
         }
         
     }
@@ -340,6 +355,9 @@ extension FavouriteViewController: UITableViewDataSource{
         return 55
     }
     
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 80
+    }
 }
 
 extension UIView{

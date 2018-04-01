@@ -53,8 +53,41 @@ class NetworkHelperImpl: NetworkHelper{
         }
     }
     
-    func getUrlSong(metadata: String) -> Promise<URL?> {
+    func getForTestUrlImage(metadata: String, size: Int) -> Promise<URL?> {
         return Promise<URL?>{pup in
+            
+            guard !metadata.isEmpty, metadata !=  " - ", let url = getSearchURLSongWithStorefront(with: metadata) else {
+                pup.fulfill(nil)
+                return
+            }
+            
+            URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+                guard error == nil, let data = data else {
+                    print("!!!!error \(error.debugDescription)")
+                    pup.fulfill(nil)
+                    return
+                }
+                
+                let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                guard let parsedResult = json as? [String: Any],
+                    let results = parsedResult[Keys.results] as? Array<[String: Any]>,
+                    let result = results.first,
+                    var artwork = result[Keys.artwork] as? String else {
+                        pup.fulfill(nil)
+                        return
+                }
+                print(result)
+                if size != 100, size > 0 {
+                    artwork = artwork.replacingOccurrences(of: "100x100", with: "\(size)x\(size)")
+                }
+                
+                let artworkURL = URL(string: artwork)
+                pup.fulfill(artworkURL)
+            }).resume()
+        }
+    }
+    func getUrlSong(metadata: String) -> Promise<(metadata: String,url: URL?)?> {
+        return Promise<(metadata: String,url: URL?)?>{pup in
             
             guard !metadata.isEmpty, metadata !=  " - ", let url = getSearchURLSongWithStorefront(with: metadata) else {
                 pup.fulfill(nil)
@@ -76,9 +109,9 @@ class NetworkHelperImpl: NetworkHelper{
                         return
                 }
                 
-//                print("result = \(result)")
+                print("result = \(result)")
                 let collectionViewUrl = URL(string: collectionView)
-                pup.fulfill(collectionViewUrl)
+                pup.fulfill((metadata,collectionViewUrl))
             }).resume()
         }
     }
@@ -137,7 +170,7 @@ class NetworkHelperImpl: NetworkHelper{
                         pup.fulfill(nil)
                         return
                 }
-                print("result = \(result)")
+//                print("result = \(result)")
                 let idRaw = String(trackId)
                 let id = idRaw.getSongId()
                 
@@ -159,13 +192,6 @@ class NetworkHelperImpl: NetworkHelper{
                 
                 
             }
-            
-            
-            
-            
-            
-            
-            
         }
     }
 

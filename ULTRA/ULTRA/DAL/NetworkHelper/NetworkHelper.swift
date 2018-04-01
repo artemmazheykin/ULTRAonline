@@ -14,7 +14,8 @@ protocol NetworkHelper: class{
     
     func downloadImage(metadata: String, size: Int) -> Promise<UIImage>
     func getUrlImage(metadata: String, size: Int) -> Promise<URL?>
-    func getUrlSong(metadata: String) -> Promise<URL?>
+    func getUrlSong(metadata: String) -> Promise<(metadata: String,url: URL?)?>
     func getUrlArtist(metadata: String) -> Promise<URL?>
     func getTrackId(metadata: String) -> Promise<String?>
+    func getForTestUrlImage(metadata: String, size: Int) -> Promise<URL?>
 }

@@ -149,6 +149,13 @@ class SongServiceImpl: SongService {
         repository.setIDsToUserDefaults(ids: ids)
     }
     
+    func addURLToUserDefaults(songUrl: (songName: String,url: URL)){
+        
+        var urls = repository.getURLsFromUserDefaults()
+        urls[songUrl.songName] = songUrl.url
+        repository.setURLsToUserDefaults(urls: urls)
+    }
+
     func deleteIDFromUserDefaults(songName: String){
         
         var ids = repository.getIDsFromUserDefaults()
@@ -156,8 +163,20 @@ class SongServiceImpl: SongService {
         repository.setIDsToUserDefaults(ids: ids)
     }
     
+    func deleteURLFromUserDefaults(songName: String){
+        
+        var urls = repository.getURLsFromUserDefaults()
+        urls[songName] = nil
+        repository.setURLsToUserDefaults(urls: urls)
+    }
+
+    
     func getIDsFromUserDefaults() -> [String : String] {
         return repository.getIDsFromUserDefaults()
+    }
+    
+    func getURLsFromUserDefaults() -> [String:URL]{
+        return repository.getURLsFromUserDefaults()
     }
 
 }

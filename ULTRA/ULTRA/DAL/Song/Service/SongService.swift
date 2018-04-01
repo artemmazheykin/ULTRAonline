@@ -22,7 +22,10 @@ protocol SongService: class {
     func deleteSongImageFromFavorites(songModel: SongModel)
     func resetFavourites()
     func addIDToUserDefaults(id: (songName: String,number: String))
+    func addURLToUserDefaults(songUrl: (songName: String,url: URL))
     func deleteIDFromUserDefaults(songName: String)
     func getIDsFromUserDefaults() -> [String:String]
+    func deleteURLFromUserDefaults(songName: String)
+    func getURLsFromUserDefaults() -> [String:URL]
 
 }

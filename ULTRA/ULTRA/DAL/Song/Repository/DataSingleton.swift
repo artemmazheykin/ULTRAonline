@@ -61,6 +61,15 @@ class DataSingleton{
             player.favoriteSongIDsDescriptor = MPMusicPlayerStoreQueueDescriptor(storeIDs: arrayIDs)
         }
     }
+    
+    var favoriteSongUrls:[String:URL] = [:]{
+        didSet{
+            print("favoriteSongUrls = \(favoriteSongUrls)")
+        }
+    }
+    
+    
+    
     var arrayIDs: [String]{
         var ids: [String] = []
         for song in sortedSongsArray{
@@ -86,10 +95,10 @@ class DataSingleton{
         songService = songServiceImpl
         self.songs = songService.getFavoriteSongsFromUserDefaults()
         trackIds = songService.getIDsFromUserDefaults()
+        favoriteSongUrls = songService.getURLsFromUserDefaults()
         let player = MagicPlayer.shared
         player.favoriteSongIDsDescriptor = MPMusicPlayerStoreQueueDescriptor(storeIDs: arrayIDs)
         updateLast10SongsEvery10Seconds()
-        bottomPlayeView = BottomPlayerView()
 
     }
     
@@ -166,10 +175,21 @@ class DataSingleton{
         
         _ = networkHelper.getTrackId(metadata: songModel.artistAndSongName).done{trackId in
             self.trackIds[songModel.artistAndSongName] = trackId
-            print("self.trackIds[songModel.artistAndSongName] = \(self.trackIds[songModel.artistAndSongName])")
+            
             if let id = trackId{
                 self.songService.addIDToUserDefaults(id: (songName: songModel.artistAndSongName, number: id))
             }
+        }
+        
+        _ = networkHelper.getUrlSong(metadata: songModel.artistAndSongName).done{songUrl in
+            
+            if let urlWithMetadata = songUrl, let url = urlWithMetadata.url{
+                self.favoriteSongUrls[urlWithMetadata.metadata] = urlWithMetadata.url
+                self.songService.addURLToUserDefaults(songUrl: (songName: songModel.artistAndSongName, url: url))
+            }
+            
+
+            
         }
         
         
@@ -184,6 +204,9 @@ class DataSingleton{
         }
         trackIds[songModel.artistAndSongName] = nil
         songService.deleteIDFromUserDefaults(songName: songModel.artistAndSongName)
+        
+        favoriteSongUrls[songModel.artistAndSongName] = nil
+        songService.deleteURLFromUserDefaults(songName: songModel.artistAndSongName)
     }
     
     
