@@ -12,6 +12,7 @@ protocol SliderDelegate {
     func sliderValueChanged(value: Float)
 }
 
+
 class BottomPlayerView: UIView {
 
     @IBOutlet var contentView: UIView!
@@ -23,6 +24,7 @@ class BottomPlayerView: UIView {
     @IBOutlet weak var previousSongButton: UIButton!
     @IBOutlet weak var playPauseButton: UIButton!
     @IBOutlet weak var nextSongButton: UIButton!
+    var editingInProcess = false
     
     var delegate: SliderDelegate?
     
@@ -62,9 +64,34 @@ class BottomPlayerView: UIView {
         songImageView.layer.masksToBounds = true
         songImageView.layer.borderWidth = 0.25
         songImageView.layer.borderColor = UIColor(red: 123/255, green: 123/255, blue: 123/255, alpha: 1.0).cgColor
+        slider.isContinuous = true
     }
     
     @IBAction func valueChanged(_ sender: UISlider) {
-        delegate?.sliderValueChanged(value: sender.value)
+        
+        editingInProcess = true
     }
+    
+    
+    @IBAction func editingDidEnd(_ sender: UISlider) {
+        
+        delegate?.sliderValueChanged(value: sender.value)
+        editingInProcess = false
+        
+    }
+    
+    
+    
+    @IBAction func touchDragInside(_ sender: UISlider) {
+        
+        
+    }
+    
+    
+    
+    
+    
+    
+    
 }
+

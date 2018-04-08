@@ -39,6 +39,7 @@
                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="CCe-uF-3l6">
                             <rect key="frame" x="78" y="40" width="289" height="31"/>
                             <connections>
+                                <action selector="editingDidEnd:" destination="-1" eventType="touchUpInside" id="6Cv-DQ-F4I"/>
                                 <action selector="valueChanged:" destination="-1" eventType="valueChanged" id="rcu-JA-a1R"/>
                             </connections>
                         </slider>

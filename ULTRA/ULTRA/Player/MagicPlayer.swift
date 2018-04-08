@@ -17,7 +17,7 @@ import MediaPlayer
     @objc optional func updateSystemPlayer()
 }
 
-class MagicPlayer {
+class MagicPlayer{
     
     var asset: AVAsset!
     private var avPlayer: AVPlayer!
@@ -26,16 +26,18 @@ class MagicPlayer {
     weak var slider: UISlider!
     weak var bottomPlayerView: BottomPlayerView!
     var timer = Timer()
+    var displayLink = CADisplayLink()
+    var nowPlaying: MPMediaItem?
     
     open var radioURL: URL{
         didSet{
             asset = AVAsset(url: radioURL)
             setupPlayer(with: asset)
-
+            
             if isPlaying{
                 play()
             }
-
+            
         }
     }
     open var isAutoPlay: Bool{
@@ -72,7 +74,7 @@ class MagicPlayer {
         }
         asset = AVAsset(url: radioURL)
         setupPlayer(with: asset)
-
+        
         
         let audioSession = AVAudioSession.sharedInstance()
         do{
@@ -87,6 +89,7 @@ class MagicPlayer {
         }
         systemPlayer.repeatMode = .all
         systemPlayer.beginGeneratingPlaybackNotifications()
+        
     }
     
     deinit {
@@ -108,52 +111,75 @@ class MagicPlayer {
                 
                 self.systemPlayer.setQueue(with: self.favoriteSongIDsDescriptor)
                 self.systemPlayer.play()
-                self.updateSlider()
             }
         }
     }
     
     func updateSlider(){
-        
-        let item = self.systemPlayer.nowPlayingItem!
-        print("item.playbackStoreID = \(item.playbackStoreID)")
-        
-        var artistAndSong = ""
-        
-        for keyValue in DataSingleton.shared.trackIds{
-            if keyValue.value == item.playbackStoreID{
-                artistAndSong = keyValue.key
+
+        if let item = nowPlaying{
+            print("item.playbackStoreID = \(item.playbackStoreID)")
+            
+            var artistAndSong = ""
+            
+            for keyValue in DataSingleton.shared.trackIds{
+                if keyValue.value == item.playbackStoreID{
+                    artistAndSong = keyValue.key
+                }
             }
-        }
-        let image = DataSingleton.shared.images[artistAndSong]
-        
-        let duration = item.playbackDuration
-        
-        DispatchQueue.main.async {
+            
+            let image = DataSingleton.shared.images[artistAndSong]
+            
+            
+            let duration = item.playbackDuration
+            print("duration = \(duration)")
+
+            if duration == 0.0{
+                DispatchQueue.global(qos: .background).async {
+                    usleep(500000)
+                    DispatchQueue.main.async {
+                        self.updateSlider()
+                    }
+                }
+            }
+            
+            
+            
+            
             self.bottomPlayerView.songNameLabel.text = item.title
             self.bottomPlayerView.songImageView.image = image
             self.slider.maximumValue = Float(duration)
             self.slider.value = 0.0
-//            DispatchQueue.global(qos: .utility).async {
-            self.timer.invalidate()
             
-            self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateTime), userInfo: nil, repeats: true)
-//            }
+            
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                self.updateTime()
+            })
+            RunLoop.current.add(timer, forMode: .commonModes)
+            timer.fire()
+            
+//            self.displayLink = CADisplayLink(target: self, selector: #selector(self.updateTime))
+//            self.displayLink.preferredFramesPerSecond = 1
+//            self.displayLink.add(to: .current, forMode: .commonModes)
+        
         }
     }
     
-    @objc func updateTime(_ timer: Timer) {
-        self.slider.value = Float(self.systemPlayer.currentPlaybackTime)
+    @objc func updateTime() {
+        
+        if !bottomPlayerView.editingInProcess{
+            DispatchQueue.main.async {
+                self.slider.setValue(Float(self.systemPlayer.currentPlaybackTime), animated: true)
+            }
+        }
     }
-    
-    
     
     open func timeControlStatus() -> AVPlayerTimeControlStatus{
         return avPlayer.timeControlStatus
     }
     open func play() {
         
-        
+        systemPlayer.stop()
         avPlayer?.play()
         DispatchQueue.global(qos: .background).async {
             
@@ -174,16 +200,16 @@ class MagicPlayer {
         isPlaying = false
         mainScreenDelegate?.playPauseStopDidTapped?()
     }
-
+    
     open func stop() {
         guard let avPlayer = avPlayer else { return }
         avPlayer.pause()
         avPlayer.replaceCurrentItem(with: nil)
         isPlaying = false
         mainScreenDelegate?.playPauseStopDidTapped?()
-
+        
     }
-
+    
     private func setupPlayer(with asset: AVAsset) {
         if avPlayer == nil {
             avPlayer = AVPlayer()
@@ -198,27 +224,30 @@ class MagicPlayer {
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(handleInterruption), name: .AVAudioSessionInterruption, object: nil)
         notificationCenter.addObserver(self, selector: #selector(handlePlaybackState), name: .MPMusicPlayerControllerPlaybackStateDidChange, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(handlePlayingItem), name: .MPMusicPlayerControllerNowPlayingItemDidChange, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(handlePlayingItem), name: .MPMusicPlayerControllerNowPlayingItemDidChange, object: systemPlayer)
     }
     
     @objc private func handlePlaybackState(notification: Notification) {
         switch systemPlayer.playbackState {
         case .playing:
-            updateSlider()
+            //            updateSlider()
             print("play")
+            return
         case .paused, .stopped:
             print("stop")
-
+            return
         default:
             break
         }
     }
-
+    
     @objc private func handlePlayingItem(notification: Notification) {
+        timer.invalidate()
+        nowPlaying = systemPlayer.nowPlayingItem
         updateSlider()
     }
-
-
+    
+    
     @objc private func handleInterruption(notification: Notification) {
         guard let userInfo = notification.userInfo,
             let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
@@ -251,7 +280,7 @@ class MagicPlayer {
             }
         }
     }
-
+    
 }
 
 extension MagicPlayer: SliderDelegate{

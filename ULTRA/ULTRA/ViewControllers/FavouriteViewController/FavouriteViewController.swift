@@ -58,8 +58,20 @@ class FavouriteViewController: UIViewController{
     @objc func didTappedPlayButton(sender: UIButton){
         
         let song = favoriteSongs[sender.tag]
+        
+        _ = networkHelper.getUrlSong(metadata: song.artistAndSongName).done{ urlOpt in
+            if let url = urlOpt{
+                let asset = AVURLAsset(url: url.url!)
+                print("asset lyrics = \(asset.lyrics)")
+                print("asset duration = \(Float(CMTimeGetSeconds(asset.duration))  )")
+
+            }
+        }
+        
+        
         if let id = DataSingleton.shared.trackIds[song.artistAndSongName]{
             let player = MagicPlayer.shared
+            print("id from favoriteVC = \(id)")
             player.systemPlayerPlay(id: id)
             
         }
@@ -310,6 +322,7 @@ extension FavouriteViewController: UITableViewDataSource{
         if let image = self.favoriteSongImages[song.artistAndSongName]{
             cell.artistImage.image = image
         }else{
+            cell.imageView?.image = nil
             DispatchQueue.global(qos: .background).async {
                 if DataSingleton.shared.isDownloadingMediaContentPermited{
                     _ = self.networkHelper.getUrlImage(metadata: song.artistAndSongName, size: 300).done{urlOpt in
