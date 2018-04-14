@@ -89,7 +89,6 @@ class MagicPlayer{
         }
         systemPlayer.repeatMode = .all
         systemPlayer.beginGeneratingPlaybackNotifications()
-        
     }
     
     deinit {
@@ -152,16 +151,29 @@ class MagicPlayer{
             self.slider.value = 0.0
             
             
-            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-                self.updateTime()
-            })
-            RunLoop.current.add(timer, forMode: .commonModes)
-            timer.fire()
+//            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+//                self.updateTime()
+//            })
+//            RunLoop.current.add(timer, forMode: .commonModes)
+//            timer.fire()
             
 //            self.displayLink = CADisplayLink(target: self, selector: #selector(self.updateTime))
 //            self.displayLink.preferredFramesPerSecond = 1
 //            self.displayLink.add(to: .current, forMode: .commonModes)
         
+        }
+    }
+    
+    func updateSliderInBackgroundThread(){
+        DispatchQueue.global(qos: .background).async {
+            while true{
+                usleep(300000)
+                if !self.bottomPlayerView.editingInProcess{
+                    DispatchQueue.main.async {
+                        self.slider.setValue(Float(self.systemPlayer.currentPlaybackTime), animated: true)
+                    }
+                }
+            }
         }
     }
     
@@ -230,7 +242,7 @@ class MagicPlayer{
     @objc private func handlePlaybackState(notification: Notification) {
         switch systemPlayer.playbackState {
         case .playing:
-            //            updateSlider()
+//            updateSliderInBackgroundThread()
             print("play")
             return
         case .paused, .stopped:

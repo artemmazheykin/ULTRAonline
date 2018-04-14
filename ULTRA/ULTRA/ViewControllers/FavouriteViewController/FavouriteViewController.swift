@@ -62,6 +62,8 @@ class FavouriteViewController: UIViewController{
         _ = networkHelper.getUrlSong(metadata: song.artistAndSongName).done{ urlOpt in
             if let url = urlOpt{
                 let asset = AVURLAsset(url: url.url!)
+                
+                print("asset description = \(asset.debugDescription)")
                 print("asset lyrics = \(asset.lyrics)")
                 print("asset duration = \(Float(CMTimeGetSeconds(asset.duration))  )")
 
