@@ -8,6 +8,10 @@
 
 
 // "trackId": 723342422
+
+//----TOKEN----
+//eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzNTRXSDVVMzMifQ.eyJpc3MiOiI3NzMyNE5URzNEIiwiaWF0IjoxNTIzNzEwMjI4LCJleHAiOjE1MjM3NTM0Mjh9.uj9KH_Klg5fXPhABvITi7RD90ejOz-6NsCphUbaySL4m0Ql390E0R86dD2sUH5-7VWFjSPutFPrd82hZE_KghA
+
 import UIKit
 import PromiseKit
 import StoreKit
@@ -17,13 +21,20 @@ class NetworkHelperImpl: NetworkHelper{
     // URLs
     
     var last10SongsUrl = "https://radiopleer.com/info/ultra_last_tracks.txt"
+    
+    let developerToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzNTRXSDVVMzMifQ.eyJpc3MiOiI3NzMyNE5URzNEIiwiaWF0IjoxNTIzNzEwMjI4LCJleHAiOjE1MjM3NTM0Mjh9.uj9KH_Klg5fXPhABvITi7RD90ejOz-6NsCphUbaySL4m0Ql390E0R86dD2sUH5-7VWFjSPutFPrd82hZE_KghA"
 
     let currentRegionCode = Locale.current.regionCode?.lowercased()
+    
+    func fetchDeveloperToken() -> String{
+        return developerToken
+    }
+    
     
     func getUrlImage(metadata: String, size: Int) -> Promise<URL?> {
         return Promise<URL?>{pup in
             
-            guard !metadata.isEmpty, metadata !=  " - ", let url = getSearchURLSong(with: metadata) else {
+            guard !metadata.isEmpty, metadata !=  " - ", let url = getSearchURLSongWithStorefront(with: metadata) else {
                 pup.fulfill(nil)
                 return
             }
@@ -86,6 +97,7 @@ class NetworkHelperImpl: NetworkHelper{
             }).resume()
         }
     }
+    
     func getUrlSong(metadata: String) -> Promise<(metadata: String,url: URL?)?> {
         return Promise<(metadata: String,url: URL?)?>{pup in
             
@@ -109,12 +121,42 @@ class NetworkHelperImpl: NetworkHelper{
                         return
                 }
                 
-                print("result = \(result)")
                 let collectionViewUrl = URL(string: collectionView)
                 pup.fulfill((metadata,collectionViewUrl))
             }).resume()
         }
     }
+    
+    func getSongDuration(id: String) -> Promise<Double>{
+        return Promise<Double>{pup in
+            
+            if let request = getURLSong(with: id){
+                let dataTask = URLSession.shared.dataTask(with: request){ (data, response, error) in
+                    guard error == nil, let data = data else {
+                        print("Error with getSongDuration URL!!!")
+                        pup.fulfill(0)
+                        return
+                    }
+                    let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                    
+                    let parsedResult = json as! [String: Any]
+
+                    guard let dataResults = parsedResult["data"] as? [[String: Any]],
+                    let attributes = dataResults.first!["attributes"] as? [String: Any],
+                    let duration = attributes["durationInMillis"] as? Double else{
+                          pup.fulfill(0)
+                        return
+                    }
+                    pup.fulfill(duration)
+                }
+                dataTask.resume()
+            }
+            else{
+                pup.fulfill(0)
+            }
+        }
+    }
+
     
     func getUrlArtist(metadata: String) -> Promise<URL?> {
         return Promise<URL?>{pup in
@@ -224,7 +266,25 @@ class NetworkHelperImpl: NetworkHelper{
         components.queryItems?.append(URLQueryItem(name: Keys.term, value: term))
         components.queryItems?.append(URLQueryItem(name: Keys.entity, value: Values.entitySong))
         
+        
         return components.url
+    }
+
+    private func getURLSong(with id: String) -> URLRequest? {
+        
+        var components = URLComponents()
+        components.scheme = DomainAppleMusicApi.scheme
+        components.host = DomainAppleMusicApi.host
+        components.path = DomainAppleMusicApi.path
+        components.path += "\(id)"
+        if let url = components.url{
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.addValue("Bearer \(developerToken)", forHTTPHeaderField: "Authorization")
+            return request
+        }else{
+            return nil
+        }
     }
 
  
@@ -236,6 +296,14 @@ class NetworkHelperImpl: NetworkHelper{
         static let scheme = "https"
         static let host = "itunes.apple.com"
         static let path = "/search"
+    }
+    
+    private struct DomainAppleMusicApi {
+        static let scheme = "https"
+        static let host = "api.music.apple.com"
+        static let path = "/v1/catalog/ru/songs/"
+        
+        //"https://api.music.apple.com/v1/catalog/ru/songs/\(id)")
     }
     
     private struct Keys {

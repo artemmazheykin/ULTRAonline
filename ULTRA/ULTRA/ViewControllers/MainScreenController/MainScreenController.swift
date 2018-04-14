@@ -241,7 +241,9 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
         commandCenter.dislikeCommand.localizedTitle = "Не нравится"
         commandCenter.likeCommand.addTarget(self, action: #selector(likeLockScreen))
         commandCenter.dislikeCommand.addTarget(self, action: #selector(dislikeLockScreen))
-        
+        commandCenter.nextTrackCommand.addTarget{ event in
+        return .success
+        }
     }
     
 //    @objc func likeOrDislike(){

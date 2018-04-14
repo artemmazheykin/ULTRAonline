@@ -21,14 +21,15 @@ class MagicPlayer{
     
     var asset: AVAsset!
     private var avPlayer: AVPlayer!
-    private var systemPlayer = MPMusicPlayerController.systemMusicPlayer
+    private var systemPlayer = MPMusicPlayerController.systemMusicPlayer//.applicationMusicPlayer
     private var playerItem: AVPlayerItem?
     weak var slider: UISlider!
     weak var bottomPlayerView: BottomPlayerView!
     var timer = Timer()
     var displayLink = CADisplayLink()
     var nowPlaying: MPMediaItem?
-    
+    var networkHelper = NetworkHelperImpl()
+
     open var radioURL: URL{
         didSet{
             asset = AVAsset(url: radioURL)
@@ -118,7 +119,6 @@ class MagicPlayer{
 
         if let item = nowPlaying{
             print("item.playbackStoreID = \(item.playbackStoreID)")
-            
             var artistAndSong = ""
             
             for keyValue in DataSingleton.shared.trackIds{
@@ -128,34 +128,21 @@ class MagicPlayer{
             }
             
             let image = DataSingleton.shared.images[artistAndSong]
-            
-            
-            let duration = item.playbackDuration
-            print("duration = \(duration)")
 
-            if duration == 0.0{
-                DispatchQueue.global(qos: .background).async {
-                    usleep(500000)
-                    DispatchQueue.main.async {
-                        self.updateSlider()
-                    }
-                }
+            _ = networkHelper.getSongDuration(id: item.playbackStoreID).done{
+                duration in
+                self.slider.maximumValue = Float(duration/1000)
+                self.bottomPlayerView.songNameLabel.text = item.title
+                self.bottomPlayerView.songImageView.image = image
+                self.slider.value = 0.0
+
             }
             
-            
-            
-            
-            self.bottomPlayerView.songNameLabel.text = item.title
-            self.bottomPlayerView.songImageView.image = image
-            self.slider.maximumValue = Float(duration)
-            self.slider.value = 0.0
-            
-            
-//            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
-//                self.updateTime()
-//            })
-//            RunLoop.current.add(timer, forMode: .commonModes)
-//            timer.fire()
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+                self.updateTime()
+            })
+            RunLoop.current.add(timer, forMode: .commonModes)
+            timer.fire()
             
 //            self.displayLink = CADisplayLink(target: self, selector: #selector(self.updateTime))
 //            self.displayLink.preferredFramesPerSecond = 1
