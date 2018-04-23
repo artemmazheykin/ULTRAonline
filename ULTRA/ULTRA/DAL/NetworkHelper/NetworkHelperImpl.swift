@@ -22,13 +22,17 @@ class NetworkHelperImpl: NetworkHelper{
     
     var last10SongsUrl = "https://radiopleer.com/info/ultra_last_tracks.txt"
     
-    let developerToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzNTRXSDVVMzMifQ.eyJpc3MiOiI3NzMyNE5URzNEIiwiaWF0IjoxNTIzNzEwMjI4LCJleHAiOjE1MjM3NTM0Mjh9.uj9KH_Klg5fXPhABvITi7RD90ejOz-6NsCphUbaySL4m0Ql390E0R86dD2sUH5-7VWFjSPutFPrd82hZE_KghA"
-
     let currentRegionCode = Locale.current.regionCode?.lowercased()
     
     func fetchDeveloperToken() -> String{
-        return developerToken
+        return DataSingleton.shared.developerToken
     }
+    
+    func fetchUserToken() -> String{
+        return DataSingleton.shared.userToken
+    }
+    
+    
     
     
     func getUrlImage(metadata: String, size: Int) -> Promise<URL?> {
@@ -139,9 +143,8 @@ class NetworkHelperImpl: NetworkHelper{
                     }
                     let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
                     
-                    let parsedResult = json as! [String: Any]
-
-                    guard let dataResults = parsedResult["data"] as? [[String: Any]],
+                    guard let parsedResult = json as? [String: Any],
+                    let dataResults = parsedResult["data"] as? [[String: Any]],
                     let attributes = dataResults.first!["attributes"] as? [String: Any],
                     let duration = attributes["durationInMillis"] as? Double else{
                           pup.fulfill(0)
@@ -254,6 +257,22 @@ class NetworkHelperImpl: NetworkHelper{
         return components.url
     }
     
+    private func getSearchURLSongWithApMusAPI(with term: String) -> URL? {
+        
+        
+        
+        var components = URLComponents()
+        components.scheme = Domain.scheme
+        components.host = Domain.host
+        components.path = Domain.path
+        components.queryItems = [URLQueryItem]()
+        components.queryItems?.append(URLQueryItem(name: Keys.term, value: term))
+        components.queryItems?.append(URLQueryItem(name: Keys.entity, value: Values.entitySong))
+        components.queryItems?.append(URLQueryItem(name: Keys.storefront, value: Values.storefront))
+        
+        return components.url
+    }
+
     private func getSearchURLSong(with term: String) -> URL? {
         
         
@@ -275,19 +294,54 @@ class NetworkHelperImpl: NetworkHelper{
         var components = URLComponents()
         components.scheme = DomainAppleMusicApi.scheme
         components.host = DomainAppleMusicApi.host
-        components.path = DomainAppleMusicApi.path
+        components.path = DomainAppleMusicApi.pathFetchSong
         components.path += "\(id)"
         if let url = components.url{
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
-            request.addValue("Bearer \(developerToken)", forHTTPHeaderField: "Authorization")
+            request.addValue("Bearer \(fetchDeveloperToken())", forHTTPHeaderField: "Authorization")
             return request
         }else{
             return nil
         }
     }
 
- 
+ // https://api.music.apple.com/v1/me/library?ids[albums]=1106659171&ids[songs]=1107054256&ids[music-videos]=267079116
+    
+    func addSongToLibrary(with id: String) -> Promise<Bool>{
+        return Promise<Bool> { pup in
+            if let request = getURLAddSong(with: id){
+                let dataTask = URLSession.shared.dataTask(with: request)
+                dataTask.resume()
+                pup.fulfill(true)
+            }
+            else{
+                pup.fulfill(false)
+            }
+            
+        }
+    }
+    
+    private func getURLAddSong(with id: String) -> URLRequest? {
+        
+        var components = URLComponents()
+        components.scheme = DomainAppleMusicApi.scheme
+        components.host = DomainAppleMusicApi.host
+        components.path = DomainAppleMusicApi.pathAddSong
+
+        components.queryItems = [URLQueryItem]()
+        components.queryItems?.append(URLQueryItem(name: Keys.songIds, value: id))
+
+        if let url = components.url{
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.addValue("Bearer \(fetchDeveloperToken())", forHTTPHeaderField: "Authorization")
+            request.addValue("\(fetchUserToken())", forHTTPHeaderField: "Music-User-Token")
+            return request
+        }else{
+            return nil
+        }
+    }
 
     
     // MARK: - Constants
@@ -301,7 +355,8 @@ class NetworkHelperImpl: NetworkHelper{
     private struct DomainAppleMusicApi {
         static let scheme = "https"
         static let host = "api.music.apple.com"
-        static let path = "/v1/catalog/ru/songs/"
+        static let pathFetchSong = "/v1/catalog/ru/songs/"
+        static let pathAddSong = "/v1/me/library"
         
         //"https://api.music.apple.com/v1/catalog/ru/songs/\(id)")
     }
@@ -311,6 +366,7 @@ class NetworkHelperImpl: NetworkHelper{
         static let term = "term"
         static let entity = "entity"
         static let storefront = "s"
+        static let songIds = "ids[songs]"
         
         // Response
         static let results = "results"

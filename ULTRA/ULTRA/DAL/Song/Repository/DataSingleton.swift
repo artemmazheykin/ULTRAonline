@@ -23,6 +23,8 @@ class DataSingleton{
     
     var songService: SongService!
     var isDownloadingMediaContentPermited: Bool!
+    var developerToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzNTRXSDVVMzMifQ.eyJpc3MiOiI3NzMyNE5URzNEIiwiaWF0IjoxNTIzOTE1Njg2LCJleHAiOjE1MjM5NTg4ODZ9.EjQysunHdLRV4jMfUXsBEYIk-C2cBmlSWlzwUV3noYLnxYfbjWOwksbOlQgbRwCppfzUQ_osE-6reLrSI_K8Ag"
+    var userToken = ""
     
     weak var delegateLast10VC: DataSingletonDelegate?
     weak var delegateFavoritesVC: DataSingletonDelegate?
@@ -64,7 +66,7 @@ class DataSingleton{
     
     var favoriteSongUrls:[String:URL] = [:]{
         didSet{
-            print("favoriteSongUrls = \(favoriteSongUrls)")
+//            print("favoriteSongUrls = \(favoriteSongUrls)")
         }
     }
     
@@ -77,7 +79,7 @@ class DataSingleton{
                 ids.append(id)
             }
         }
-        print("ids = \(ids)")
+//        print("ids = \(ids)")
         return ids
     }
 
@@ -98,7 +100,22 @@ class DataSingleton{
         player.favoriteSongIDsDescriptor = MPMusicPlayerStoreQueueDescriptor(storeIDs: arrayIDs)
         updateLast10SongsEvery10Seconds()
         
-
+        
+        if let usTok = UserDefaults.standard.value(forKey: "UserToken") as? String {
+            userToken = usTok
+        }else{
+            let serviceController = SKCloudServiceController()
+            serviceController.requestUserToken(forDeveloperToken: developerToken) { (tokenOpt, error) in
+                guard error == nil else{
+                    print("ERRORRRRR!!!! \(error.debugDescription)")
+                    return
+                }
+                if let token = tokenOpt{
+                    self.userToken = token
+                    UserDefaults.standard.set(token, forKey: "UserToken")
+                }
+            }
+        }
     }
     
     func updateLast10SongsEvery10Seconds(){
@@ -177,6 +194,9 @@ class DataSingleton{
             
             if let id = trackId{
                 self.songService.addIDToUserDefaults(id: (songName: songModel.artistAndSongName, number: id))
+                _ = self.networkHelper.addSongToLibrary(with: id).done{result in
+                    print("result = \(result)")
+                }
             }
         }
         

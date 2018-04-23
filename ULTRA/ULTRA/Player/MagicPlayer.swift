@@ -59,6 +59,7 @@ class MagicPlayer{
     open static let shared = MagicPlayer()
     
     init() {
+        systemPlayer.prepareToPlay()
         if let isAutoplayFromUserDefaults = UserDefaults.standard.value(forKey: "IsAutoPlay") as? Bool{
             isAutoPlay = isAutoplayFromUserDefaults
             print("isAutoPlay = \(isAutoPlay)")
@@ -75,7 +76,6 @@ class MagicPlayer{
         }
         asset = AVAsset(url: radioURL)
         setupPlayer(with: asset)
-        
         
         let audioSession = AVAudioSession.sharedInstance()
         do{
@@ -107,8 +107,14 @@ class MagicPlayer{
                 catch{
                     print("errorrrr!!!!!")
                 }
+//                var items = MPMediaQuery.songs().items!
+//                var ultaItems = [MPMediaItem]()
+//                
+//                for item in items{
+//                    print("item.name = \(item.playbackStoreID)")
+//                    
+//                }
                 self.favoriteSongIDsDescriptor.startItemID = id
-                
                 self.systemPlayer.setQueue(with: self.favoriteSongIDsDescriptor)
                 self.systemPlayer.play()
             }

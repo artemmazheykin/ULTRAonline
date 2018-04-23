@@ -59,18 +59,6 @@ class FavouriteViewController: UIViewController{
         
         let song = favoriteSongs[sender.tag]
         
-        _ = networkHelper.getUrlSong(metadata: song.artistAndSongName).done{ urlOpt in
-            if let url = urlOpt{
-                let asset = AVURLAsset(url: url.url!)
-                
-                print("asset description = \(asset.debugDescription)")
-                print("asset lyrics = \(asset.lyrics)")
-                print("asset duration = \(Float(CMTimeGetSeconds(asset.duration))  )")
-
-            }
-        }
-        
-        
         if let id = DataSingleton.shared.trackIds[song.artistAndSongName]{
             let player = MagicPlayer.shared
             print("id from favoriteVC = \(id)")

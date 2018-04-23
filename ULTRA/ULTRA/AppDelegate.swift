@@ -14,10 +14,6 @@
 //Services
 //MusicKit
 
-// Token: eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzNTRXSDVVMzMifQ.eyJpc3MiOiI3NzMyNE5URzNEIiwiaWF0IjoxNTIxMjI3NzE2LCJleHAiOjE1MjEyNzA5MTZ9.vkdqJGuUk60aKqCQD8Duh9ZRouJmZbvLdoFnPGJIC6Q_vj5956WMjIU8iWjElYJ6hZ6_b89Er4QNiZSpNfo_Zw
-
-//----TOKEN----
-//eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzNTRXSDVVMzMifQ.eyJpc3MiOiI3NzMyNE5URzNEIiwiaWF0IjoxNTIxMjg2ODMyLCJleHAiOjE1MjEzMzAwMzJ9.WOPTSsJxuXG--iuIkzrzVPXrSn4qUewc0yYec906slFsrg2WRiqf-3P2Pr11veqpNn-VJ0HNIBsHfjHP7sBq7Q
 
 // Storefront ID fetched was: 143469-16,29
 
@@ -35,14 +31,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 //        fetchDeveloperToken()
-//        appleMusicRequestPermission()
+        appleMusicRequestPermission()
 //        appleMusicFetchStorefrontRegion()
         fabric = FabrikaImpl()
         data = DataSingleton.shared
         
         data.fetchImages()
         UIApplication.shared.beginReceivingRemoteControlEvents()
-
         
         
 //        do {
@@ -109,36 +104,48 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         SKCloudServiceController.requestAuthorization { (status:SKCloudServiceAuthorizationStatus) in
 
-            switch SKCloudServiceController.authorizationStatus() {
-                
-            case .authorized:
-                
-                print("The user's already authorized - we don't need to do anything more here, so we'll exit early.")
-                return
-                
-            case .denied:
-                
-                print("The user has selected 'Don't Allow' in the past - so we're going to show them a different dialog to push them through to their Settings page and change their mind, and exit the function early.")
-                
-                // Show an alert to guide users into the Settings
-                
-                return
-                
-            case .notDetermined:
-                
-                print("The user hasn't decided yet - so we'll break out of the switch and ask them.")
-                break
-                
-            case .restricted:
-                
-                print("User may be restricted; for example, if the device is in Education mode, it limits external Apple Music usage. This is similar behaviour to Denied.")
-                return
-                
-            }
+//            switch SKCloudServiceController.authorizationStatus() {
+//                
+//            case .authorized:
+//                
+//                print("The user's already authorized - we don't need to do anything more here, so we'll exit early.")
+//                return
+//                
+//            case .denied:
+//                
+//                print("The user has selected 'Don't Allow' in the past - so we're going to show them a different dialog to push them through to their Settings page and change their mind, and exit the function early.")
+//                
+//                // Show an alert to guide users into the Settings
+//                
+//                return
+//                
+//            case .notDetermined:
+//                
+//                print("The user hasn't decided yet - so we'll break out of the switch and ask them.")
+//                break
+//                
+//            case .restricted:
+//                
+//                print("User may be restricted; for example, if the device is in Education mode, it limits external Apple Music usage. This is similar behaviour to Denied.")
+//                return
+//                
+//            }
 
             switch status {
 
             case .authorized:
+
+                let serviceController = SKCloudServiceController()
+                serviceController.requestUserToken(forDeveloperToken: DataSingleton.shared.developerToken) { (tokenOpt, error) in
+                    guard error == nil else{
+                        print("ERRORRRRR!!!! \(error.debugDescription)")
+                        return
+                    }
+                    if let token = tokenOpt{
+                        DataSingleton.shared.userToken = token
+                        UserDefaults.standard.set(token, forKey: "UserToken")
+                    }
+                }
 
                 print("All good - the user tapped 'OK', so you're clear to move forward and start playing.")
 
