@@ -12,6 +12,15 @@ protocol SliderDelegate {
     func sliderValueChanged(value: Float)
 }
 
+protocol ButtonDelegate {
+    func playbackButtonDidPressed(kindOfButton: KindOfPressedButton)
+}
+
+
+enum KindOfPressedButton{
+    case previousTrack, play, nextTrack
+}
+
 
 class BottomPlayerView: UIView {
 
@@ -21,12 +30,17 @@ class BottomPlayerView: UIView {
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var songNameLabel: UILabel!
     
+    @IBOutlet weak var passedTimeLabel: UILabel!
+    @IBOutlet weak var remainedTimeLabel: UILabel!
+    
+    
     @IBOutlet weak var previousSongButton: UIButton!
     @IBOutlet weak var playPauseButton: UIButton!
     @IBOutlet weak var nextSongButton: UIButton!
     var editingInProcess = false
     
-    var delegate: SliderDelegate?
+    var sliderDelegate: SliderDelegate?
+    var buttonDelegate: ButtonDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -39,7 +53,7 @@ class BottomPlayerView: UIView {
     }
     
     func instanceFromNib(){
-        
+                
         Bundle.main.loadNibNamed("BottomPlayer", owner: self, options: nil)
         var darkBlur:UIBlurEffect = UIBlurEffect()
         if #available(iOS 10.0, *) { //iOS 10.0 and above
@@ -55,7 +69,8 @@ class BottomPlayerView: UIView {
         slider.setThumbImage(#imageLiteral(resourceName: "smallDot"), for: .normal)
         slider.setThumbImage(#imageLiteral(resourceName: "bigDot"), for: .highlighted)
         slider.minimumTrackTintColor = UIColor.black
-
+        slider.setValue(0, animated: false)
+        
         addSubview(contentView)
         contentView.backgroundColor = UIColor.clear
         contentView.frame = self.bounds
@@ -65,6 +80,19 @@ class BottomPlayerView: UIView {
         songImageView.layer.borderWidth = 0.25
         songImageView.layer.borderColor = UIColor(red: 123/255, green: 123/255, blue: 123/255, alpha: 1.0).cgColor
         slider.isContinuous = true
+        
+        let previousImage = #imageLiteral(resourceName: "previous-track").withRenderingMode(.alwaysTemplate)
+        let playImage = #imageLiteral(resourceName: "play").withRenderingMode(.alwaysTemplate)
+        let nextImage = #imageLiteral(resourceName: "next-track").withRenderingMode(.alwaysTemplate)
+
+        
+        previousSongButton.setImage(previousImage, for: .normal)
+//        previousSongButton.backgro
+        
+        playPauseButton.setImage(playImage, for: .normal)
+        nextSongButton.setImage(nextImage, for: .normal)
+        
+        
     }
     
     @IBAction func valueChanged(_ sender: UISlider) {
@@ -75,19 +103,22 @@ class BottomPlayerView: UIView {
     
     @IBAction func editingDidEnd(_ sender: UISlider) {
         
-        delegate?.sliderValueChanged(value: sender.value)
+        sliderDelegate?.sliderValueChanged(value: sender.value)
         editingInProcess = false
         
     }
-    
-    
-    
-    @IBAction func touchDragInside(_ sender: UISlider) {
-        
-        
+
+    @IBAction func previousTrackButtonDidTapped(_ sender: UIButton) {
+        buttonDelegate?.playbackButtonDidPressed(kindOfButton: .previousTrack)
     }
     
+    @IBAction func playButtonDidTapped(_ sender: UIButton) {
+        buttonDelegate?.playbackButtonDidPressed(kindOfButton: .play)
+    }
     
+    @IBAction func nextTrackButtonDidTapped(_ sender: UIButton) {
+        buttonDelegate?.playbackButtonDidPressed(kindOfButton: .nextTrack)
+    }
     
     
     

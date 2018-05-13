@@ -37,7 +37,6 @@ class FavouriteViewController: UIViewController{
         reloadSection()
         self.navigationController?.navigationBar.tintColor = UIColor.white
         print("favoriteSongs.count = \(favoriteSongs.count)")
-        
         // Do any additional setup after loading the view.
         
     }
@@ -361,7 +360,15 @@ extension FavouriteViewController: UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        
+        
         return 80
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 80))
+        footerView.backgroundColor = .clear
+        return footerView
     }
 }
 

@@ -14,8 +14,10 @@
             <connections>
                 <outlet property="contentView" destination="iN0-l3-epB" id="Adl-rh-NVR"/>
                 <outlet property="nextSongButton" destination="t9f-rr-uXy" id="miN-kZ-94A"/>
+                <outlet property="passedTimeLabel" destination="2cP-7h-stK" id="OLX-Zg-CbM"/>
                 <outlet property="playPauseButton" destination="WQ8-pf-Tl2" id="ft3-iF-lDJ"/>
                 <outlet property="previousSongButton" destination="1dw-wq-bE0" id="vMB-D6-jN8"/>
+                <outlet property="remainedTimeLabel" destination="cp8-Qn-kBd" id="8g6-6B-dTC"/>
                 <outlet property="slider" destination="CCe-uF-3l6" id="SXw-8T-qQG"/>
                 <outlet property="songImageView" destination="NCR-jZ-C4o" id="w0G-AA-yFi"/>
                 <outlet property="songNameLabel" destination="Gjp-fu-7TG" id="KSG-PN-8dr"/>
@@ -55,15 +57,21 @@
                                                 <constraint firstAttribute="height" constant="20" id="Gp2-Qj-zs5"/>
                                                 <constraint firstAttribute="width" constant="20" id="W0C-hT-2xx"/>
                                             </constraints>
-                                            <state key="normal" image="previous-track"/>
+                                            <connections>
+                                                <action selector="previousTrackButtonDidTapped:" destination="-1" eventType="touchUpInside" id="vvi-Yv-fq7"/>
+                                            </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WQ8-pf-Tl2">
+                                        <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="playback" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WQ8-pf-Tl2">
                                             <rect key="frame" x="43" y="0.0" width="20" height="20"/>
-                                            <state key="normal" image="play"/>
+                                            <connections>
+                                                <action selector="playButtonDidTapped:" destination="-1" eventType="touchUpInside" id="toU-dD-QvB"/>
+                                            </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t9f-rr-uXy">
                                             <rect key="frame" x="86" y="0.0" width="20.5" height="20"/>
-                                            <state key="normal" image="next-track"/>
+                                            <connections>
+                                                <action selector="nextTrackButtonDidTapped:" destination="-1" eventType="touchUpInside" id="bSX-cs-ZSv"/>
+                                            </connections>
                                         </button>
                                     </subviews>
                                     <constraints>
@@ -92,15 +100,48 @@
                                 <constraint firstAttribute="height" constant="0.5" id="JaW-OT-kJz"/>
                             </constraints>
                         </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2cP-7h-stK" customClass="CustomLabel" customModule="ULTRA" customModuleProvider="target">
+                            <rect key="frame" x="80" y="36.5" width="29.5" height="13.5"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Label">
+                                    <attributes>
+                                        <font key="NSFont" size="12" name="ArialMT"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="right" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="characterSpacing">
+                                    <real key="value" value="20"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cp8-Qn-kBd" customClass="CustomLabel" customModule="ULTRA" customModuleProvider="target">
+                            <rect key="frame" x="335.5" y="36.5" width="29.5" height="13.5"/>
+                            <attributedString key="attributedText">
+                                <fragment content="Label">
+                                    <attributes>
+                                        <font key="NSFont" size="12" name="ArialMT"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="right" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="CWc-vv-cCX" firstAttribute="centerX" secondItem="wye-Pd-Lqr" secondAttribute="centerX" id="48t-Y7-h1B"/>
                         <constraint firstAttribute="bottom" secondItem="CCe-uF-3l6" secondAttribute="bottom" constant="10" id="5a5-HO-j1s"/>
+                        <constraint firstItem="CCe-uF-3l6" firstAttribute="top" secondItem="2cP-7h-stK" secondAttribute="bottom" constant="-10" id="6sU-L2-ZTn"/>
                         <constraint firstAttribute="bottom" secondItem="NCR-jZ-C4o" secondAttribute="bottom" constant="10" id="9Of-7O-jnw"/>
+                        <constraint firstItem="CCe-uF-3l6" firstAttribute="top" secondItem="cp8-Qn-kBd" secondAttribute="bottom" constant="-10" id="B82-Qa-OpQ"/>
                         <constraint firstAttribute="trailing" secondItem="CCe-uF-3l6" secondAttribute="trailing" constant="10" id="Dag-y8-C9b"/>
                         <constraint firstItem="vMd-bk-MiW" firstAttribute="leading" secondItem="NCR-jZ-C4o" secondAttribute="trailing" constant="10" id="EJn-9D-kG0"/>
                         <constraint firstItem="CCe-uF-3l6" firstAttribute="top" secondItem="vMd-bk-MiW" secondAttribute="bottom" constant="10" id="NoD-uf-xPq"/>
+                        <constraint firstItem="2cP-7h-stK" firstAttribute="leading" secondItem="CCe-uF-3l6" secondAttribute="leading" id="Pxc-Q7-nle"/>
+                        <constraint firstItem="cp8-Qn-kBd" firstAttribute="trailing" secondItem="CCe-uF-3l6" secondAttribute="trailing" id="Syv-gA-8ad"/>
                         <constraint firstItem="NCR-jZ-C4o" firstAttribute="leading" secondItem="wye-Pd-Lqr" secondAttribute="leading" constant="10" id="YvR-Gq-6oQ"/>
                         <constraint firstItem="vMd-bk-MiW" firstAttribute="top" secondItem="CWc-vv-cCX" secondAttribute="bottom" constant="10" id="gVc-zB-v4d"/>
                         <constraint firstItem="CCe-uF-3l6" firstAttribute="leading" secondItem="NCR-jZ-C4o" secondAttribute="trailing" constant="10" id="lZY-O0-Zuu"/>
@@ -121,9 +162,4 @@
             <point key="canvasLocation" x="17" y="71"/>
         </view>
     </objects>
-    <resources>
-        <image name="next-track" width="96" height="96"/>
-        <image name="play" width="104" height="104"/>
-        <image name="previous-track" width="96" height="96"/>
-    </resources>
 </document>

@@ -134,19 +134,26 @@ class MagicPlayer{
             }
             
             let image = DataSingleton.shared.images[artistAndSong]
+            let appleMusicArtwork = item.artwork
+            let appleMusicImage = appleMusicArtwork?.image(at: CGSize(width: 300, height: 300))
 
             _ = networkHelper.getSongDuration(id: item.playbackStoreID).done{
                 duration in
                 self.slider.maximumValue = Float(duration/1000)
                 self.bottomPlayerView.songNameLabel.text = item.title
-                self.bottomPlayerView.songImageView.image = image
+                if image != nil{
+                    self.bottomPlayerView.songImageView.image = image
+                }else{
+                    self.bottomPlayerView.songImageView.image = appleMusicImage
+                }
                 self.slider.value = 0.0
 
             }
             
-            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (timer) in
+            timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true, block: { (timer) in
                 self.updateTime()
             })
+            
             RunLoop.current.add(timer, forMode: .commonModes)
             timer.fire()
             
@@ -170,8 +177,37 @@ class MagicPlayer{
         }
     }
     
+    func timeSecondsToFormatted (interval: Int) -> String{
+        
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute, .second]
+        formatter.unitsStyle = .positional
+        
+        let formattedString = formatter.string(from: TimeInterval(interval))!
+        return formattedString
+    }
+    
     @objc func updateTime() {
         
+        let passedTime = Int(slider.value)
+        let remainedTime = Int(slider.maximumValue - slider.value)
+        
+        if passedTime < 10 {
+            bottomPlayerView.passedTimeLabel.text = "0:0\(timeSecondsToFormatted(interval: passedTime))"
+        }else if passedTime < 60{
+            bottomPlayerView.passedTimeLabel.text = "0:\(timeSecondsToFormatted(interval: passedTime))"
+        }else{
+            bottomPlayerView.passedTimeLabel.text = timeSecondsToFormatted(interval: passedTime)
+        }
+        
+        if remainedTime < 10 {
+            bottomPlayerView.remainedTimeLabel.text = "-0:0\(timeSecondsToFormatted(interval: remainedTime))"
+        }else if remainedTime < 60{
+            bottomPlayerView.remainedTimeLabel.text = "-0:\(timeSecondsToFormatted(interval: remainedTime))"
+        }else{
+            bottomPlayerView.remainedTimeLabel.text = "-\(timeSecondsToFormatted(interval: remainedTime))"
+        }
+
         if !bottomPlayerView.editingInProcess{
             DispatchQueue.main.async {
                 self.slider.setValue(Float(self.systemPlayer.currentPlaybackTime), animated: true)
@@ -293,6 +329,25 @@ extension MagicPlayer: SliderDelegate{
     func sliderValueChanged(value: Float){
         systemPlayer.currentPlaybackTime = TimeInterval(value)
     }
-    
-    
 }
+
+extension MagicPlayer: ButtonDelegate{
+    
+    func playbackButtonDidPressed(kindOfButton: KindOfPressedButton) {
+     
+        switch kindOfButton{
+        case .previousTrack:
+            systemPlayer.skipToPreviousItem()
+        case .play:
+            systemPlayer.play()
+        case .nextTrack:
+            systemPlayer.skipToNextItem()
+        }
+    }
+}
+
+
+
+
+
+

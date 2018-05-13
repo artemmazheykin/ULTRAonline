@@ -137,7 +137,7 @@ class NetworkHelperImpl: NetworkHelper{
             if let request = getURLSong(with: id){
                 let dataTask = URLSession.shared.dataTask(with: request){ (data, response, error) in
                     guard error == nil, let data = data else {
-                        print("Error with getSongDuration URL!!!")
+                        print("Error \(error?.localizedDescription) with getSongDuration URL!!!")
                         pup.fulfill(0)
                         return
                     }

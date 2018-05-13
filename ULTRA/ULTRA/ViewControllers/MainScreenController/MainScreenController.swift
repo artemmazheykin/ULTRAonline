@@ -73,8 +73,13 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        bottomPlayerView.passedTimeLabel.text = ""
+        bottomPlayerView.remainedTimeLabel.text = ""
+        bottomPlayerView.songNameLabel.text = ""
+        
         radioPlayer.mainScreenDelegate = self
-        bottomPlayerView.delegate = radioPlayer
+        bottomPlayerView.sliderDelegate = radioPlayer
+        bottomPlayerView.buttonDelegate = radioPlayer
         radioPlayer.slider = bottomPlayerView.slider
         radioPlayer.bottomPlayerView = bottomPlayerView
         DataSingleton.shared.delegateMainScreenVC = self
