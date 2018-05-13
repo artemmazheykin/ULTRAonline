@@ -104,32 +104,48 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         SKCloudServiceController.requestAuthorization { (status:SKCloudServiceAuthorizationStatus) in
 
-//            switch SKCloudServiceController.authorizationStatus() {
-//                
-//            case .authorized:
-//                
-//                print("The user's already authorized - we don't need to do anything more here, so we'll exit early.")
-//                return
-//                
-//            case .denied:
-//                
-//                print("The user has selected 'Don't Allow' in the past - so we're going to show them a different dialog to push them through to their Settings page and change their mind, and exit the function early.")
-//                
-//                // Show an alert to guide users into the Settings
-//                
-//                return
-//                
-//            case .notDetermined:
-//                
-//                print("The user hasn't decided yet - so we'll break out of the switch and ask them.")
-//                break
-//                
-//            case .restricted:
-//                
-//                print("User may be restricted; for example, if the device is in Education mode, it limits external Apple Music usage. This is similar behaviour to Denied.")
-//                return
-//                
-//            }
+            switch SKCloudServiceController.authorizationStatus() {
+                
+            case .authorized:
+                
+                print("The user's already authorized - we don't need to do anything more here, so we'll exit early.")
+                
+                if UserDefaults.standard.value(forKey: "UserToken") == nil{
+                    let serviceController = SKCloudServiceController()
+                    serviceController.requestUserToken(forDeveloperToken: DataSingleton.shared.developerToken) { (tokenOpt, error) in
+                        guard error == nil else{
+                            print("ERRORRRRR!!!! \(error.debugDescription)")
+                            
+                            return
+                        }
+                        if let token = tokenOpt{
+                            DataSingleton.shared.userToken = token
+                            UserDefaults.standard.set(token, forKey: "UserToken")
+                        }
+                    }
+                }
+                
+                return
+                
+            case .denied:
+                
+                print("The user has selected 'Don't Allow' in the past - so we're going to show them a different dialog to push them through to their Settings page and change their mind, and exit the function early.")
+                
+                // Show an alert to guide users into the Settings
+                
+                return
+                
+            case .notDetermined:
+                
+                print("The user hasn't decided yet - so we'll break out of the switch and ask them.")
+                break
+                
+            case .restricted:
+                
+                print("User may be restricted; for example, if the device is in Education mode, it limits external Apple Music usage. This is similar behaviour to Denied.")
+                return
+                
+            }
 
             switch status {
 

@@ -23,7 +23,7 @@ class DataSingleton{
     
     var songService: SongService!
     var isDownloadingMediaContentPermited: Bool!
-    var developerToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzNTRXSDVVMzMifQ.eyJpc3MiOiI3NzMyNE5URzNEIiwiaWF0IjoxNTIzOTE1Njg2LCJleHAiOjE1MjM5NTg4ODZ9.EjQysunHdLRV4jMfUXsBEYIk-C2cBmlSWlzwUV3noYLnxYfbjWOwksbOlQgbRwCppfzUQ_osE-6reLrSI_K8Ag"
+    var developerToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzNTRXSDVVMzMifQ.eyJpc3MiOiI3NzMyNE5URzNEIiwiaWF0IjoxNTI2MjA0NTc1LCJleHAiOjE1NDE3NTY1NzV9.6TxACUqT4CKhaq_eE9CIUbvotZ2KP0nC5n8dUlslogIXsIBRh1TyTRttm5lXl-ZY9CBdgGQZ2CCZ-ienOeFOFQ"
     var userToken = ""
     
     weak var delegateLast10VC: DataSingletonDelegate?
@@ -194,8 +194,11 @@ class DataSingleton{
             
             if let id = trackId{
                 self.songService.addIDToUserDefaults(id: (songName: songModel.artistAndSongName, number: id))
-                _ = self.networkHelper.addSongToLibrary(with: id).done{result in
-                    print("result = \(result)")
+                
+                if let flag = UserDefaults.standard.value(forKey: "IsAutoAddingToAppleMusicPermited") as? Bool, flag == true{
+                    _ = self.networkHelper.addSongToLibrary(with: id).done{result in
+                        print("result = \(result)")
+                    }
                 }
             }
         }

@@ -238,7 +238,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="JPX-Hv-8uc">
-                                <rect key="frame" x="10" y="50" width="355" height="104"/>
+                                <rect key="frame" x="10" y="50" width="355" height="142"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="hJf-26-yhZ">
                                         <rect key="frame" x="0.0" y="0.0" width="355" height="28"/>
@@ -313,8 +313,33 @@
                                             </segmentedControl>
                                         </subviews>
                                     </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="b80-Ij-i6J">
+                                        <rect key="frame" x="0.0" y="114" width="355" height="28"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Добавлять треки в Apple Music" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="AFP-7o-z6m">
+                                                <rect key="frame" x="0.0" y="0.0" width="270" height="28"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <segmentedControl opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="DYa-EJ-4ac">
+                                                <rect key="frame" x="275" y="0.0" width="80" height="29"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" relation="lessThanOrEqual" priority="999" constant="80" id="gzE-2U-IRe"/>
+                                                </constraints>
+                                                <segments>
+                                                    <segment title="да"/>
+                                                    <segment title="нет"/>
+                                                </segments>
+                                                <connections>
+                                                    <action selector="didTappedOnAddToAppleMusic:" destination="Gnz-ig-b4z" eventType="valueChanged" id="cZV-aU-sdM"/>
+                                                </connections>
+                                            </segmentedControl>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="DYa-EJ-4ac" firstAttribute="trailing" secondItem="eFF-8b-tru" secondAttribute="trailing" id="9SV-nq-7is"/>
                                     <constraint firstItem="eFF-8b-tru" firstAttribute="trailing" secondItem="OX0-G1-MXP" secondAttribute="trailing" id="Slm-HS-vGJ"/>
                                     <constraint firstItem="OX0-G1-MXP" firstAttribute="trailing" secondItem="hD6-z3-aGS" secondAttribute="trailing" id="v08-1b-Lcg"/>
                                 </constraints>
@@ -352,6 +377,7 @@
                         <viewLayoutGuide key="safeArea" id="qm8-JT-Gja"/>
                     </view>
                     <connections>
+                        <outlet property="addToAppleMusicSegmentedControl" destination="DYa-EJ-4ac" id="hVq-Ei-uVg"/>
                         <outlet property="artworkSegmentedControl" destination="OX0-G1-MXP" id="qdz-FU-Jdd"/>
                         <outlet property="autoPlaySegmentedControl" destination="eFF-8b-tru" id="fEe-3B-YV3"/>
                         <outlet property="bitrateSegmentedControl" destination="hD6-z3-aGS" id="maI-l1-hli"/>

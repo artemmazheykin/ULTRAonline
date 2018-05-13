@@ -7,13 +7,15 @@
 //
 
 import UIKit
+import StoreKit
+
 
 class SettingsViewController: UIViewController {
 
     @IBOutlet weak var bitrateSegmentedControl: UISegmentedControl!
     @IBOutlet weak var artworkSegmentedControl: UISegmentedControl!
     @IBOutlet weak var autoPlaySegmentedControl: UISegmentedControl!
-    
+    @IBOutlet weak var addToAppleMusicSegmentedControl: UISegmentedControl!
     
     
     override func viewDidLoad() {
@@ -36,6 +38,17 @@ class SettingsViewController: UIViewController {
         }else{
             autoPlaySegmentedControl.selectedSegmentIndex = 1
         }
+        
+        if let flag = UserDefaults.standard.value(forKey: "IsAutoAddingToAppleMusicPermited") as? Bool{
+            if UserDefaults.standard.value(forKey: "UserToken") == nil{
+                addToAppleMusicSegmentedControl.selectedSegmentIndex = 1
+            }else{
+                addToAppleMusicSegmentedControl.selectedSegmentIndex = flag ? 0 : 1
+            }
+        }else{
+            addToAppleMusicSegmentedControl.selectedSegmentIndex = 1
+        }
+
 
         // Do any additional setup after loading the view.
     }
@@ -83,11 +96,40 @@ class SettingsViewController: UIViewController {
         default: break
         }
         UserDefaults.standard.set(player.isAutoPlay, forKey: "IsAutoPlay")
+
+    }
+    
+    @IBAction func didTappedOnAddToAppleMusic(_ sender: UISegmentedControl) {
         
-        
+        switch sender.selectedSegmentIndex {
+        case 0:
+            
+            if UserDefaults.standard.value(forKey: "UserToken") == nil{
+                let serviceController = SKCloudServiceController()
+                serviceController.requestUserToken(forDeveloperToken: DataSingleton.shared.developerToken) { (tokenOpt, error) in
+                    guard error == nil else{
+                        print("ERRORRRRR!!!! \(error.debugDescription)")
+                        self.addToAppleMusicSegmentedControl.selectedSegmentIndex = 1
+                        return
+                    }
+                    if let token = tokenOpt{
+                        DataSingleton.shared.userToken = token
+                        UserDefaults.standard.set(token, forKey: "UserToken")
+                    }
+                    else{
+                        self.addToAppleMusicSegmentedControl.selectedSegmentIndex = 1
+                    }
+                }
+            }
+            
+            UserDefaults.standard.set(true, forKey: "IsAutoAddingToAppleMusicPermited")
+        case 1:
+            UserDefaults.standard.set(false, forKey: "IsAutoAddingToAppleMusicPermited")
+        default: break
+        }
         
     }
-
+    
     
     @IBAction func didTappedSendReview(_ sender: UIButton) {
 //  app id 1360797374
