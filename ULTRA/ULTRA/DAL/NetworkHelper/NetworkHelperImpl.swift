@@ -51,18 +51,23 @@ class NetworkHelperImpl: NetworkHelper{
                 }
 
                 let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                print("jsooooooon  = \(json)")
                 guard let parsedResult = json as? [String: Any],
-                    let results = parsedResult[Keys.results] as? Array<[String: Any]>,
-                    let result = results.first,
-                    var artwork = result[Keys.artwork] as? String else {
+                    let results = parsedResult[Keys.results] as? [String: Any],
+                    let songs = results[Keys.songs] as? [String: Any],
+                    let dataArray = songs[Keys.data] as? Array<[String: Any]>,
+                    let dataFirst = dataArray.first,
+                    let attributes = dataFirst[Keys.attributes] as? [String: Any],
+                    let artwork = attributes[Keys.artworkForApMusicAPI] as? [String: Any],
+                    var artworkUrlString = artwork[Keys.url] as? String else {
                         pup.fulfill(nil)
                         return
                 }
-                if size != 100, size > 0 {
-                    artwork = artwork.replacingOccurrences(of: "100x100", with: "\(size)x\(size)")
+                if size > 0 {
+                    artworkUrlString = artworkUrlString.replacingOccurrences(of: "{w}x{h}", with: "\(size)x\(size)")
                 }
                 
-                let artworkURL = URL(string: artwork)
+                let artworkURL = URL(string: artworkUrlString)
                 pup.fulfill(artworkURL)
             }).resume()
         }
@@ -377,7 +382,12 @@ class NetworkHelperImpl: NetworkHelper{
         static let songIds = "ids[songs]"
         static let limit = "limit"
         static let types = "types"
-        
+        static let songs = "songs"
+        static let data = "data"
+        static let url = "url"
+        static let attributes = "attributes"
+        static let artworkForApMusicAPI = "artwork"
+
         // Response
         static let results = "results"
         static let artwork = "artworkUrl100"
