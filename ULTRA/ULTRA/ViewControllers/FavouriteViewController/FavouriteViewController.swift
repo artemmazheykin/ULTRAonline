@@ -38,7 +38,7 @@ class FavouriteViewController: UIViewController{
         self.navigationController?.navigationBar.tintColor = UIColor.white
         print("favoriteSongs.count = \(favoriteSongs.count)")
         // Do any additional setup after loading the view.
-        
+        favoritesTable.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
     }
     
     func updateFavoriteSongs(){
