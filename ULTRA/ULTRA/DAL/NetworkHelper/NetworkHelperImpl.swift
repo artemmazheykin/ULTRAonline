@@ -38,12 +38,12 @@ class NetworkHelperImpl: NetworkHelper{
     func getUrlImage(metadata: String, size: Int) -> Promise<URL?> {
         return Promise<URL?>{pup in
             
-            guard !metadata.isEmpty, metadata !=  " - ", let url = getSearchURLSongWithStorefront(with: metadata) else {
+            guard !metadata.isEmpty, metadata !=  " - ", let request = getSearchURLSongWithApMusAPI(with: metadata) else {
                 pup.fulfill(nil)
                 return
             }
             
-            URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+            URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
                 guard error == nil, let data = data else {
                     print("!!!!error \(error.debugDescription)")
                     pup.fulfill(nil)
@@ -257,20 +257,28 @@ class NetworkHelperImpl: NetworkHelper{
         return components.url
     }
     
-    private func getSearchURLSongWithApMusAPI(with term: String) -> URL? {
-        
-        
+    
+    
+    
+    //https://api.music.apple.com/v1/catalog/us/search?term=james+brown&limit=2&types=artists,albums
+    private func getSearchURLSongWithApMusAPI(with term: String) -> URLRequest? {
         
         var components = URLComponents()
-        components.scheme = Domain.scheme
-        components.host = Domain.host
-        components.path = Domain.path
+        components.scheme = DomainAppleMusicApi.scheme
+        components.host = DomainAppleMusicApi.host
+        components.path = DomainAppleMusicApi.pathFindSong
         components.queryItems = [URLQueryItem]()
         components.queryItems?.append(URLQueryItem(name: Keys.term, value: term))
-        components.queryItems?.append(URLQueryItem(name: Keys.entity, value: Values.entitySong))
-        components.queryItems?.append(URLQueryItem(name: Keys.storefront, value: Values.storefront))
-        
-        return components.url
+        components.queryItems?.append(URLQueryItem(name: Keys.limit, value: Values.limit))
+        components.queryItems?.append(URLQueryItem(name: Keys.types, value: Values.types))
+        if let url = components.url{
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.addValue("Bearer \(fetchDeveloperToken())", forHTTPHeaderField: "Authorization")
+            return request
+        }else{
+            return nil
+        }
     }
 
     private func getSearchURLSong(with term: String) -> URL? {
@@ -357,7 +365,7 @@ class NetworkHelperImpl: NetworkHelper{
         static let host = "api.music.apple.com"
         static let pathFetchSong = "/v1/catalog/ru/songs/"
         static let pathAddSong = "/v1/me/library"
-        
+        static let pathFindSong = "/v1/catalog/ru/search"
         //"https://api.music.apple.com/v1/catalog/ru/songs/\(id)")
     }
     
@@ -367,6 +375,8 @@ class NetworkHelperImpl: NetworkHelper{
         static let entity = "entity"
         static let storefront = "s"
         static let songIds = "ids[songs]"
+        static let limit = "limit"
+        static let types = "types"
         
         // Response
         static let results = "results"
@@ -381,6 +391,9 @@ class NetworkHelperImpl: NetworkHelper{
         static let entitySong = "song"
         static let entityArtist = "artist"
         static let storefront = "143469"
+        static let limit = "1"
+        static let types = "songs"
+
     }
     
     func getDataFromUrl(url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
