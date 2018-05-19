@@ -21,10 +21,25 @@ class MagicPlayer{
     
     var asset: AVAsset!
     private var avPlayer: AVPlayer!
-    private var systemPlayer = MPMusicPlayerController.systemMusicPlayer//.applicationMusicPlayer
+    var systemPlayer = MPMusicPlayerController.systemMusicPlayer//.applicationMusicPlayer
     private var playerItem: AVPlayerItem?
     weak var slider: UISlider!
     weak var bottomPlayerView: BottomPlayerView!
+    var currentRadioSongName = ""{
+        didSet{
+            if isRadioActive{
+                bottomPlayerView.songNameLabel.text = currentRadioSongName
+            }
+        }
+    }
+    var currentRadioSongImage: UIImage?{
+        didSet{
+            if isRadioActive{
+                bottomPlayerView.songImageView.image = currentRadioSongImage
+            }
+        }
+    }
+
     var timer = Timer()
     var displayLink = CADisplayLink()
     var nowPlaying: MPMediaItem?
@@ -49,7 +64,34 @@ class MagicPlayer{
         }
     }
     
-    open var isPlaying = false
+    var isRadioActive = false{
+        didSet{
+            if isRadioActive{
+                bottomPlayerView.slider.isEnabled = false
+                bottomPlayerView.passedTimeLabel.isHidden = true
+                bottomPlayerView.remainedTimeLabel.isHidden = true
+                bottomPlayerView.slider.setValue(0.0, animated: true)
+                bottomPlayerView.playPauseButton.tag = 0
+                bottomPlayerView.previousSongButton.isEnabled = false
+                bottomPlayerView.nextSongButton.isEnabled = false
+                bottomPlayerView.updateStartStopButton()
+            }else{
+                bottomPlayerView.passedTimeLabel.isHidden = false
+                bottomPlayerView.remainedTimeLabel.isHidden = false
+                bottomPlayerView.playPauseButton.tag = 1
+                bottomPlayerView.slider.isEnabled = true
+                bottomPlayerView.previousSongButton.isEnabled = true
+                bottomPlayerView.nextSongButton.isEnabled = true
+                bottomPlayerView.updateStartStopButton()
+            }
+        }
+    }
+    
+    open var isPlaying = false{
+        didSet{
+            bottomPlayerView.updateStartStopButton()
+        }
+    }
     
     var mainScreenDelegate: MagicPlayerDelegate?
     var favorVCDelegate: MagicPlayerDelegate?
@@ -90,6 +132,7 @@ class MagicPlayer{
         }
         systemPlayer.repeatMode = .all
         systemPlayer.beginGeneratingPlaybackNotifications()
+        
     }
     
     deinit {
@@ -97,6 +140,8 @@ class MagicPlayer{
     }
     
     open func systemPlayerPlay(id: String?){
+        isRadioActive = false
+        
         if let id = id{
             DispatchQueue.global(qos: .userInitiated).async {
                 self.stop()
@@ -157,25 +202,9 @@ class MagicPlayer{
             RunLoop.current.add(timer, forMode: .commonModes)
             timer.fire()
             
-//            self.displayLink = CADisplayLink(target: self, selector: #selector(self.updateTime))
-//            self.displayLink.preferredFramesPerSecond = 1
-//            self.displayLink.add(to: .current, forMode: .commonModes)
-        
         }
     }
     
-    func updateSliderInBackgroundThread(){
-        DispatchQueue.global(qos: .background).async {
-            while true{
-                usleep(300000)
-                if !self.bottomPlayerView.editingInProcess{
-                    DispatchQueue.main.async {
-                        self.slider.setValue(Float(self.systemPlayer.currentPlaybackTime), animated: true)
-                    }
-                }
-            }
-        }
-    }
     
     func timeSecondsToFormatted (interval: Int) -> String{
         
@@ -219,9 +248,12 @@ class MagicPlayer{
         return avPlayer.timeControlStatus
     }
     open func play() {
+        isRadioActive = true
         
         systemPlayer.stop()
         avPlayer?.play()
+        bottomPlayerView.songNameLabel.text = currentRadioSongName
+        bottomPlayerView.songImageView.image = currentRadioSongImage
         DispatchQueue.global(qos: .background).async {
             
             
@@ -271,7 +303,6 @@ class MagicPlayer{
     @objc private func handlePlaybackState(notification: Notification) {
         switch systemPlayer.playbackState {
         case .playing:
-//            updateSliderInBackgroundThread()
             print("play")
             return
         case .paused, .stopped:
@@ -305,7 +336,7 @@ class MagicPlayer{
                 try AVAudioSession.sharedInstance().setActive(false)
             }
             catch{
-                print("error")
+                print("error312311")
             }
         case .ended:
             guard let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else { break }
@@ -314,7 +345,7 @@ class MagicPlayer{
                 try AVAudioSession.sharedInstance().setActive(true, with: .notifyOthersOnDeactivation)
             }
             catch{
-                print("error")
+                print("error342411")
             }
             DispatchQueue.main.async {
                 options.contains(.shouldResume) ? self.play() : self.pause()
@@ -340,6 +371,8 @@ extension MagicPlayer: ButtonDelegate{
             systemPlayer.skipToPreviousItem()
         case .play:
             systemPlayer.play()
+        case .pause:
+            systemPlayer.pause()
         case .nextTrack:
             systemPlayer.skipToNextItem()
         }

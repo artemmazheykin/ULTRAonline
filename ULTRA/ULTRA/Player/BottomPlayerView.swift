@@ -18,7 +18,7 @@ protocol ButtonDelegate {
 
 
 enum KindOfPressedButton{
-    case previousTrack, play, nextTrack
+    case previousTrack, play, pause, nextTrack
 }
 
 
@@ -45,6 +45,29 @@ class BottomPlayerView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         instanceFromNib()
+    }
+    
+    @IBAction func nextTrackTouchDown(_ sender: UIButton) {
+        let backgroundView = UIView()
+        backgroundView.tag = 777
+        print("sender.frame.origin = \(sender.frame.origin)")
+        backgroundView.alpha = 0.5
+        backgroundView.layer.cornerRadius = sender.frame.width/2
+        backgroundView.frame.size = CGSize(width: sender.frame.width, height: sender.frame.height)
+        backgroundView.backgroundColor = UIColor.gray
+        sender.insertSubview(backgroundView, at: 0)
+        UIView.animate(withDuration: 0.3, animations: {
+            let resize = CGFloat(10)
+            backgroundView.frame.size = CGSize(width: sender.frame.width+resize, height: sender.frame.height+resize)
+            backgroundView.layer.cornerRadius = (sender.frame.width+resize)/2
+            backgroundView.center = CGPoint(x: sender.frame.width/2, y: sender.frame.height/2)
+        }) { (result) in
+            for view in sender.subviews{
+                if view.tag == 777{
+                    view.removeFromSuperview()
+                }
+            }
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -80,19 +103,41 @@ class BottomPlayerView: UIView {
         songImageView.layer.borderWidth = 0.25
         songImageView.layer.borderColor = UIColor(red: 123/255, green: 123/255, blue: 123/255, alpha: 1.0).cgColor
         slider.isContinuous = true
-        
-        let previousImage = #imageLiteral(resourceName: "previous-track").withRenderingMode(.alwaysTemplate)
-        let playImage = #imageLiteral(resourceName: "play").withRenderingMode(.alwaysTemplate)
-        let nextImage = #imageLiteral(resourceName: "next-track").withRenderingMode(.alwaysTemplate)
+        switch MagicPlayer.shared.systemPlayer.playbackState{
+        case .playing, .paused:
+            self.playPauseButton.tag = 1
+        default:
+            self.playPauseButton.tag = 0
+        }
 
-        
-        previousSongButton.setImage(previousImage, for: .normal)
-//        previousSongButton.backgro
-        
-        playPauseButton.setImage(playImage, for: .normal)
-        nextSongButton.setImage(nextImage, for: .normal)
-        
-        
+        previousSongButton.setImage(#imageLiteral(resourceName: "previous-track"), for: .normal)
+        updateStartStopButton()
+        nextSongButton.setImage(#imageLiteral(resourceName: "next-track"), for: .normal)
+    }
+    
+    func updateStartStopButton(){
+        DispatchQueue.main.async {
+            
+            switch self.playPauseButton.tag {
+            case 0:
+                if MagicPlayer.shared.timeControlStatus().rawValue == 0{
+                    self.playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+                }else{
+                    self.playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+                }
+                
+            case 1:
+                switch MagicPlayer.shared.systemPlayer.playbackState{
+                case .paused:
+                    self.playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+                default:
+                    self.playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+                }
+                
+            default:
+                break
+            }
+        }
     }
     
     @IBAction func valueChanged(_ sender: UISlider) {
@@ -113,7 +158,30 @@ class BottomPlayerView: UIView {
     }
     
     @IBAction func playButtonDidTapped(_ sender: UIButton) {
-        buttonDelegate?.playbackButtonDidPressed(kindOfButton: .play)
+        switch sender.tag {
+        case 0:
+            if MagicPlayer.shared.isPlaying{
+                MagicPlayer.shared.pause()
+                MagicPlayer.shared.isPlaying = false
+            }
+            else{
+                MagicPlayer.shared.play()
+                MagicPlayer.shared.isPlaying = true
+            }
+        case 1:
+            switch MagicPlayer.shared.systemPlayer.playbackState.rawValue{
+            case 2:
+                buttonDelegate?.playbackButtonDidPressed(kindOfButton: .play)
+                sender.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+            default:
+                buttonDelegate?.playbackButtonDidPressed(kindOfButton: .pause)
+                sender.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+            }
+            
+        default:
+            break
+        }
+        
     }
     
     @IBAction func nextTrackButtonDidTapped(_ sender: UIButton) {

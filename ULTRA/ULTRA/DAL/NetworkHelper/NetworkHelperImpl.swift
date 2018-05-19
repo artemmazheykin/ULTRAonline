@@ -60,6 +60,7 @@ class NetworkHelperImpl: NetworkHelper{
                     let attributes = dataFirst[Keys.attributes] as? [String: Any],
                     let artwork = attributes[Keys.artworkForApMusicAPI] as? [String: Any],
                     var artworkUrlString = artwork[Keys.url] as? String else {
+                        print("error with parsing json object")
                         pup.fulfill(nil)
                         return
                 }

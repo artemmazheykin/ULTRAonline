@@ -199,10 +199,13 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
     }
     
     func updateMedia(){
-        self.artistName.fadeTransition(0.5)
-        self.songName.fadeTransition(0.5)
-        self.artistName.text = self.currentArtistName
-        self.songName.text = self.currentSongName
+        artistName.fadeTransition(0.5)
+        songName.fadeTransition(0.5)
+        artistName.text = currentArtistName
+        songName.text = currentSongName
+        radioPlayer.currentRadioSongName = currentSongName
+        radioPlayer.currentRadioSongImage = artistImageFromVC.image
+        
         self.updateLockScreen(artist: self.currentArtistName, song: self.currentSongName, image: self.artistImageFromVC.image!)
     }
     
@@ -246,9 +249,9 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
         commandCenter.dislikeCommand.localizedTitle = "Не нравится"
         commandCenter.likeCommand.addTarget(self, action: #selector(likeLockScreen))
         commandCenter.dislikeCommand.addTarget(self, action: #selector(dislikeLockScreen))
-        commandCenter.nextTrackCommand.addTarget{ event in
-        return .success
-        }
+//        commandCenter.nextTrackCommand.addTarget{ event in
+//        return .success
+//        }
     }
     
 //    @objc func likeOrDislike(){

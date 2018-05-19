@@ -20,6 +20,7 @@
 import UIKit
 import AVFoundation
 import StoreKit
+import MediaPlayer
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -73,6 +74,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
+        
+        
+        switch MagicPlayer.shared.systemPlayer.playbackState{
+        case .playing, .paused:
+            MagicPlayer.shared.isRadioActive = false
+        default:
+            MagicPlayer.shared.isRadioActive = true
+        }
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 

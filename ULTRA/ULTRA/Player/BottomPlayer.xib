@@ -58,12 +58,14 @@
                                                 <constraint firstAttribute="width" constant="20" id="W0C-hT-2xx"/>
                                             </constraints>
                                             <connections>
+                                                <action selector="nextTrackTouchDown:" destination="-1" eventType="touchDown" id="od9-2Y-JKp"/>
                                                 <action selector="previousTrackButtonDidTapped:" destination="-1" eventType="touchUpInside" id="vvi-Yv-fq7"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="playback" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WQ8-pf-Tl2">
                                             <rect key="frame" x="43" y="0.0" width="20" height="20"/>
                                             <connections>
+                                                <action selector="nextTrackTouchDown:" destination="-1" eventType="touchDown" id="Q0v-cp-IPx"/>
                                                 <action selector="playButtonDidTapped:" destination="-1" eventType="touchUpInside" id="toU-dD-QvB"/>
                                             </connections>
                                         </button>
@@ -71,6 +73,7 @@
                                             <rect key="frame" x="86" y="0.0" width="20.5" height="20"/>
                                             <connections>
                                                 <action selector="nextTrackButtonDidTapped:" destination="-1" eventType="touchUpInside" id="bSX-cs-ZSv"/>
+                                                <action selector="nextTrackTouchDown:" destination="-1" eventType="touchDown" id="7PG-1j-w8L"/>
                                             </connections>
                                         </button>
                                     </subviews>

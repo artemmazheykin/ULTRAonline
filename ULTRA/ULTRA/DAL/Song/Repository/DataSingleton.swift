@@ -16,6 +16,7 @@ import MediaPlayer
     
     @objc optional func last10SongsHaveChanged(last10Songs:[SongModel], last10SongsStrings: [String])
     @objc optional func favoriteSongsHaveChanged()
+
 }
 
 
@@ -29,6 +30,7 @@ class DataSingleton{
     weak var delegateLast10VC: DataSingletonDelegate?
     weak var delegateFavoritesVC: DataSingletonDelegate?
     weak var delegateMainScreenVC: DataSingletonDelegate?
+    
     
     var songs:[String:SongModel]{
         didSet{

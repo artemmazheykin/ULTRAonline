@@ -330,6 +330,11 @@ extension FavouriteViewController: UITableViewDataSource{
                         }
                     }
                 }
+                else{
+                    DispatchQueue.main.async {
+                        cell.artistImage.image = #imageLiteral(resourceName: "ultra_logo_black")
+                    }
+                }
             }
         }
         
