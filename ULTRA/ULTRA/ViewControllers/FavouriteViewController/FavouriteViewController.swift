@@ -314,7 +314,7 @@ extension FavouriteViewController: UITableViewDataSource{
             cell.imageView?.image = nil
             DispatchQueue.global(qos: .background).async {
                 if DataSingleton.shared.isDownloadingMediaContentPermited{
-                    _ = self.networkHelper.getUrlImage(metadata: song.artistAndSongName, size: 300).done{urlOpt in
+                    _ = self.networkHelper.getUrlImage(songName: song.songNameEncoded, metadata: song.artistAndSongName, size: 300).done{urlOpt in
                         if let url = urlOpt{
                             cell.artistImage.kf.setImage(with: url, placeholder: #imageLiteral(resourceName: "ultra_logo_black"), completionHandler: { (imageOpt, _, _, _) in
                                 if let image = imageOpt{

@@ -15,9 +15,19 @@ import UIKit
     var dateOfCreation:Date
     var isFavorite = false
     var artistAndSongName: String{
-        return artistName + " - " + songName
+        
+        var resultString = songName + " " + artistName
+        resultString = resultString.replacingOccurrences(of: "_", with: " ")
+        resultString = resultString.replacingOccurrences(of: "(live)", with: "")
+        return resultString
     }
 
+    var songNameEncoded: String{
+        var resultString = songName
+        resultString = resultString.replacingOccurrences(of: "_", with: " ")
+        resultString = resultString.replacingOccurrences(of: "(live)", with: "")
+        return resultString
+    }
     
     init(artistName: String, songName: String){
         self.artistName = artistName

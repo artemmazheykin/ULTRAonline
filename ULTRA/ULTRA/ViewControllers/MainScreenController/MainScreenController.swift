@@ -170,7 +170,7 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
                                 self.updateMedia()
                             }
                             if self.isDownloadingMediaContentPermited{
-                                _ = self.networkHelper.getUrlImage(metadata: self.currentSong.artistAndSongName, size: 500).done{urlOpt in
+                                _ = self.networkHelper.getUrlImage(songName: self.currentSong.songNameEncoded, metadata: self.currentSong.artistAndSongName, size: 500).done{urlOpt in
                                     if let url = urlOpt{
                                         self.artistImageFromVC.kf.setImage(with: url, completionHandler: { (image, _, _, _) in
                                             

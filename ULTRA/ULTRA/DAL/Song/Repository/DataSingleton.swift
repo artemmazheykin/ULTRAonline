@@ -176,7 +176,7 @@ class DataSingleton{
             songModel.dateOfCreation = Date()
             songs[songModel.artistAndSongName] = songModel
             songService.addSongToFavorites(songModel: songModel)
-        _ = networkHelper.getUrlImage(metadata: songModel.artistAndSongName, size: 300).done{url in
+        _ = networkHelper.getUrlImage(songName: songModel.songNameEncoded, metadata: songModel.artistAndSongName, size: 300).done{url in
             
             if self.isDownloadingMediaContentPermited{
                 if let url = url{
