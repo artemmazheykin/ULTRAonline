@@ -66,23 +66,33 @@ class MagicPlayer{
     
     var isRadioActive = false{
         didSet{
-            if isRadioActive{
-                bottomPlayerView.slider.isEnabled = false
-                bottomPlayerView.passedTimeLabel.isHidden = true
-                bottomPlayerView.remainedTimeLabel.isHidden = true
-                bottomPlayerView.slider.setValue(0.0, animated: true)
-                bottomPlayerView.playPauseButton.tag = 0
-                bottomPlayerView.previousSongButton.isEnabled = false
-                bottomPlayerView.nextSongButton.isEnabled = false
-                bottomPlayerView.updateStartStopButton()
-            }else{
-                bottomPlayerView.passedTimeLabel.isHidden = false
-                bottomPlayerView.remainedTimeLabel.isHidden = false
-                bottomPlayerView.playPauseButton.tag = 1
-                bottomPlayerView.slider.isEnabled = true
-                bottomPlayerView.previousSongButton.isEnabled = true
-                bottomPlayerView.nextSongButton.isEnabled = true
-                bottomPlayerView.updateStartStopButton()
+            DispatchQueue.main.async {
+                if self.isRadioActive{
+                    self.bottomPlayerView.slider.isEnabled = false
+                    self.bottomPlayerView.passedTimeLabel.isHidden = true
+                    self.bottomPlayerView.remainedTimeLabel.isHidden = true
+                    self.bottomPlayerView.slider.setValue(0.0, animated: true)
+                    self.bottomPlayerView.playPauseButton.tag = 0
+                    self.bottomPlayerView.previousSongButton.isEnabled = false
+                    self.bottomPlayerView.nextSongButton.isEnabled = false
+                    self.bottomPlayerView.updateStartStopButton()
+                }else{
+                    self.bottomPlayerView.passedTimeLabel.isHidden = false
+                    self.bottomPlayerView.remainedTimeLabel.isHidden = false
+                    self.bottomPlayerView.playPauseButton.tag = 1
+                    self.bottomPlayerView.slider.isEnabled = true
+                    self.bottomPlayerView.previousSongButton.isEnabled = true
+                    self.bottomPlayerView.nextSongButton.isEnabled = true
+                    self.bottomPlayerView.updateStartStopButton()
+                }
+            }
+        }
+    }
+    
+    var isSystemPlayerPlaying = MPMusicPlayerController.systemMusicPlayer.playbackState{
+        didSet{
+            if !isRadioActive{
+                self.bottomPlayerView.updateStartStopButton()
             }
         }
     }
@@ -140,11 +150,11 @@ class MagicPlayer{
     }
     
     open func systemPlayerPlay(id: String?){
-        isRadioActive = false
         
         if let id = id{
             DispatchQueue.global(qos: .userInitiated).async {
                 self.stop()
+                self.isRadioActive = false
                 let audiosession = AVAudioSession.sharedInstance()
                 do{
                     try audiosession.setActive(false)
@@ -162,6 +172,9 @@ class MagicPlayer{
                 self.favoriteSongIDsDescriptor.startItemID = id
                 self.systemPlayer.setQueue(with: self.favoriteSongIDsDescriptor)
                 self.systemPlayer.play()
+                DispatchQueue.main.async {
+                    self.bottomPlayerView.playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+                }
             }
         }
     }
@@ -236,8 +249,8 @@ class MagicPlayer{
         }else{
             bottomPlayerView.remainedTimeLabel.text = "-\(timeSecondsToFormatted(interval: remainedTime))"
         }
-
-        if !bottomPlayerView.editingInProcess{
+        
+        if !bottomPlayerView.editingInProcess && !isRadioActive{
             DispatchQueue.main.async {
                 self.slider.setValue(Float(self.systemPlayer.currentPlaybackTime), animated: true)
             }
@@ -255,8 +268,6 @@ class MagicPlayer{
         bottomPlayerView.songNameLabel.text = currentRadioSongName
         bottomPlayerView.songImageView.image = currentRadioSongImage
         DispatchQueue.global(qos: .background).async {
-            
-            
             usleep(500000)
             if self.avPlayer?.timeControlStatus.rawValue == 1 || self.avPlayer?.timeControlStatus.rawValue == 0{
                 self.setupPlayer(with: self.asset)

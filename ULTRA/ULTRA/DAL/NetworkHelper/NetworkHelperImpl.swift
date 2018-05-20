@@ -325,7 +325,12 @@ class NetworkHelperImpl: NetworkHelper{
     func addSongToLibrary(with id: String) -> Promise<Bool>{
         return Promise<Bool> { pup in
             if let request = getURLAddSong(with: id){
-                let dataTask = URLSession.shared.dataTask(with: request)
+                let dataTask = URLSession.shared.dataTask(with: request, completionHandler: { (_, _, error) in
+                    if error != nil{
+                        print("error with adding track to apple music library: \(error.debugDescription)")
+                    }
+                })
+                
                 dataTask.resume()
                 pup.fulfill(true)
             }

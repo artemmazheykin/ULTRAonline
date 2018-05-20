@@ -120,7 +120,7 @@ class BottomPlayerView: UIView {
             
             switch self.playPauseButton.tag {
             case 0:
-                if MagicPlayer.shared.timeControlStatus().rawValue == 0{
+                if MagicPlayer.shared.timeControlStatus() == .paused{
                     self.playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
                 }else{
                     self.playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
