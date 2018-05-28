@@ -235,7 +235,7 @@ class NetworkHelperImpl: NetworkHelper{
         }
     }
     
-    func getTrackId (songName: String, metadata: String) -> Promise<String?> {
+    func getTrackId (metadata: String) -> Promise<String?> {
         return Promise<String?>{pup in
             
             guard !metadata.isEmpty, metadata !=  " - ", let request = getSearchURLSongWithApMusAPI(with: metadata) else {
