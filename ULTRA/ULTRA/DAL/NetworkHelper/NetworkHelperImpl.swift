@@ -369,9 +369,32 @@ class NetworkHelperImpl: NetworkHelper{
     func addSongToLibrary(with id: String) -> Promise<Bool>{
         return Promise<Bool> { pup in
             if let request = getURLAddSong(with: id){
-                let dataTask = URLSession.shared.dataTask(with: request, completionHandler: { (_, _, error) in
+                let dataTask = URLSession.shared.dataTask(with: request, completionHandler: { (_, response, error) in
                     if error != nil{
                         print("error with adding track to apple music library: \(error.debugDescription)")
+                    }
+                    
+                    if let httpResponse = response as? HTTPURLResponse{
+                        print("httpResponse.code = \(httpResponse.statusCode)")
+                        switch httpResponse.statusCode{
+                        case 403:
+                            let serviceController = SKCloudServiceController()
+                            serviceController.requestUserToken(forDeveloperToken: DataSingleton.shared.developerToken) { (tokenOpt, error) in
+                                guard error == nil else{
+                                    print("ERRORRRRR!!!! \(error.debugDescription)")
+                                    return
+                                }
+                                if let token = tokenOpt{
+                                    DataSingleton.shared.userToken = token
+                                    UserDefaults.standard.set(token, forKey: "UserToken")
+                                }
+                                else{
+                                    print("ERRORRRRR!!!! \(error.debugDescription)")
+                                    return
+                                }
+                            }
+                        default: break
+                        }
                     }
                 })
                 
