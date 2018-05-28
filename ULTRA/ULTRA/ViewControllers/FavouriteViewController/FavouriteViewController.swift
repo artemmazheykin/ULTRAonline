@@ -98,15 +98,20 @@ class FavouriteViewController: UIViewController{
         }
     }
     
-    
-    
     @objc func didTappedCopyNameButton(){
         
         let cell = favoriteSongs[selectedIndexPath!.row]
         UIPasteboard.general.string = cell.artistAndSongName
+        
+        fadeInAndOut(text: "Название трека скопировано в буфер обмена")
+        
+    }
+    
+    func fadeInAndOut(text: String){
+        
         let copyView = UILabel()
         
-        copyView.text = "Название трека скопировано в буфер обмена"
+        copyView.text = text
         copyView.numberOfLines = 2
         copyView.adjustsFontSizeToFitWidth = true
         copyView.textAlignment = .center
@@ -116,7 +121,7 @@ class FavouriteViewController: UIViewController{
         view.addSubview(copyView)
         copyView.translatesAutoresizingMaskIntoConstraints = false
         var constraints:[NSLayoutConstraint] = []
-        
+
         constraints.append(copyView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0))
         constraints.append(copyView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0))
         constraints.append(copyView.widthAnchor.constraint(equalToConstant: view.frame.width*0.8))
@@ -127,10 +132,8 @@ class FavouriteViewController: UIViewController{
             sleep(1)
             DispatchQueue.main.async {
                 copyView.fadeOut()
-                //                copyView.removeFromSuperview()
             }
         }
-        
     }
     
     override func didReceiveMemoryWarning() {
@@ -340,7 +343,7 @@ extension FavouriteViewController: UITableViewDataSource{
         
         cell.playButton.tag = indexPath.row
         cell.playButton.addTarget(self, action: #selector(didTappedPlayButton(sender:)), for: .touchUpInside)
-        
+        cell.playButton.isHidden = true
         if let _ = DataSingleton.shared.trackIds[self.favoriteSongs[indexPath.row].artistAndSongName]{
             cell.playButton.isHidden = false
         }else{
@@ -390,9 +393,12 @@ extension UIView{
     ///
     /// - Parameter duration: custom animation duration
     func fadeOut(withDuration duration: TimeInterval = 1.0) {
+
         UIView.animate(withDuration: duration, animations: {
             self.alpha = 0.0
-        })
+        }) { (result) in
+            self.removeFromSuperview()
+        }
     }
     
     func addLabelCopy(){

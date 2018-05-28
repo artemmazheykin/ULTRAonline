@@ -38,7 +38,7 @@ class NetworkHelperImpl: NetworkHelper{
     func getUrlImage(songName: String, metadata: String, size: Int) -> Promise<URL?> {
         return Promise<URL?>{pup in
             
-            guard !metadata.isEmpty, metadata !=  " - ", let request = getSearchURLSongWithApMusAPI(with: metadata) else {
+            guard !metadata.isEmpty, metadata !=  " ", let request = getSearchURLSongWithApMusAPI(with: metadata) else {
                 pup.fulfill(nil)
                 return
             }
@@ -49,12 +49,12 @@ class NetworkHelperImpl: NetworkHelper{
                     pup.fulfill(nil)
                     return
                 }
-                var songNames: [String] = []
-                var indexOpt: Int?
+//                var songNames: [String] = []
+//                var indexOpt: Int?
                 var artworkUrlString = ""
                 
                 let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
-                print("jsooooooon  = \(json)")
+//                print("jsooooooon  = \(json)")
                 guard let parsedResult = json as? [String: Any],
                     let results = parsedResult[Keys.results] as? [String: Any],
                     let songs = results[Keys.songs] as? [String: Any],
@@ -63,36 +63,36 @@ class NetworkHelperImpl: NetworkHelper{
                         pup.fulfill(nil)
                         return
                 }
-                for data in dataArray{
-                    
-                    guard let attributes = data[Keys.attributes] as? [String: Any],
-                        let trackName = attributes[Keys.name] as? String else{
-                            print("error with parsing json object")
-                            pup.fulfill(nil)
-                            return
-                    }
-                    
-                    songNames.append(trackName)
-                }
-                
-                for (i,name) in songNames.enumerated(){
-                    if songName.contains(name){
-                        indexOpt = i
-                        break
-                    }
-                }
-                
-                if let index = indexOpt{
-                    guard let attributes = dataArray[index][Keys.attributes] as? [String: Any],
-                        let artwork = attributes[Keys.artworkForApMusicAPI] as? [String: Any],
-                        let artworkUrlStringIndex = artwork[Keys.url] as? String else{
-                            print("error with parsing json object")
-                            pup.fulfill(nil)
-                            return
-                    }
-                    artworkUrlString = artworkUrlStringIndex
-
-                }else{
+//                for data in dataArray{
+//
+//                    guard let attributes = data[Keys.attributes] as? [String: Any],
+//                        let trackName = attributes[Keys.name] as? String else{
+//                            print("error with parsing json object")
+//                            pup.fulfill(nil)
+//                            return
+//                    }
+//
+//                    songNames.append(trackName)
+//                }
+//
+//                for (i,name) in songNames.enumerated(){
+//                    if songName.contains(name){
+//                        indexOpt = i
+//                        break
+//                    }
+//                }
+//
+//                if let index = indexOpt{
+//                    guard let attributes = dataArray[index][Keys.attributes] as? [String: Any],
+//                        let artwork = attributes[Keys.artworkForApMusicAPI] as? [String: Any],
+//                        let artworkUrlStringIndex = artwork[Keys.url] as? String else{
+//                            print("error with parsing json object")
+//                            pup.fulfill(nil)
+//                            return
+//                    }
+//                    artworkUrlString = artworkUrlStringIndex
+//
+//                }else{
                     guard let attributes = dataArray.first?[Keys.attributes] as? [String: Any],
                         let artwork = attributes[Keys.artworkForApMusicAPI] as? [String: Any],
                         let artworkUrlStringFirst = artwork[Keys.url] as? String else{
@@ -101,7 +101,7 @@ class NetworkHelperImpl: NetworkHelper{
                             return
                     }
                     artworkUrlString = artworkUrlStringFirst
-                }
+//                }
                 
                 if size > 0 {
                     artworkUrlString = artworkUrlString.replacingOccurrences(of: "{w}x{h}", with: "\(size)x\(size)")
@@ -238,12 +238,12 @@ class NetworkHelperImpl: NetworkHelper{
     func getTrackId (metadata: String) -> Promise<String?> {
         return Promise<String?>{pup in
             
-            guard !metadata.isEmpty, metadata !=  " - ", let request = getSearchURLSongWithApMusAPI(with: metadata) else {
+            guard !metadata.isEmpty, metadata !=  " - ", let url = getSearchURLSongWithStorefront(with: metadata) else {
                 pup.fulfill(nil)
                 return
             }
-            
-            URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
+
+            URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
                 guard error == nil, let data = data else {
                     print("!!!!error \(error.debugDescription)")
                     pup.fulfill(nil)
