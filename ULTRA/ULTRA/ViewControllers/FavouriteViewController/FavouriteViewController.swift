@@ -58,9 +58,11 @@ class FavouriteViewController: UIViewController{
         
         let song = favoriteSongs[sender.tag]
         
+        print("songName = \(song.artistAndSongName)")
+        
         if let id = DataSingleton.shared.trackIds[song.artistAndSongName]{
             let player = MagicPlayer.shared
-            print("id from favoriteVC = \(id)")
+            print("id from favoriteVC = \(id) for name: \(song.artistAndSongName)")
             player.systemPlayerPlay(id: id)
             
         }

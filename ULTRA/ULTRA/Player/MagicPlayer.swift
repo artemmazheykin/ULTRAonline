@@ -149,32 +149,37 @@ class MagicPlayer{
         systemPlayer.endGeneratingPlaybackNotifications()
     }
     
-    open func systemPlayerPlay(id: String?){
+    open func systemPlayerPlay(id: String){
         
-        if let id = id{
-            DispatchQueue.global(qos: .userInitiated).async {
-                self.stop()
-                self.isRadioActive = false
-                let audiosession = AVAudioSession.sharedInstance()
-                do{
-                    try audiosession.setActive(false)
-                }
-                catch{
-                    print("errorrrr!!!!!")
-                }
-//                var items = MPMediaQuery.songs().items!
-//                var ultaItems = [MPMediaItem]()
-//                
-//                for item in items{
-//                    print("item.name = \(item.playbackStoreID)")
-//                    
-//                }
-                self.favoriteSongIDsDescriptor.startItemID = id
-                self.systemPlayer.setQueue(with: self.favoriteSongIDsDescriptor)
-                self.systemPlayer.play()
-                DispatchQueue.main.async {
-                    self.bottomPlayerView.playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
-                }
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.stop()
+            self.isRadioActive = false
+            let audiosession = AVAudioSession.sharedInstance()
+            do{
+                try audiosession.setActive(false)
+            }
+            catch{
+                print("errorrrr!!!!!")
+            }
+            //                var items = MPMediaQuery.songs().items!
+            //                var ultaItems = [MPMediaItem]()
+            //
+            //                for item in items{
+            //                    print("item.name = \(item.playbackStoreID)")
+            //
+            //                }
+            self.favoriteSongIDsDescriptor.startItemID = id
+            
+            self.systemPlayer.setQueue(with: self.favoriteSongIDsDescriptor)
+             
+            print("favoriteSongIDsDescriptor storeIds: \(self.favoriteSongIDsDescriptor.storeIDs)")
+            print("favoriteSongIDsDescriptor.startItemID: \(self.favoriteSongIDsDescriptor.startItemID)")
+//            self.systemPlayer.play()
+            self.systemPlayer.prepareToPlay()
+            print("self.systemPlayer.indexOfNowPlayingItem \(self.systemPlayer.indexOfNowPlayingItem)")
+//            self.systemPlayer.setQueue(with: [id])
+            DispatchQueue.main.async {
+                self.bottomPlayerView.playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
             }
         }
     }

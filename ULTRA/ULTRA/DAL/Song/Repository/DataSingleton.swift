@@ -231,6 +231,7 @@ class DataSingleton{
         
         favoriteSongUrls[songModel.artistAndSongName] = nil
         songService.deleteURLFromUserDefaults(songName: songModel.artistAndSongName)
+//        MagicPlayer.shared.systemPlayer.setQueue(with: MagicPlayer.shared.favoriteSongIDsDescriptor)
     }
     
     
