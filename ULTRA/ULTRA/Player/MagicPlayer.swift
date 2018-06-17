@@ -171,10 +171,8 @@ class MagicPlayer{
             
             print("favoriteSongIDsDescriptor storeIds: \(self.favoriteSongIDsDescriptor.storeIDs)")
             print("favoriteSongIDsDescriptor.startItemID: \(self.favoriteSongIDsDescriptor.startItemID)")
-//            self.systemPlayer.play()
             self.systemPlayer.play()
             print("self.systemPlayer.indexOfNowPlayingItem \(self.systemPlayer.indexOfNowPlayingItem)")
-//            self.systemPlayer.setQueue(with: [id])
             DispatchQueue.main.async {
                 self.bottomPlayerView.playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
             }
@@ -328,8 +326,15 @@ class MagicPlayer{
     
     @objc private func handlePlayingItem(notification: Notification) {
         timer.invalidate()
-        nowPlaying = systemPlayer.nowPlayingItem
-        updateSlider()
+        DispatchQueue.global(qos: .background).async {
+            usleep(500000)
+            DispatchQueue.main.async {
+                self.nowPlaying = self.systemPlayer.nowPlayingItem
+                self.updateSlider()
+                print("systemPlayer.nowPlayingItem = \(self.systemPlayer.nowPlayingItem)")
+            }
+        }
+        
     }
     
     
