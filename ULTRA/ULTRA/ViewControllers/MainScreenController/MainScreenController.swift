@@ -132,6 +132,10 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
 
         }
         
+        if MagicPlayer.shared.isAutoPlay{
+            MagicPlayer.shared.play()
+        }
+
         //        songService.resetFavourites()
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -170,31 +174,35 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
                             DispatchQueue.main.async {
                                 self.updateMedia()
                             }
-                            if self.isDownloadingMediaContentPermited{
-                                _ = self.networkHelper.getUrlImage(songName: self.currentSong.songNameEncoded, metadata: self.currentSong.artistAndSongName, size: 500).done{urlOpt in
-                                    if let url = urlOpt{
-                                        self.artistImageFromVC.kf.setImage(with: url, completionHandler: { (image, _, _, _) in
-                                            
-                                            if image == nil{
-                                                self.artistImageFromVC.image = #imageLiteral(resourceName: "ultra_logo_black")
-                                            }
-                                            self.updateMedia()
-                                        })
-                                    }
-                                    else{
-                                        self.artistImageFromVC.image = #imageLiteral(resourceName: "ultra_logo_black")
-                                        self.updateMedia()
-                                    }
-                                }
-                            }else{
-                                DispatchQueue.main.async {
-                                    self.artistImageFromVC.image = #imageLiteral(resourceName: "ultra_logo_black")
-                                }
-                            }
+                            self.setArtwork()
                         }
                     }
                 }
                 usleep(1000000)
+            }
+        }
+    }
+    
+    func setArtwork(){
+        if self.isDownloadingMediaContentPermited{
+            _ = self.networkHelper.getUrlImage(songName: self.currentSong.songNameEncoded, metadata: self.currentSong.artistAndSongName, size: 500).done{urlOpt in
+                if let url = urlOpt{
+                    self.artistImageFromVC.kf.setImage(with: url, completionHandler: { (image, _, _, _) in
+                        
+                        if image == nil{
+                            self.artistImageFromVC.image = #imageLiteral(resourceName: "ultra_logo_black")
+                        }
+                        self.updateMedia()
+                    })
+                }
+                else{
+                    self.artistImageFromVC.image = #imageLiteral(resourceName: "ultra_logo_black")
+                    self.updateMedia()
+                }
+            }
+        }else{
+            DispatchQueue.main.async {
+                self.artistImageFromVC.image = #imageLiteral(resourceName: "ultra_logo_black")
             }
         }
     }
@@ -250,9 +258,6 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
         commandCenter.dislikeCommand.localizedTitle = "Не нравится"
         commandCenter.likeCommand.addTarget(self, action: #selector(likeLockScreen))
         commandCenter.dislikeCommand.addTarget(self, action: #selector(dislikeLockScreen))
-//        commandCenter.nextTrackCommand.addTarget{ event in
-//        return .success
-//        }
     }
     
 //    @objc func likeOrDislike(){

@@ -105,6 +105,27 @@ class SettingsViewController: UIViewController {
         switch sender.selectedSegmentIndex {
         case 0:
             
+            if authorisationHelper.IsDeniedWasSet(){
+                let alertController = UIAlertController (title: "Вы запретили доступ к личной библиотеке Apple Music", message: "Зайти в настройки и изменить это?", preferredStyle: .alert)
+                
+                let settingsAction = UIAlertAction(title: "Настройки", style: .default) { (_) -> Void in
+                    guard let settingsUrl = URL(string: UIApplicationOpenSettingsURLString) else {
+                        return
+                    }
+                    
+                    if UIApplication.shared.canOpenURL(settingsUrl) {
+                        UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
+                            print("Settings opened: \(success)") // Prints true
+                        })
+                    }
+                }
+                alertController.addAction(settingsAction)
+                let cancelAction = UIAlertAction(title: "Отмена", style: .default, handler: nil)
+                alertController.addAction(cancelAction)
+                
+                present(alertController, animated: true, completion: nil)
+            }
+            
             if UserDefaults.standard.value(forKey: "UserToken") == nil{
                 
                 _ = authorisationHelper.requestUserToken().done{ result in

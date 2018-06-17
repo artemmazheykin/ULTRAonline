@@ -34,6 +34,9 @@ class AuthorisationHelperImpl: AuthorisationHelper{
                         UserDefaults.standard.set(token, forKey: self.devTokenKey)
                         print("Developer token is GOOOD!!")
                         pup.fulfill(token)
+                        if let navc = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController, let vc = navc.viewControllers.first as? MainScreenController{
+                            vc.setArtwork()
+                        }
                     }
                     else{
                         pup.fulfill("")
@@ -92,6 +95,28 @@ class AuthorisationHelperImpl: AuthorisationHelper{
                     }
                 }
             }
+        }
+    }
+    
+    func IsDeniedWasSet() -> Bool{
+        switch SKCloudServiceController.authorizationStatus() {
+            
+        case .authorized:
+            
+            return false
+            
+        case .denied:
+            
+            return true
+            
+        case .notDetermined:
+            
+            return false
+            
+        case .restricted:
+            
+            return false
+            
         }
     }
     

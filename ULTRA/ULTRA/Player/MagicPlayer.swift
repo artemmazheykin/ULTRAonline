@@ -136,13 +136,11 @@ class MagicPlayer{
             print("Error with setting audiosession!!!!!")
         }
         setupNotifications()
-        if isAutoPlay{
-            play()
-        }
         systemPlayer.repeatMode = .all
         systemPlayer.beginGeneratingPlaybackNotifications()
-        
     }
+    
+    
     
     deinit {
         systemPlayer.endGeneratingPlaybackNotifications()

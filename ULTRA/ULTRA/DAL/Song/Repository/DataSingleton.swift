@@ -107,18 +107,20 @@ class DataSingleton{
     func updateLast10SongsEvery10Seconds(){
         DispatchQueue.global(qos: .background).async {
             while true{
-                _ = self.networkHelper.updateLast10Songs().done{ last10SongsStrings in
-                    self.last10SongsStrings = last10SongsStrings
-                    var verifiedLast10songs: [SongModel] = []
-                    let uncheckedLast10Songs = self.convertStringSongsToModel(last10SongsStrings)
-                    for uncheckedSong in uncheckedLast10Songs{
-                        if let song = self.songs[uncheckedSong.artistAndSongName]{
-                            verifiedLast10songs.append(song)
-                        }else{
-                            verifiedLast10songs.append(uncheckedSong)
+                if self.networkHelper != nil{
+                    _ = self.networkHelper.updateLast10Songs().done{ last10SongsStrings in
+                        self.last10SongsStrings = last10SongsStrings
+                        var verifiedLast10songs: [SongModel] = []
+                        let uncheckedLast10Songs = self.convertStringSongsToModel(last10SongsStrings)
+                        for uncheckedSong in uncheckedLast10Songs{
+                            if let song = self.songs[uncheckedSong.artistAndSongName]{
+                                verifiedLast10songs.append(song)
+                            }else{
+                                verifiedLast10songs.append(uncheckedSong)
+                            }
                         }
+                        self.last10Songs = verifiedLast10songs
                     }
-                    self.last10Songs = verifiedLast10songs
                 }
                 sleep(10)
             }

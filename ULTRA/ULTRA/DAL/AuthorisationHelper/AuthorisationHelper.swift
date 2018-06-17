@@ -31,4 +31,5 @@ protocol AuthorisationHelper{
     
     func data(with request: URLRequest, completion: @escaping (Data?, Error?) -> Swift.Void)
     
+    func IsDeniedWasSet() -> Bool
 }
