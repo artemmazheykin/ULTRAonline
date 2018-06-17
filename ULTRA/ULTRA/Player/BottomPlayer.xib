@@ -101,7 +101,7 @@
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2cP-7h-stK" customClass="CustomLabel" customModule="ULTRA" customModuleProvider="target">
-                            <rect key="frame" x="80" y="46.5" width="29.5" height="13.5"/>
+                            <rect key="frame" x="80" y="41.5" width="29.5" height="13.5"/>
                             <attributedString key="attributedText">
                                 <fragment content="Label">
                                     <attributes>
@@ -118,7 +118,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cp8-Qn-kBd" customClass="CustomLabel" customModule="ULTRA" customModuleProvider="target">
-                            <rect key="frame" x="335.5" y="46.5" width="29.5" height="13.5"/>
+                            <rect key="frame" x="335.5" y="41.5" width="29.5" height="13.5"/>
                             <attributedString key="attributedText">
                                 <fragment content="Label">
                                     <attributes>
@@ -134,9 +134,9 @@
                     <constraints>
                         <constraint firstItem="CWc-vv-cCX" firstAttribute="centerX" secondItem="wye-Pd-Lqr" secondAttribute="centerX" id="48t-Y7-h1B"/>
                         <constraint firstAttribute="bottom" secondItem="CCe-uF-3l6" secondAttribute="bottom" constant="10" id="5a5-HO-j1s"/>
-                        <constraint firstItem="CCe-uF-3l6" firstAttribute="top" secondItem="2cP-7h-stK" secondAttribute="bottom" constant="-10" id="6sU-L2-ZTn"/>
+                        <constraint firstItem="CCe-uF-3l6" firstAttribute="top" secondItem="2cP-7h-stK" secondAttribute="bottom" constant="-5" id="6sU-L2-ZTn"/>
                         <constraint firstAttribute="bottom" secondItem="NCR-jZ-C4o" secondAttribute="bottom" constant="10" id="9Of-7O-jnw"/>
-                        <constraint firstItem="CCe-uF-3l6" firstAttribute="top" secondItem="cp8-Qn-kBd" secondAttribute="bottom" constant="-10" id="B82-Qa-OpQ"/>
+                        <constraint firstItem="CCe-uF-3l6" firstAttribute="top" secondItem="cp8-Qn-kBd" secondAttribute="bottom" constant="-5" id="B82-Qa-OpQ"/>
                         <constraint firstAttribute="trailing" secondItem="CCe-uF-3l6" secondAttribute="trailing" constant="10" id="Dag-y8-C9b"/>
                         <constraint firstItem="vMd-bk-MiW" firstAttribute="leading" secondItem="NCR-jZ-C4o" secondAttribute="trailing" constant="10" id="EJn-9D-kG0"/>
                         <constraint firstItem="CCe-uF-3l6" firstAttribute="top" secondItem="vMd-bk-MiW" secondAttribute="bottom" constant="10" id="NoD-uf-xPq"/>

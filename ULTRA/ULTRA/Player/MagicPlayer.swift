@@ -326,14 +326,18 @@ class MagicPlayer{
     
     @objc private func handlePlayingItem(notification: Notification) {
         timer.invalidate()
-        DispatchQueue.global(qos: .background).async {
-            usleep(500000)
-            DispatchQueue.main.async {
-                self.nowPlaying = self.systemPlayer.nowPlayingItem
-                self.updateSlider()
-                print("systemPlayer.nowPlayingItem = \(self.systemPlayer.nowPlayingItem)")
-            }
-        }
+        self.nowPlaying = self.systemPlayer.nowPlayingItem
+        self.updateSlider()
+        print("systemPlayer.nowPlayingItem = \(self.systemPlayer.nowPlayingItem)")
+
+//        DispatchQueue.global(qos: .background).async {
+//            usleep(500000)
+//            DispatchQueue.main.async {
+//                self.nowPlaying = self.systemPlayer.nowPlayingItem
+//                self.updateSlider()
+//                print("systemPlayer.nowPlayingItem = \(self.systemPlayer.nowPlayingItem)")
+//            }
+//        }
         
     }
     
