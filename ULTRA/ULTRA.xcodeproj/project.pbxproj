@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0438C3AA2056A54D001390B8 /* SongImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0438C3A92056A54D001390B8 /* SongImageModel.swift */; };
 		8940A8BC48C5C0F04A839937 /* Pods_ULTRA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C51DB75E386B43D8FCB52F2 /* Pods_ULTRA.framework */; };
+		ED020BD920CF0100006FDD60 /* AuthorisationHelperImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED020BD820CF0100006FDD60 /* AuthorisationHelperImpl.swift */; };
+		ED020BDB20D01660006FDD60 /* AuthorisationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED020BDA20D0165F006FDD60 /* AuthorisationHelper.swift */; };
 		ED040B09205DC9CA00754D2E /* MagicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED040B08205DC9CA00754D2E /* MagicPlayer.swift */; };
 		ED26DE932056D23B007FE8D7 /* StreamRate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED26DE922056D23B007FE8D7 /* StreamRate.swift */; };
 		ED3AC45E2034BF5E006770F1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3AC45D2034BF5E006770F1 /* AppDelegate.swift */; };
@@ -68,6 +70,8 @@
 		21D8229B62D413E64C044ABE /* Pods-ULTRA.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ULTRA.release.xcconfig"; path = "Pods/Target Support Files/Pods-ULTRA/Pods-ULTRA.release.xcconfig"; sourceTree = "<group>"; };
 		45C5EBEE5FE8025C629C9317 /* Pods-ULTRA.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ULTRA.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ULTRA/Pods-ULTRA.debug.xcconfig"; sourceTree = "<group>"; };
 		4C51DB75E386B43D8FCB52F2 /* Pods_ULTRA.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ULTRA.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED020BD820CF0100006FDD60 /* AuthorisationHelperImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorisationHelperImpl.swift; sourceTree = "<group>"; };
+		ED020BDA20D0165F006FDD60 /* AuthorisationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorisationHelper.swift; sourceTree = "<group>"; };
 		ED040B08205DC9CA00754D2E /* MagicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicPlayer.swift; sourceTree = "<group>"; };
 		ED26DE922056D23B007FE8D7 /* StreamRate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamRate.swift; sourceTree = "<group>"; };
 		ED3AC45A2034BF5E006770F1 /* ULTRA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ULTRA.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -144,6 +148,15 @@
 				21D8229B62D413E64C044ABE /* Pods-ULTRA.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		ED020BD720CF008D006FDD60 /* AuthorisationHelper */ = {
+			isa = PBXGroup;
+			children = (
+				ED020BDA20D0165F006FDD60 /* AuthorisationHelper.swift */,
+				ED020BD820CF0100006FDD60 /* AuthorisationHelperImpl.swift */,
+			);
+			path = AuthorisationHelper;
 			sourceTree = "<group>";
 		};
 		ED040B07205DC9A100754D2E /* Player */ = {
@@ -248,6 +261,7 @@
 				EDCDE9432051F1880085803A /* Song */,
 				EDCDE9422051F0EA0085803A /* SystemParameters */,
 				ED9FEB5E20558D4500E953CA /* NetworkHelper */,
+				ED020BD720CF008D006FDD60 /* AuthorisationHelper */,
 			);
 			path = DAL;
 			sourceTree = "<group>";
@@ -596,6 +610,7 @@
 				ED9C898B2053419D002FDFC0 /* String.swift in Sources */,
 				EDA6474C206D553200C33D05 /* BottomPlayerView.swift in Sources */,
 				ED9FEB5D20547F8C00E953CA /* UILabel.swift in Sources */,
+				ED020BDB20D01660006FDD60 /* AuthorisationHelper.swift in Sources */,
 				ED9FEB6220558E1E00E953CA /* NetworkHelperImpl.swift in Sources */,
 				ED751FF62051ECA600803BA2 /* NavigatorImpl.swift in Sources */,
 				EDCDE9482051F1D30085803A /* SongModel.swift in Sources */,
@@ -620,6 +635,7 @@
 				ED751FF32051ECA600803BA2 /* SystemParametersModel.swift in Sources */,
 				ED751FEC2051ECA600803BA2 /* StoryboardViewControllerType.swift in Sources */,
 				ED751FF12051ECA600803BA2 /* SystemParametersRepository.swift in Sources */,
+				ED020BD920CF0100006FDD60 /* AuthorisationHelperImpl.swift in Sources */,
 				ED751FEE2051ECA600803BA2 /* Storyboard.swift in Sources */,
 				ED751FF02051ECA600803BA2 /* FabrikaImpl.swift in Sources */,
 				ED9C899020534796002FDFC0 /* SongCell.swift in Sources */,

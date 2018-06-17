@@ -19,7 +19,6 @@
 
 import UIKit
 import AVFoundation
-import StoreKit
 import MediaPlayer
 
 @UIApplicationMain
@@ -33,7 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 //        fetchDeveloperToken()
         appleMusicRequestPermission()
-//        appleMusicFetchStorefrontRegion()
         fabric = FabrikaImpl()
         data = DataSingleton.shared
         
@@ -190,31 +188,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         }
 
-    }
-    
-    func appleMusicFetchStorefrontRegion() {
-        
-        let serviceController = SKCloudServiceController()
-        serviceController.requestStorefrontIdentifier { (storefrontId:String?, err:Error?) in
-            
-            guard err == nil else {
-                
-                print("An error occured. Handle it here.")
-                return
-                
-            }
-            
-            guard let storefrontId = storefrontId else {
-                
-                print("Handle the error - the callback didn't contain a storefront ID.")
-                return
-                
-            }
-            
-            print("Success! The Storefront ID fetched was: \(storefrontId)")
-            
-        }
-        
     }
     
 }

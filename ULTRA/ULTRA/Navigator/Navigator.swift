@@ -10,8 +10,6 @@ import UIKit
 
 protocol Navigator: class {
     
-    func last10SongController(didTappedButtonFrom viewController: UIViewController)
     func favouriteViewController(didTappedButtonFrom viewController: UIViewController)
-
 
 }

@@ -11,6 +11,8 @@ import PromiseKit
 
 class Last10SongController: UIViewController{
     
+    var authorisationHelper: AuthorisationHelper!
+
     @IBOutlet weak var songsTableView: UITableView!
     var verifiedLast10songs: [SongModel] = []
     var last10SongsStrings: [String] = []{

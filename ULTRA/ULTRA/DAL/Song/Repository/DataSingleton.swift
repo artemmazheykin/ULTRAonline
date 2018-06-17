@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import Kingfisher
-import StoreKit
 import MediaPlayer
 
 @objc protocol DataSingletonDelegate: class {
@@ -22,10 +21,12 @@ import MediaPlayer
 
 class DataSingleton{
     
+    var authorisationHelper: AuthorisationHelper!
+    
     var songService: SongService!
     var isDownloadingMediaContentPermited: Bool!
-    var developerToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzNTRXSDVVMzMifQ.eyJpc3MiOiI3NzMyNE5URzNEIiwiaWF0IjoxNTI2MjA0NTc1LCJleHAiOjE1NDE3NTY1NzV9.6TxACUqT4CKhaq_eE9CIUbvotZ2KP0nC5n8dUlslogIXsIBRh1TyTRttm5lXl-ZY9CBdgGQZ2CCZ-ienOeFOFQ"
-    var userToken = ""
+//    var developerToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzNTRXSDVVMzMifQ.eyJpc3MiOiI3NzMyNE5URzNEIiwiaWF0IjoxNTI2MjA0NTc1LCJleHAiOjE1NDE3NTY1NzV9.6TxACUqT4CKhaq_eE9CIUbvotZ2KP0nC5n8dUlslogIXsIBRh1TyTRttm5lXl-ZY9CBdgGQZ2CCZ-ienOeFOFQ"
+//    var userToken = ""
     
     weak var delegateLast10VC: DataSingletonDelegate?
     weak var delegateFavoritesVC: DataSingletonDelegate?
@@ -85,7 +86,7 @@ class DataSingleton{
         return ids
     }
 
-    var networkHelper = NetworkHelperImpl()
+    var networkHelper: NetworkHelper!
     
     open static let shared = DataSingleton()
     

@@ -7,10 +7,11 @@
 //
 
 import UIKit
-import StoreKit
 
 
 class SettingsViewController: UIViewController {
+
+    var authorisationHelper: AuthorisationHelper!
 
     @IBOutlet weak var bitrateSegmentedControl: UISegmentedControl!
     @IBOutlet weak var artworkSegmentedControl: UISegmentedControl!

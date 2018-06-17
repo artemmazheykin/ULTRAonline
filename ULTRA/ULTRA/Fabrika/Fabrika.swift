@@ -11,7 +11,6 @@ import UIKit
 protocol Fabrika: class{
     
     func mainScreenController() -> UIViewController
-    func last10SongController() -> UIViewController
     func favouriteViewController() -> UIViewController
     
 }

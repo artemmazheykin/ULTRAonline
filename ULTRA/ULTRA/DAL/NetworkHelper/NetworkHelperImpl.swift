@@ -14,18 +14,18 @@
 
 import UIKit
 import PromiseKit
-import StoreKit
 
 class NetworkHelperImpl: NetworkHelper{
     
     // URLs
-    
+    var authorisationHelper: AuthorisationHelper!
+
     var last10SongsUrl = "https://radiopleer.com/info/ultra_last_tracks.txt"
     
     let currentRegionCode = Locale.current.regionCode?.lowercased()
     
     func fetchDeveloperToken() -> String{
-        return DataSingleton.shared.developerToken
+        return authorisationHelper.fetchDeveloperToken() DataSingleton.shared.developerToken
     }
     
     func fetchUserToken() -> String{

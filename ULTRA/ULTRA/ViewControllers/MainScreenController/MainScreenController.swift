@@ -30,6 +30,7 @@ protocol MainScreenControllerDelegate{
 
 class MainScreenController: UIViewController, UIPopoverPresentationControllerDelegate{
     
+    var authorisationHelper: AuthorisationHelper!
     
     @IBOutlet weak var startStopRadio: UIButton!
     @IBOutlet weak var artistName: UILabel!
@@ -46,7 +47,7 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
     weak var navigator: Navigator!
     weak var systemParametersService:SystemParametersService!
     weak var songService: SongService!
-    var networkHelper: NetworkHelper = NetworkHelperImpl()
+    var networkHelper: NetworkHelper!
     var currentArtistName:String!
     var currentSongName:String!
     var isDownloadingMediaContentPermited: Bool!{
@@ -343,6 +344,7 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
         // get a reference to the view controller for the popover
         let popController = UIStoryboard(name: "Story", bundle: nil).instantiateViewController(withIdentifier: "Last10SongController") as! Last10SongController
         
+        popController.authorisationHelper = authorisationHelper
         popController.last10SongsStrings = DataSingleton.shared.last10SongsStrings
         popController.verifiedLast10songs = DataSingleton.shared.last10Songs
         popController.preferredContentSize = CGSize(width: 350, height: 450)
@@ -365,9 +367,7 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
         
         // get a reference to the view controller for the popover
         let popController = UIStoryboard(name: "Story", bundle: nil).instantiateViewController(withIdentifier: "SettingsViewController") as! SettingsViewController
-        
-//        popController.last10SongsStrings = DataSingleton.shared.last10SongsStrings
-//        popController.verifiedLast10songs = DataSingleton.shared.last10Songs
+        popController.authorisationHelper = authorisationHelper
         popController.preferredContentSize = CGSize(width: 350, height: 300)
         // set the presentation style
         popController.modalPresentationStyle = UIModalPresentationStyle.popover

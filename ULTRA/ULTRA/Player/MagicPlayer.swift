@@ -8,7 +8,6 @@
 
 import UIKit
 import AVFoundation
-import StoreKit
 import MediaPlayer
 
 
@@ -43,7 +42,7 @@ class MagicPlayer{
     var timer = Timer()
     var displayLink = CADisplayLink()
     var nowPlaying: MPMediaItem?
-    var networkHelper = NetworkHelperImpl()
+    var networkHelper: NetworkHelper!
 
     open var radioURL: URL{
         didSet{
@@ -171,7 +170,7 @@ class MagicPlayer{
             self.favoriteSongIDsDescriptor.startItemID = id
             
             self.systemPlayer.setQueue(with: self.favoriteSongIDsDescriptor)
-             
+            
             print("favoriteSongIDsDescriptor storeIds: \(self.favoriteSongIDsDescriptor.storeIDs)")
             print("favoriteSongIDsDescriptor.startItemID: \(self.favoriteSongIDsDescriptor.startItemID)")
 //            self.systemPlayer.play()

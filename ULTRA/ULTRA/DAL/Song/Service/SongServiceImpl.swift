@@ -13,7 +13,7 @@ import PromiseKit
 class SongServiceImpl: SongService {
     
     var repository: SongRepository!
-    let networkHelper:NetworkHelper = NetworkHelperImpl()
+    var networkHelper: NetworkHelper!
     
     func addSongToFavorites(songModel: SongModel){
         var artists = repository.getFavoriteArtistsFromUserDefaults()

@@ -14,10 +14,25 @@ class FabrikaImpl: Fabrika{
     private var navigator: Navigator!
     private var systemParametersService: SystemParametersService!
     private var songService: SongService!
+    private var authorisationHelper: AuthorisationHelper!
+    private var networkHelper: NetworkHelper!
     
     private func initDAL(){
         initSystemParametersService()
         initSongService()
+    }
+    
+    private func initAuthHelper(){
+        authorisationHelper = AuthorisationHelperImpl()
+        DataSingleton.shared.authorisationHelper = authorisationHelper
+    }
+    
+    func initNetworkHelper(){
+        let netHelper = NetworkHelperImpl()
+        netHelper.authorisationHelper = authorisationHelper
+        networkHelper = netHelper
+        DataSingleton.shared.networkHelper = networkHelper
+        MagicPlayer.shared.networkHelper = networkHelper
     }
     
     private func initSystemParametersService(){
@@ -29,12 +44,15 @@ class FabrikaImpl: Fabrika{
     private func initSongService(){
         let songService = SongServiceImpl()
         songService.repository = SongRepositoryImpl()
+        songService.networkHelper = networkHelper
         self.songService = songService
     }
 
     init(){
         let navigator = NavigatorImpl(fabrika: self)
         self.navigator = navigator
+        initAuthHelper()
+        initNetworkHelper()
         initDAL()
         navigator.showFirstViewController()
     }
@@ -48,6 +66,8 @@ class FabrikaImpl: Fabrika{
                     mainScreenController.navigator = navigator
                     mainScreenController.systemParametersService = systemParametersService
                     mainScreenController.songService = songService
+                    mainScreenController.authorisationHelper = authorisationHelper
+                    mainScreenController.networkHelper = networkHelper
                 }
             }
             return navc
@@ -55,16 +75,13 @@ class FabrikaImpl: Fabrika{
         return UIViewController()
         
     }
-    
-    func last10SongController() -> UIViewController{
-        return storyboard.getViewController(type: .last10SongController)
-    }
-    
+        
     func favouriteViewController() -> UIViewController {
         let vc = storyboard.getViewController(type: .favouriteViewController) as! FavouriteViewController
         vc.navigator = navigator
         vc.songService = songService
-        
+        vc.authorisationHelper = authorisationHelper
+        vc.networkHelper = networkHelper
         return vc
     }
 }

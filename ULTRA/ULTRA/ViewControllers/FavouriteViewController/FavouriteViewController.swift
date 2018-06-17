@@ -8,7 +8,6 @@
 
 import UIKit
 import Kingfisher
-import StoreKit
 import MediaPlayer
 
 class FavouriteViewController: UIViewController{
@@ -17,9 +16,10 @@ class FavouriteViewController: UIViewController{
     
     @IBOutlet weak var headerView: UIView!
     
+    var authorisationHelper: AuthorisationHelper!
     weak var navigator: Navigator!
     weak var songService: SongService!
-    var networkHelper: NetworkHelper = NetworkHelperImpl()
+    var networkHelper: NetworkHelper!
     var favoriteSongs:[SongModel] = []
     var favoriteSongImages:[String:UIImage] = [:]
     var selectedIndexPath: IndexPath?
