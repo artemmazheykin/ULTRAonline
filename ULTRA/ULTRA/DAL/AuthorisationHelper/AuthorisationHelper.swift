@@ -13,10 +13,22 @@ import PromiseKit
 
 protocol AuthorisationHelper{
     
+    var devTokenKey: String{
+        get
+    }
+    
+    var userTokenKey: String{
+        get
+    }
+
+    func fetchDeveloperToken() -> Promise<String>
+    
     func fetchDeveloperTokenFromJWT() -> Promise<String?>
     
-    func requestUserToken()
+    func requestUserToken() -> Promise<String?>
     
     func requestAuthorization()
+    
+    func data(with request: URLRequest, completion: @escaping (Data?, Error?) -> Swift.Void)
     
 }

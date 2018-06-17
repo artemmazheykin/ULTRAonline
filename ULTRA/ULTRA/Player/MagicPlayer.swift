@@ -174,7 +174,7 @@ class MagicPlayer{
             print("favoriteSongIDsDescriptor storeIds: \(self.favoriteSongIDsDescriptor.storeIDs)")
             print("favoriteSongIDsDescriptor.startItemID: \(self.favoriteSongIDsDescriptor.startItemID)")
 //            self.systemPlayer.play()
-            self.systemPlayer.prepareToPlay()
+            self.systemPlayer.play()
             print("self.systemPlayer.indexOfNowPlayingItem \(self.systemPlayer.indexOfNowPlayingItem)")
 //            self.systemPlayer.setQueue(with: [id])
             DispatchQueue.main.async {

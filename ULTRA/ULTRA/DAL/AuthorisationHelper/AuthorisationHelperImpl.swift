@@ -10,14 +10,39 @@ import Foundation
 import StoreKit
 import PromiseKit
 
+enum ResponseError: Error {
+    case invalidResponse(URLResponse?)
+    case unacceptableStatusCode(Int)
+}
 
 class AuthorisationHelperImpl: AuthorisationHelper{
     
     let devTokenKey = "DeveloperToken"
-    var developerToken = ""
+    var userTokenKey = "UserToken"
     var userToken = ""
     let serviceController = SKCloudServiceController()
     let getDevTokenUrlString = "https://us-central1-ultraonline-f867c.cloudfunctions.net/getAppleToken"
+    
+    func fetchDeveloperToken() -> Promise<String>{
+        
+        return Promise<String>{pup in
+            if let token = UserDefaults.standard.string(forKey: devTokenKey){
+                pup.fulfill(token)
+            }else{
+                _ = fetchDeveloperTokenFromJWT().done{ result in
+                    if let token = result{
+                        UserDefaults.standard.set(token, forKey: self.devTokenKey)
+                        print("Developer token is GOOOD!!")
+                        pup.fulfill(token)
+                    }
+                    else{
+                        pup.fulfill("")
+                    }
+                }
+            }
+        }
+
+    }
     
     func fetchDeveloperTokenFromJWT() -> Promise<String?>{
         return Promise<String?>{pup in
@@ -39,25 +64,33 @@ class AuthorisationHelperImpl: AuthorisationHelper{
                         pup.fulfill(nil)
                         return
                 }
+                
                 print("token = \(token)")
                 pup.fulfill(token)
                 }.resume()
         }
     }
-
-    func requestUserToken(){
-        serviceController.requestUserToken(forDeveloperToken: developerToken) { (tokenOpt, error) in
-            guard error == nil else{
-                print("ERRORRRRR!!!! \(error.debugDescription)")
-                return
-            }
-            if let token = tokenOpt{
-                self.userToken = token
-                UserDefaults.standard.set(token, forKey: "UserToken")
-            }
-            else{
-                print("ERRORRRRR!!!! \(error.debugDescription)")
-                return
+    
+    func requestUserToken() -> Promise<String?>{
+        return Promise<String?>{ pup in
+            _ = fetchDeveloperToken().done{ token in
+                
+                self.serviceController.requestUserToken(forDeveloperToken: token) { (tokenOpt, error) in
+                    guard error == nil else{
+                        print("ERRORRRRR!!!! \(error.debugDescription)")
+                        pup.fulfill(nil)
+                        return
+                    }
+                    if let token = tokenOpt{
+                        self.userToken = token
+                        UserDefaults.standard.set(token, forKey: self.userTokenKey)
+                        pup.fulfill(token)
+                    }
+                    else{
+                        print("ERRORRRRR!!!! \(error.debugDescription)")
+                        pup.fulfill(nil)
+                    }
+                }
             }
         }
     }
@@ -72,17 +105,8 @@ class AuthorisationHelperImpl: AuthorisationHelper{
                 
                 print("The user's already authorized - we don't need to do anything more here, so we'll exit early.")
                 
-                if UserDefaults.standard.value(forKey: "UserToken") == nil{
-                    self.serviceController.requestUserToken(forDeveloperToken: self.developerToken) { (tokenOpt, error) in
-                        guard error == nil else{
-                            print("ERRORRRRR!!!! \(error.debugDescription)")
-                            
-                            return
-                        }
-                        if let token = tokenOpt{
-                            self.userToken = token
-                            UserDefaults.standard.set(token, forKey: "UserToken")
-                        }
+                if UserDefaults.standard.value(forKey: self.userTokenKey) == nil{
+                    _ = self.requestUserToken().done{ _ in
                     }
                 }
                 
@@ -112,15 +136,7 @@ class AuthorisationHelperImpl: AuthorisationHelper{
                 
             case .authorized:
                 
-                self.serviceController.requestUserToken(forDeveloperToken: self.developerToken) { (tokenOpt, error) in
-                    guard error == nil else{
-                        print("ERRORRRRR!!!! \(error.debugDescription)")
-                        return
-                    }
-                    if let token = tokenOpt{
-                        self.userToken = token
-                        UserDefaults.standard.set(token, forKey: "UserToken")
-                    }
+                _ = self.requestUserToken().done{_ in
                 }
                 
                 print("All good - the user tapped 'OK', so you're clear to move forward and start playing.")
@@ -142,3 +158,39 @@ class AuthorisationHelperImpl: AuthorisationHelper{
         }
     }
 }
+
+extension AuthorisationHelperImpl {
+    func data(with request: URLRequest, completion: @escaping (Data?, Error?) -> Swift.Void) {
+        let task = URLSession.shared.dataTask(with: request) { data, response, error -> Void in
+            guard error == nil else {
+                completion(nil, error)
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(nil, ResponseError.invalidResponse(response))
+                return
+            }
+            
+            guard (200..<300).contains(httpResponse.statusCode) else {
+                switch httpResponse.statusCode{
+                case 401:
+                    UserDefaults.standard.set(nil, forKey: self.devTokenKey)
+                    _ = self.fetchDeveloperToken()
+                case 403:
+                    _ = self.requestUserToken().done{ _ in
+                    }
+                default: break
+                }
+                completion(nil, ResponseError.unacceptableStatusCode(httpResponse.statusCode))
+                return
+            }
+            
+            
+            
+            completion(data, nil)
+        }
+        task.resume()
+    }
+}
+

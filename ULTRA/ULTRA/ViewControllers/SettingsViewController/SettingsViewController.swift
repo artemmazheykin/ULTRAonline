@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import PromiseKit
 
 class SettingsViewController: UIViewController {
 
@@ -106,23 +106,14 @@ class SettingsViewController: UIViewController {
         case 0:
             
             if UserDefaults.standard.value(forKey: "UserToken") == nil{
-                let serviceController = SKCloudServiceController()
-                serviceController.requestUserToken(forDeveloperToken: DataSingleton.shared.developerToken) { (tokenOpt, error) in
-                    guard error == nil else{
-                        print("ERRORRRRR!!!! \(error.debugDescription)")
+                
+                _ = authorisationHelper.requestUserToken().done{ result in
+                    if result == nil{
                         self.addToAppleMusicSegmentedControl.selectedSegmentIndex = 1
                         return
                     }
-                    if let token = tokenOpt{
-                        DataSingleton.shared.userToken = token
-                        UserDefaults.standard.set(token, forKey: "UserToken")
-                    }
-                    else{
-                        self.addToAppleMusicSegmentedControl.selectedSegmentIndex = 1
-                    }
                 }
             }
-            
             UserDefaults.standard.set(true, forKey: "IsAutoAddingToAppleMusicPermited")
         case 1:
             UserDefaults.standard.set(false, forKey: "IsAutoAddingToAppleMusicPermited")

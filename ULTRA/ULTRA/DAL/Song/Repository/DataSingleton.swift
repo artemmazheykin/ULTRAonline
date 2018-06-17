@@ -102,23 +102,6 @@ class DataSingleton{
         let player = MagicPlayer.shared
         player.favoriteSongIDsDescriptor = MPMusicPlayerStoreQueueDescriptor(storeIDs: arrayIDs)
         updateLast10SongsEvery10Seconds()
-        
-        
-        if let usTok = UserDefaults.standard.value(forKey: "UserToken") as? String {
-            userToken = usTok
-        }else{
-            let serviceController = SKCloudServiceController()
-            serviceController.requestUserToken(forDeveloperToken: developerToken) { (tokenOpt, error) in
-                guard error == nil else{
-                    print("ERRORRRRR!!!! \(error.debugDescription)")
-                    return
-                }
-                if let token = tokenOpt{
-                    self.userToken = token
-                    UserDefaults.standard.set(token, forKey: "UserToken")
-                }
-            }
-        }
     }
     
     func updateLast10SongsEvery10Seconds(){
