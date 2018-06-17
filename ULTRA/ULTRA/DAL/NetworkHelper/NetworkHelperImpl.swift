@@ -24,17 +24,6 @@ class NetworkHelperImpl: NetworkHelper{
     
     let currentRegionCode = Locale.current.regionCode?.lowercased()
     
-    func fetchDeveloperToken() -> String{
-        return authorisationHelper.fetchDeveloperToken() DataSingleton.shared.developerToken
-    }
-    
-    func fetchUserToken() -> String{
-        return DataSingleton.shared.userToken
-    }
-    
-    
-    
-    
     func getUrlImage(songName: String, metadata: String, size: Int) -> Promise<URL?> {
         return Promise<URL?>{pup in
             
