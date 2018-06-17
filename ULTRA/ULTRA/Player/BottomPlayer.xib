@@ -39,23 +39,23 @@
                             </constraints>
                         </imageView>
                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="CCe-uF-3l6">
-                            <rect key="frame" x="78" y="40" width="289" height="31"/>
+                            <rect key="frame" x="78" y="50" width="289" height="21"/>
                             <connections>
                                 <action selector="editingDidEnd:" destination="-1" eventType="touchUpInside" id="6Cv-DQ-F4I"/>
                                 <action selector="valueChanged:" destination="-1" eventType="valueChanged" id="rcu-JA-a1R"/>
                             </connections>
                         </slider>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="vMd-bk-MiW">
-                            <rect key="frame" x="80" y="10" width="285" height="20"/>
+                            <rect key="frame" x="80" y="10" width="285" height="30"/>
                             <subviews>
-                                <stackView opaque="NO" contentMode="scaleToFill" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="1rX-RE-Zlr">
-                                    <rect key="frame" x="0.0" y="0.0" width="106.5" height="20"/>
+                                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1rX-RE-Zlr">
+                                    <rect key="frame" x="0.0" y="0.0" width="90.5" height="30"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1dw-wq-bE0">
-                                            <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="20" id="Gp2-Qj-zs5"/>
-                                                <constraint firstAttribute="width" constant="20" id="W0C-hT-2xx"/>
+                                                <constraint firstAttribute="height" constant="30" id="Gp2-Qj-zs5"/>
+                                                <constraint firstAttribute="width" constant="30" id="W0C-hT-2xx"/>
                                             </constraints>
                                             <connections>
                                                 <action selector="nextTrackTouchDown:" destination="-1" eventType="touchDown" id="od9-2Y-JKp"/>
@@ -63,14 +63,14 @@
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="playback" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WQ8-pf-Tl2">
-                                            <rect key="frame" x="43" y="0.0" width="20" height="20"/>
+                                            <rect key="frame" x="30" y="0.0" width="30" height="30"/>
                                             <connections>
                                                 <action selector="nextTrackTouchDown:" destination="-1" eventType="touchDown" id="Q0v-cp-IPx"/>
                                                 <action selector="playButtonDidTapped:" destination="-1" eventType="touchUpInside" id="toU-dD-QvB"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t9f-rr-uXy">
-                                            <rect key="frame" x="86" y="0.0" width="20.5" height="20"/>
+                                            <rect key="frame" x="60" y="0.0" width="30.5" height="30"/>
                                             <connections>
                                                 <action selector="nextTrackButtonDidTapped:" destination="-1" eventType="touchUpInside" id="bSX-cs-ZSv"/>
                                                 <action selector="nextTrackTouchDown:" destination="-1" eventType="touchDown" id="7PG-1j-w8L"/>
@@ -83,10 +83,7 @@
                                     </constraints>
                                 </stackView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gjp-fu-7TG">
-                                    <rect key="frame" x="116.5" y="0.0" width="168.5" height="20"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="20" id="xAV-27-IiA"/>
-                                    </constraints>
+                                    <rect key="frame" x="100.5" y="0.0" width="184.5" height="30"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -104,7 +101,7 @@
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2cP-7h-stK" customClass="CustomLabel" customModule="ULTRA" customModuleProvider="target">
-                            <rect key="frame" x="80" y="36.5" width="29.5" height="13.5"/>
+                            <rect key="frame" x="80" y="46.5" width="29.5" height="13.5"/>
                             <attributedString key="attributedText">
                                 <fragment content="Label">
                                     <attributes>
@@ -121,7 +118,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cp8-Qn-kBd" customClass="CustomLabel" customModule="ULTRA" customModuleProvider="target">
-                            <rect key="frame" x="335.5" y="36.5" width="29.5" height="13.5"/>
+                            <rect key="frame" x="335.5" y="46.5" width="29.5" height="13.5"/>
                             <attributedString key="attributedText">
                                 <fragment content="Label">
                                     <attributes>
