@@ -23,11 +23,31 @@ class FavouriteViewController: UIViewController{
     var favoriteSongs:[SongModel] = []
     var favoriteSongImages:[String:UIImage] = [:]
     var selectedIndexPath: IndexPath?
+    var playingMusicIcon: UIView!
+    var playingSongIndexPath: IndexPath!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         updateFavoriteSongs()
         
+        playingMusicIcon = UIView(frame: CGRect(x: 5, y: 5, width: 40, height: 40))
+        let firstBar = UIView(frame: CGRect(x: 4, y: 3, width: 5, height: 30))
+        firstBar.backgroundColor = UIColor.red
+        let secondBar = UIView(frame: CGRect(x: 13, y: 3, width: 5, height: 30))
+        firstBar.backgroundColor = UIColor.red
+        let thirdBar = UIView(frame: CGRect(x: 22, y: 3, width: 5, height: 30))
+        firstBar.backgroundColor = UIColor.red
+        let fourthBar = UIView(frame: CGRect(x: 31, y: 3, width: 5, height: 30))
+        firstBar.backgroundColor = UIColor.red
+        secondBar.backgroundColor = UIColor.red
+        thirdBar.backgroundColor = UIColor.red
+        fourthBar.backgroundColor = UIColor.red
+
+        playingMusicIcon.addSubview(firstBar)
+        playingMusicIcon.addSubview(secondBar)
+        playingMusicIcon.addSubview(thirdBar)
+        playingMusicIcon.addSubview(fourthBar)
+
         let mainVc = self.navigationController?.viewControllers[0] as! MainScreenController
         mainVc.delegate = self
         MagicPlayer.shared.favorVCDelegate = self
@@ -58,6 +78,9 @@ class FavouriteViewController: UIViewController{
         
         let song = favoriteSongs[sender.tag]
         
+        playingSongIndexPath = IndexPath(row: sender.tag, section: 0)
+//        animatePlayingIcon()
+        
         print("songName = \(song.artistAndSongName)")
         
         if let id = DataSingleton.shared.trackIds[song.artistAndSongName]{
@@ -66,6 +89,34 @@ class FavouriteViewController: UIViewController{
             player.systemPlayerPlay(id: id)
             
         }
+    }
+    
+    
+    func animatePlayingIcon(){
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: [.autoreverse, .repeat], animations: {
+            let barView = self.playingMusicIcon.subviews.first!
+            barView.frame.size.height = 4
+            barView.frame.origin = CGPoint(x: barView.frame.origin.x, y: 38)
+        }, completion: nil)
+
+        UIView.animate(withDuration: 0.5, delay: 0.1, options: [.autoreverse, .repeat], animations: {
+            let barView = self.playingMusicIcon.subviews[1]
+            barView.frame.size.height = 4
+            barView.frame.origin = CGPoint(x: barView.frame.origin.x, y: 38)
+        }, completion: nil)
+
+        UIView.animate(withDuration: 0.5, delay: 0.2, options: [.autoreverse, .repeat], animations: {
+            let barView = self.playingMusicIcon.subviews[2]
+            barView.frame.size.height = 4
+            barView.frame.origin = CGPoint(x: barView.frame.origin.x, y: 38)
+        }, completion: nil)
+
+        UIView.animate(withDuration: 0.5, delay: 0.3, options: [.autoreverse, .repeat], animations: {
+            let barView = self.playingMusicIcon.subviews[3]
+            barView.frame.size.height = 4
+            barView.frame.origin = CGPoint(x: barView.frame.origin.x, y: 38)
+        }, completion: nil)
+
     }
 
     @objc func didTappedAppleMusicButton(){
@@ -311,6 +362,7 @@ extension FavouriteViewController: UITableViewDataSource{
         let cell = favoritesTable.dequeueReusableCell(withIdentifier: "FavoriteSongCell") as! FavoriteSongCell
         let song = favoriteSongs[indexPath.row]
         
+        
         cell.songNameLabel.text = song.songName
         cell.artistNameLabel.text = song.artistName
         if let image = self.favoriteSongImages[song.artistAndSongName]{
@@ -361,6 +413,12 @@ extension FavouriteViewController: UITableViewDataSource{
                 }
             }
         }
+        
+        if let index = playingSongIndexPath, index == indexPath{
+            cell.artistImage.addSubview(playingMusicIcon)
+            animatePlayingIcon()
+        }
+
         return cell
         
     }

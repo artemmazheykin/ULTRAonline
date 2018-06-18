@@ -14,7 +14,7 @@ class FavoriteSongCell: UITableViewCell {
     @IBOutlet weak var songNameLabel: UILabel!
     @IBOutlet weak var artistNameLabel: UILabel!
     @IBOutlet weak var playButton: UIButton!
-    
+        
     override func awakeFromNib() {
         super.awakeFromNib()
         artistImage.layer.cornerRadius = 3
