@@ -361,7 +361,9 @@ extension FavouriteViewController: UITableViewDataSource{
         
         let cell = favoritesTable.dequeueReusableCell(withIdentifier: "FavoriteSongCell") as! FavoriteSongCell
         let song = favoriteSongs[indexPath.row]
-        
+        for view in cell.artistImage.subviews{
+            view.removeFromSuperview()
+        }
         
         cell.songNameLabel.text = song.songName
         cell.artistNameLabel.text = song.artistName
