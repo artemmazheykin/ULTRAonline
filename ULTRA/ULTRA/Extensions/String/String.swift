@@ -10,76 +10,6 @@ import Foundation
 
 extension String{
     
-//    func getLast10Songs() -> [String]{
-//
-//        let substrings = self.components(separatedBy: "</li>")
-//
-//        var myTimeAnd10Songs:[String] = []
-//
-//        for substring in substrings{
-//            let subsubstrings = substring.components(separatedBy: "<li>")
-//            for subsubstring in subsubstrings{
-//                let subsubsubstrings = subsubstring.components(separatedBy: "\r\n")
-//                myTimeAnd10Songs.append(contentsOf: subsubsubstrings)
-//            }
-//        }
-//
-//        var myTempTimeAnd10Songs:[String] = []
-//
-//        for item in myTimeAnd10Songs{
-//            if item != ""{
-//                myTempTimeAnd10Songs.append(item)
-//            }
-//        }
-//
-//        return myTempTimeAnd10Songs
-//
-//    }
-    
-    
-    func getArtistAndSongFromURL(completion: @escaping ((artist: String, song: String)?) -> ()){
-        
-        var artist: String?
-        var song: String?
-
-        if let myURL = URL(string: self) {
-            
-            do{
-                let myHTMLString = try String(contentsOf: myURL, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
-                
-                let substrings = myHTMLString.components(separatedBy: "\"")
-                
-                
-                if substrings.count == 9{
-                    
-                    for (i,substring) in substrings.enumerated(){
-                        
-                        if substring == ":"{
-                            if artist == nil{
-                                artist = substrings[i+1]
-                            }
-                            else{
-                                song = substrings[i+1]
-                            }
-                        }
-                    }
-                }
-                else{
-                    print("myHTMLString is wrong!")
-                    completion(nil)
-                }
-                if let artist = artist, let song = song{
-                    completion((artist,song))
-                }
-            }
-            catch{
-                print("Error with text from URL!!!!")
-            }
-        }else{
-            completion(nil)
-        }
-    }
-    
     func getSongId() -> String{
         
         let components = self.components(separatedBy: ".0")
@@ -88,4 +18,69 @@ extension String{
         }
         return ""
     }
+}
+
+extension DateFormatter {
+    
+    convenience init (format: String) {
+        self.init()
+        dateFormat = format
+        locale = Locale.current
+    }
+}
+
+extension String {
+    
+    func toDate (format: String) -> Date? {
+        return DateFormatter(format: format).date(from: self)
+    }
+    
+    func toDateString (inputFormat: String, outputFormat:String) -> String? {
+        if let date = toDate(format: inputFormat) {
+            return DateFormatter(format: outputFormat).string(from: date)
+        }
+        return nil
+    }
+    
+    func toDateComponents() -> DateComponents?{
+        
+        let format = "dd.MM.yyyy'T'HH:mm:ss"
+        
+        if let date = toDate(format: format){
+            
+            let calendar = Calendar.current
+            let dateComponents = calendar.dateComponents([.day,.month,.year,.hour,.minute,.second], from: date)
+            return dateComponents
+        }
+        
+        return nil
+    }
+    
+}
+
+extension Date {
+    
+    func toString (format:String) -> String? {
+        return DateFormatter(format: format).string(from: self)
+    }
+    
+    func extractYearMonthDayHourMinuteSecond() -> (year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int)?{
+        
+        let calendar = Calendar.current
+        let dateComponent = calendar.dateComponents([.day,.month,.year,.hour,.minute,.second], from: self)
+        if let day = dateComponent.day, let month = dateComponent.month, let year = dateComponent.year, let hour = dateComponent.hour, let minute = dateComponent.minute, let second = dateComponent.second{
+            return (year: year, month: month, day: day, hour: hour, minute: minute, second: second)
+        }
+        
+        
+        return nil
+    }
+    
+    func toDateComponents() -> DateComponents{
+        
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.day,.month,.year,.hour,.minute,.second], from: self)
+        return dateComponents
+    }
+    
 }

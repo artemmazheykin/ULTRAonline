@@ -19,5 +19,6 @@ protocol NetworkHelper: class{
     func getTrackId(metadata: String) -> Promise<String?>
     func getSongDuration(id: String) -> Promise<Double>
     func addSongToLibrary(with id: String) -> Promise<Bool>
+    func updateCurrentSong() -> Promise<(artist: String, song: String)?>
     func updateLast10Songs() -> Promise<[String]>
 }

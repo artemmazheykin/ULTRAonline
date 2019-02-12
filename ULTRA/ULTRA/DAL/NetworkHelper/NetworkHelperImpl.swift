@@ -404,28 +404,73 @@ class NetworkHelperImpl: NetworkHelper{
     
     // https://fmgid.com/stations/ultra/current.json
     
-    
-    func updateLast10Songs() -> Promise<[String]>{
-        return Promise<[String]>{ pup in
-            
+    func updateCurrentSong() -> Promise<(artist: String, song: String)?>{
+        return Promise<(artist: String, song: String)?>{pup in
             let request = URLRequest(url: URL(string: last10SongsUrl)!)
             URLSession.shared.dataTask(with: request) { (dataOpt, _, error) in
+                guard error == nil, let data = dataOpt
+                    else{
+                        print("Error with getting info from last10SongsUrl")
+                        pup.fulfill(nil)
+                        return
+                }
+                
+                let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                guard let parsedResult = json as? [String: Any],
+                    let artist = parsedResult["artist"] as? String,
+                    let title = parsedResult["title"] as? String
+                    else {
+                        print("error with parsing json object")
+                        pup.fulfill(nil)
+                        return
+                }
+                pup.fulfill((artist: artist, song: title))
+            }.resume()
+        }
+    }
+        
+        func updateLast10Songs() -> Promise<[String]>{
+            return Promise<[String]>{ pup in
+                
+                let request = URLRequest(url: URL(string: last10SongsUrl)!)
+                URLSession.shared.dataTask(with: request) { (dataOpt, _, error) in
                 guard error == nil, let data = dataOpt
                     else{
                         print("Error with getting info from last10SongsUrl")
                         pup.fulfill([])
                         return
                 }
+                
                 let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
-                guard let parsedResult = json as? [String: Any]
+                guard let parsedResult = json as? [String: Any],
+                let metadata = parsedResult["metadata"] as? String,
+                let timeline = parsedResult["timeline"] as? String,
+                let timeHoursAndMinutesString = timeline.toDateString(inputFormat: "YYYY-MM-dd HH:mm:ss", outputFormat: "HH:mm") as? String,
+                let lastSongs = parsedResult["prev_tracks"] as? [[String: Any]]
                     /*let token = parsedResult["token"] as? String*/ else {
                         print("error with parsing json object")
                         pup.fulfill([])
                         return
                 }
+                var lastSongsString:[String] = []
                 
+                for song in lastSongs{
+                    guard let artist = song["artist"] as? String,
+                        let title = song["title"] as? String,
+                        let timeline = song["timeline"] as? String,
+                        let timeHoursAndMinutesString = timeline.toDateString(inputFormat: "YYYY-MM-dd HH:mm:ss", outputFormat: "HH:mm") else{
+                            print("error with parsing song from json object")
+                            pup.fulfill([])
+                            return
+                    }
+                    lastSongsString.append("\(timeHoursAndMinutesString) \(artist) - \(title)")
+                    
+                }
+                
+                
+                print("timeHoursAndMinutesString = \(timeHoursAndMinutesString)")
                 print("parsedResult = \(parsedResult)")
-                pup.fulfill([])
+                pup.fulfill(lastSongsString)
                 }.resume()
             
             

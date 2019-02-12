@@ -164,7 +164,7 @@ class MainScreenController: UIViewController, UIPopoverPresentationControllerDel
         DispatchQueue.global(qos: .background).async {
             while true{
                 
-                self.myURLArtistAndSongString.getArtistAndSongFromURL(){tuple in
+                _ = self.networkHelper.updateCurrentSong().done{tuple in
                     
                     if let artistAndSong = tuple{
                         if self.currentSongName != artistAndSong.song{
