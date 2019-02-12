@@ -10,31 +10,31 @@ import Foundation
 
 extension String{
     
-    func getLast10Songs() -> [String]{
-        
-        let substrings = self.components(separatedBy: "</li>")
-        
-        var myTimeAnd10Songs:[String] = []
-        
-        for substring in substrings{
-            let subsubstrings = substring.components(separatedBy: "<li>")
-            for subsubstring in subsubstrings{
-                let subsubsubstrings = subsubstring.components(separatedBy: "\r\n")
-                myTimeAnd10Songs.append(contentsOf: subsubsubstrings)
-            }
-        }
-        
-        var myTempTimeAnd10Songs:[String] = []
-        
-        for item in myTimeAnd10Songs{
-            if item != ""{
-                myTempTimeAnd10Songs.append(item)
-            }
-        }
-        
-        return myTempTimeAnd10Songs
-        
-    }
+//    func getLast10Songs() -> [String]{
+//
+//        let substrings = self.components(separatedBy: "</li>")
+//
+//        var myTimeAnd10Songs:[String] = []
+//
+//        for substring in substrings{
+//            let subsubstrings = substring.components(separatedBy: "<li>")
+//            for subsubstring in subsubstrings{
+//                let subsubsubstrings = subsubstring.components(separatedBy: "\r\n")
+//                myTimeAnd10Songs.append(contentsOf: subsubsubstrings)
+//            }
+//        }
+//
+//        var myTempTimeAnd10Songs:[String] = []
+//
+//        for item in myTimeAnd10Songs{
+//            if item != ""{
+//                myTempTimeAnd10Songs.append(item)
+//            }
+//        }
+//
+//        return myTempTimeAnd10Songs
+//
+//    }
     
     
     func getArtistAndSongFromURL(completion: @escaping ((artist: String, song: String)?) -> ()){

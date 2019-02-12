@@ -20,7 +20,7 @@ class NetworkHelperImpl: NetworkHelper{
     // URLs
     var authorisationHelper: AuthorisationHelper!
 
-    var last10SongsUrl = "https://radiopleer.com/info/ultra_last_tracks.txt"
+    var last10SongsUrl = "https://fmgid.com/stations/ultra/current.json"
     
     let currentRegionCode = Locale.current.regionCode?.lowercased()
     
@@ -402,23 +402,48 @@ class NetworkHelperImpl: NetworkHelper{
 
     }
     
+    // https://fmgid.com/stations/ultra/current.json
+    
+    
     func updateLast10Songs() -> Promise<[String]>{
         return Promise<[String]>{ pup in
-            if let myURL = URL(string: last10SongsUrl) {
+            
+            let request = URLRequest(url: URL(string: last10SongsUrl)!)
+            URLSession.shared.dataTask(with: request) { (dataOpt, _, error) in
+                guard error == nil, let data = dataOpt
+                    else{
+                        print("Error with getting info from last10SongsUrl")
+                        pup.fulfill([])
+                        return
+                }
+                let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                guard let parsedResult = json as? [String: Any]
+                    /*let token = parsedResult["token"] as? String*/ else {
+                        print("error with parsing json object")
+                        pup.fulfill([])
+                        return
+                }
                 
-                do{
-                    let myHTMLString = try String(contentsOf: myURL, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
-                    
-                    let myLast10Songs = myHTMLString.getLast10Songs()
-                    
-                    pup.fulfill(myLast10Songs)
-                }
-                catch{
-                    print("Error with text from URL!!!!")
-                }
-            }else{
-                print("Wrong last10SongsUrl!!!!!!!!!!!!")
-            }
+                print("parsedResult = \(parsedResult)")
+                pup.fulfill([])
+                }.resume()
+            
+            
+//            if let myURL = URL(string: last10SongsUrl) {
+//
+//                do{
+//                    let myHTMLString = try String(contentsOf: myURL, encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
+//
+//                    let myLast10Songs = myHTMLString.getLast10Songs()
+//
+//                    pup.fulfill(myLast10Songs)
+//                }
+//                catch{
+//                    print("Error with text from URL!!!!")
+//                }
+//            }else{
+//                print("Wrong last10SongsUrl!!!!!!!!!!!!")
+//            }
         }
     }
 }
