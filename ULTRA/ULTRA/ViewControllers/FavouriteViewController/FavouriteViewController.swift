@@ -31,13 +31,10 @@ class FavouriteViewController: UIViewController{
         updateFavoriteSongs()
         
         playingMusicIcon = UIView(frame: CGRect(x: 5, y: 5, width: 40, height: 40))
-        let firstBar = UIView(frame: CGRect(x: 4, y: 3, width: 5, height: 30))
-        firstBar.backgroundColor = UIColor.red
-        let secondBar = UIView(frame: CGRect(x: 13, y: 3, width: 5, height: 30))
-        firstBar.backgroundColor = UIColor.red
-        let thirdBar = UIView(frame: CGRect(x: 22, y: 3, width: 5, height: 30))
-        firstBar.backgroundColor = UIColor.red
-        let fourthBar = UIView(frame: CGRect(x: 31, y: 3, width: 5, height: 30))
+        let firstBar = UIView(frame: CGRect(x: 4, y: 5, width: 5, height: 30))
+        let secondBar = UIView(frame: CGRect(x: 13, y: 5, width: 5, height: 30))
+        let thirdBar = UIView(frame: CGRect(x: 22, y: 5, width: 5, height: 30))
+        let fourthBar = UIView(frame: CGRect(x: 31, y: 5, width: 5, height: 30))
         firstBar.backgroundColor = UIColor.red
         secondBar.backgroundColor = UIColor.red
         thirdBar.backgroundColor = UIColor.red
@@ -93,28 +90,28 @@ class FavouriteViewController: UIViewController{
     
     
     func animatePlayingIcon(){
-        UIView.animate(withDuration: 0.5, delay: 0.0, options: [.autoreverse, .repeat], animations: {
+        UIView.animate(withDuration: 5, delay: 0.0, options: [.autoreverse, .repeat, .], animations: {
             let barView = self.playingMusicIcon.subviews.first!
-            barView.frame.size.height = 4
-            barView.frame.origin = CGPoint(x: barView.frame.origin.x, y: 38)
+            barView.frame.size.height = 5
+            barView.frame.origin = CGPoint(x: barView.frame.origin.x, y: 30)
         }, completion: nil)
 
-        UIView.animate(withDuration: 0.5, delay: 0.1, options: [.autoreverse, .repeat], animations: {
+        UIView.animate(withDuration: 5, delay: 0.1, options: [.autoreverse], animations: {
             let barView = self.playingMusicIcon.subviews[1]
-            barView.frame.size.height = 4
-            barView.frame.origin = CGPoint(x: barView.frame.origin.x, y: 38)
+            barView.frame.size.height = 5
+            barView.frame.origin = CGPoint(x: barView.frame.origin.x, y: 30)
         }, completion: nil)
 
-        UIView.animate(withDuration: 0.5, delay: 0.2, options: [.autoreverse, .repeat], animations: {
+        UIView.animate(withDuration: 5, delay: 0.2, options: [.autoreverse], animations: {
             let barView = self.playingMusicIcon.subviews[2]
-            barView.frame.size.height = 4
-            barView.frame.origin = CGPoint(x: barView.frame.origin.x, y: 38)
+            barView.frame.size.height = 5
+            barView.frame.origin = CGPoint(x: barView.frame.origin.x, y: 30)
         }, completion: nil)
 
-        UIView.animate(withDuration: 0.5, delay: 0.3, options: [.autoreverse, .repeat], animations: {
+        UIView.animate(withDuration: 5, delay: 0.3, options: [.autoreverse], animations: {
             let barView = self.playingMusicIcon.subviews[3]
-            barView.frame.size.height = 4
-            barView.frame.origin = CGPoint(x: barView.frame.origin.x, y: 38)
+            barView.frame.size.height = 5
+            barView.frame.origin = CGPoint(x: barView.frame.origin.x, y: 30)
         }, completion: nil)
 
     }

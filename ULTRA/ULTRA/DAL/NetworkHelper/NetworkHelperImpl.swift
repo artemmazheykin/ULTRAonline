@@ -428,7 +428,7 @@ class NetworkHelperImpl: NetworkHelper{
             }.resume()
         }
     }
-        
+    
         func updateLast10Songs() -> Promise<[String]>{
             return Promise<[String]>{ pup in
                 
