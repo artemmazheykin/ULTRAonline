@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0438C3AA2056A54D001390B8 /* SongImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0438C3A92056A54D001390B8 /* SongImageModel.swift */; };
+		043D7830221594DD00AC7DB6 /* AnimatingMusicSign.xib in Resources */ = {isa = PBXBuildFile; fileRef = 043D782F221594DD00AC7DB6 /* AnimatingMusicSign.xib */; };
+		043D783222159B3500AC7DB6 /* AnimatingMusicSign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043D783122159B3500AC7DB6 /* AnimatingMusicSign.swift */; };
 		8940A8BC48C5C0F04A839937 /* Pods_ULTRA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C51DB75E386B43D8FCB52F2 /* Pods_ULTRA.framework */; };
 		ED020BD920CF0100006FDD60 /* AuthorisationHelperImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED020BD820CF0100006FDD60 /* AuthorisationHelperImpl.swift */; };
 		ED020BDB20D01660006FDD60 /* AuthorisationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED020BDA20D0165F006FDD60 /* AuthorisationHelper.swift */; };
@@ -67,6 +69,8 @@
 
 /* Begin PBXFileReference section */
 		0438C3A92056A54D001390B8 /* SongImageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongImageModel.swift; sourceTree = "<group>"; };
+		043D782F221594DD00AC7DB6 /* AnimatingMusicSign.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AnimatingMusicSign.xib; sourceTree = "<group>"; };
+		043D783122159B3500AC7DB6 /* AnimatingMusicSign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatingMusicSign.swift; sourceTree = "<group>"; };
 		21D8229B62D413E64C044ABE /* Pods-ULTRA.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ULTRA.release.xcconfig"; path = "Pods/Target Support Files/Pods-ULTRA/Pods-ULTRA.release.xcconfig"; sourceTree = "<group>"; };
 		45C5EBEE5FE8025C629C9317 /* Pods-ULTRA.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ULTRA.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ULTRA/Pods-ULTRA.debug.xcconfig"; sourceTree = "<group>"; };
 		4C51DB75E386B43D8FCB52F2 /* Pods_ULTRA.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ULTRA.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -141,6 +145,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		043D782E2215932600AC7DB6 /* AnimatingMusicSign */ = {
+			isa = PBXGroup;
+			children = (
+				043D782F221594DD00AC7DB6 /* AnimatingMusicSign.xib */,
+				043D783122159B3500AC7DB6 /* AnimatingMusicSign.swift */,
+			);
+			path = AnimatingMusicSign;
+			sourceTree = "<group>";
+		};
 		744EAB37940FCB574BFFE017 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -213,6 +226,7 @@
 				ED751FE92051ECA600803BA2 /* Router */,
 				ED751FD62051ECA600803BA2 /* Storyboard */,
 				ED040B07205DC9A100754D2E /* Player */,
+				043D782E2215932600AC7DB6 /* AnimatingMusicSign */,
 			);
 			path = ULTRA;
 			sourceTree = "<group>";
@@ -529,6 +543,7 @@
 				ED3AC4652034BF5E006770F1 /* Assets.xcassets in Resources */,
 				ED3AC4632034BF5E006770F1 /* Story.storyboard in Resources */,
 				EDA6474A20691BF600C33D05 /* BottomPlayer.xib in Resources */,
+				043D7830221594DD00AC7DB6 /* AnimatingMusicSign.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -628,6 +643,7 @@
 				ED3AC45E2034BF5E006770F1 /* AppDelegate.swift in Sources */,
 				EDD32EF02052985E008B5644 /* SongRepository.swift in Sources */,
 				ED26DE932056D23B007FE8D7 /* StreamRate.swift in Sources */,
+				043D783222159B3500AC7DB6 /* AnimatingMusicSign.swift in Sources */,
 				EDA493522053293600A27141 /* SongService.swift in Sources */,
 				ED751FF42051ECA600803BA2 /* SystemParametersServiceImpl.swift in Sources */,
 				ED751FF92051ECA600803BA2 /* Router.swift in Sources */,

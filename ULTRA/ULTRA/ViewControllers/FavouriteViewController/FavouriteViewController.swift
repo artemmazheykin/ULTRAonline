@@ -31,16 +31,26 @@ class FavouriteViewController: UIViewController{
         updateFavoriteSongs()
         
         playingMusicIcon = UIView(frame: CGRect(x: 5, y: 5, width: 40, height: 40))
-        let firstBar = UIView(frame: CGRect(x: 4, y: 5, width: 5, height: 30))
+        
+        let firstBar = UIView()
+        playingMusicIcon.addSubview(firstBar)
+        firstBar.translatesAutoresizingMaskIntoConstraints = false
+        playingMusicIcon.translatesAutoresizingMaskIntoConstraints = false
+        firstBar.frame.size.height = 30
+        firstBar.frame.size.width = 5
+        firstBar.bottomAnchor.constraint(equalTo: playingMusicIcon.bottomAnchor, constant: 30).isActive = true
+        firstBar.leftAnchor.constraint(equalTo: playingMusicIcon.leftAnchor, constant: 0).isActive = true
+        
+//        let firstBar = UIView(frame: CGRect(x: 4, y: 5, width: 5, height: 30))
         let secondBar = UIView(frame: CGRect(x: 13, y: 5, width: 5, height: 30))
         let thirdBar = UIView(frame: CGRect(x: 22, y: 5, width: 5, height: 30))
         let fourthBar = UIView(frame: CGRect(x: 31, y: 5, width: 5, height: 30))
-        firstBar.backgroundColor = UIColor.red
+        firstBar.backgroundColor = UIColor.blue
         secondBar.backgroundColor = UIColor.red
         thirdBar.backgroundColor = UIColor.red
         fourthBar.backgroundColor = UIColor.red
 
-        playingMusicIcon.addSubview(firstBar)
+//        playingMusicIcon.addSubview(firstBar)
         playingMusicIcon.addSubview(secondBar)
         playingMusicIcon.addSubview(thirdBar)
         playingMusicIcon.addSubview(fourthBar)
@@ -90,11 +100,20 @@ class FavouriteViewController: UIViewController{
     
     
     func animatePlayingIcon(){
-        UIView.animate(withDuration: 5, delay: 0.0, options: [.autoreverse, .repeat, .], animations: {
-            let barView = self.playingMusicIcon.subviews.first!
-            barView.frame.size.height = 5
-            barView.frame.origin = CGPoint(x: barView.frame.origin.x, y: 30)
-        }, completion: nil)
+        
+//        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 5, delay: 0, options: [.autoreverse, .repeat], animations: {
+//            let barView = self.playingMusicIcon.subviews.first!
+//
+//            print("self.playingMusicIcon.subviews = \(self.playingMusicIcon.subviews)")
+//            barView.frame.size.height = 5
+//
+//        }, completion: nil)
+        
+//        UIView.animate(withDuration: 5, delay: 0.0, options: [.autoreverse, .repeat], animations: {
+//            let barView = self.playingMusicIcon.subviews.first!
+//            barView.frame.size.height = 5
+////            barView.frame.origin = CGPoint(x: barView.frame.origin.x, y: 30)
+//        }, completion: nil)
 
         UIView.animate(withDuration: 5, delay: 0.1, options: [.autoreverse], animations: {
             let barView = self.playingMusicIcon.subviews[1]
@@ -414,8 +433,12 @@ extension FavouriteViewController: UITableViewDataSource{
         }
         
         if let index = playingSongIndexPath, index == indexPath{
-            cell.artistImage.addSubview(playingMusicIcon)
-            animatePlayingIcon()
+            
+            let anView = AnimatingMusicSign()
+            anView.frame = CGRect(x: 5, y: 5, width: 40, height: 40)
+            cell.artistImage.addSubview(anView)
+//            cell.artistImage.addSubview(playingMusicIcon)
+//            animatePlayingIcon()
         }
 
         return cell
