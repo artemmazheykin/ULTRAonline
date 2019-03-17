@@ -29,6 +29,11 @@ class AnimatingMusicSign: UIView {
         instanceFromNib()
     }
     
+    class func instanceFromNib() -> UIView{
+        return UINib(nibName: "AnimatingMusicSign", bundle: nil).instantiate(withOwner: self, options: nil)[0] as! UIView
+    }
+    
+    
     func instanceFromNib(){
         
         Bundle.main.loadNibNamed("AnimatingMusicSign", owner: self, options: nil)
@@ -42,4 +47,15 @@ class AnimatingMusicSign: UIView {
     }
     */
 
+}
+
+extension Bundle {
+    
+    static func loadView<T>(fromNib name: String, withType type: T.Type) -> T {
+        if let view = Bundle.main.loadNibNamed(name, owner: nil, options: nil)?.first as? T {
+            return view
+        }
+        
+        fatalError("Could not load view with type " + String(describing: type))
+    }
 }

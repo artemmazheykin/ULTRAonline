@@ -330,6 +330,10 @@ extension FavouriteViewController: UITableViewDelegate{
                 }
             }
         }
+        let myView = Bundle.loadView(fromNib: "AnimatingMusicSign", withType: AnimatingMusicSign.self)
+        myView.frame = CGRect(x: 5, y: 5, width: 40, height: 40)
+        headerView.addSubview(myView)
+
     }
     
     func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
@@ -434,9 +438,9 @@ extension FavouriteViewController: UITableViewDataSource{
         
         if let index = playingSongIndexPath, index == indexPath{
             
-            let anView = AnimatingMusicSign()
-            anView.frame = CGRect(x: 5, y: 5, width: 40, height: 40)
-            cell.artistImage.addSubview(anView)
+//            let anView = AnimatingMusicSign()
+//            anView.frame = CGRect(x: 5, y: 5, width: 40, height: 40)
+//            cell.artistImage.addSubview(anView)
 //            cell.artistImage.addSubview(playingMusicIcon)
 //            animatePlayingIcon()
         }
