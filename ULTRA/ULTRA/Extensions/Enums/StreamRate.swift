@@ -12,7 +12,7 @@
 import Foundation
 
 enum StreamRate{
-    case _64, _128, _196
+    case _64, _128, _192
     
     var description: String{
         switch self {
@@ -20,8 +20,8 @@ enum StreamRate{
             return "64 kb/s"
         case ._128:
             return "128 kb/s"
-        case ._196:
-            return "196 kb/s"
+        case ._192:
+            return "192 kb/s"
         }
     }
     
@@ -31,8 +31,8 @@ enum StreamRate{
             self = ._64
         case "128":
             self = ._128
-        case "196":
-            self = ._196
+        case "192":
+            self = ._192
 
         default:
             return nil
@@ -45,7 +45,7 @@ enum StreamRate{
             return 0
         case ._128:
             return 1
-        case ._196:
+        case ._192:
             return 2
         }
     }
@@ -56,8 +56,8 @@ enum StreamRate{
             return "64"
         case ._128:
             return "128"
-        case ._196:
-            return "196"
+        case ._192:
+            return "192"
         }
     }
         
@@ -65,10 +65,12 @@ enum StreamRate{
         switch self {
         case ._64:
             return "https://nashe1.hostingradio.ru:18000/ultra-64.mp3"
+            //https://nashe1.hostingradio.ru:18000/ultra-64.mp3
         case ._128:
             return "https://nashe1.hostingradio.ru:18000/ultra-128.mp3"
-        case ._196:
+        case ._192:
             return "https://nashe1.hostingradio.ru:18000/ultra-192.mp3"
+            //https://nashe1.hostingradio.ru:18000/ultra-192.mp3
         }
     }
     

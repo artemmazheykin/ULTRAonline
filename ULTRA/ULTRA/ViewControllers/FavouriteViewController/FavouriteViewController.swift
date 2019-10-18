@@ -330,9 +330,9 @@ extension FavouriteViewController: UITableViewDelegate{
                 }
             }
         }
-        let myView = Bundle.loadView(fromNib: "AnimatingMusicSign", withType: AnimatingMusicSign.self)
-        myView.frame = CGRect(x: 5, y: 5, width: 40, height: 40)
-        headerView.addSubview(myView)
+//        let myView = Bundle.loadView(fromNib: "AnimatingMusicSign", withType: AnimatingMusicSign.self)
+//        myView.frame = CGRect(x: 5, y: 5, width: 40, height: 40)
+//        headerView.addSubview(myView)
 
     }
     

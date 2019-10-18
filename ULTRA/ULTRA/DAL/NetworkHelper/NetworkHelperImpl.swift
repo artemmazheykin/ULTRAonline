@@ -20,7 +20,8 @@ class NetworkHelperImpl: NetworkHelper{
     // URLs
     var authorisationHelper: AuthorisationHelper!
 
-    var last10SongsUrl = "https://fmgid.com/stations/ultra/current.json"
+    var last10SongsUrl = "https://meta.fmgid.com/stations/ultra/current.json"
+    //                    https://meta.fmgid.com/stations/ultra/current.json
     
     let currentRegionCode = Locale.current.regionCode?.lowercased()
     
@@ -444,11 +445,11 @@ class NetworkHelperImpl: NetworkHelper{
                 let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
                 guard let parsedResult = json as? [String: Any],
                 let metadata = parsedResult["metadata"] as? String,
-                let timeline = parsedResult["timeline"] as? String,
+                let timeline = parsedResult["datetime"] as? String,
                 let timeHoursAndMinutesString = timeline.toDateString(inputFormat: "YYYY-MM-dd HH:mm:ss", outputFormat: "HH:mm") as? String,
                 let lastSongs = parsedResult["prev_tracks"] as? [[String: Any]]
                     /*let token = parsedResult["token"] as? String*/ else {
-                        print("error with parsing json object")
+                        print("error with parsing json object with last 10 song")
                         pup.fulfill([])
                         return
                 }
@@ -457,7 +458,7 @@ class NetworkHelperImpl: NetworkHelper{
                 for song in lastSongs{
                     guard let artist = song["artist"] as? String,
                         let title = song["title"] as? String,
-                        let timeline = song["timeline"] as? String,
+                        let timeline = song["datetime"] as? String,
                         let timeHoursAndMinutesString = timeline.toDateString(inputFormat: "YYYY-MM-dd HH:mm:ss", outputFormat: "HH:mm") else{
                             print("error with parsing song from json object")
                             pup.fulfill([])
